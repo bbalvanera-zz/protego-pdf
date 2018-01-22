@@ -1,0 +1,24 @@
+{
+  "rulesDirectory": [
+    "node_modules/codelyzer"
+  ],
+  "extends": [ "tslint:recommended" ],
+  "rules": {
+    "ordered-imports": false,
+    "quotemark": [
+      true,
+      "single"
+    ],
+    "object-literal-sort-keys": false,
+    "trailing-comma": false,
+    "no-console": [
+      false,
+      "log",
+      "error"
+    ],
+    "max-line-length": [
+      true,
+      140
+    ]
+  }
+}
