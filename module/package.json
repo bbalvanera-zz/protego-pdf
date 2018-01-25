@@ -1,0 +1,58 @@
+{
+  "name": "protego-pdf-helper",
+  "version": "0.1.0",
+  "description": "A node.js/csharp module that enables access to PDF encryption functionality through the use of iText",
+  "homepage": "https://github.com/bbalvanera/protego-pdf#readme",
+  "author": {
+    "name": "Bernardo Balvanera",
+    "email": "bernardo.balvanera@gmail.com"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "prepublish": "nsp check",
+    "compile": "tslint -c tslint.json -p tsconfig.json && tsc",
+    "test": "jest"
+  },
+  "main": "./lib/index.js",
+  "typings": "./lib/index.d.ts",
+  "keywords": [
+    "pdf",
+    "protect",
+    "encrypt",
+    "password",
+    "service"
+  ],
+  "dependencies": { },
+  "devDependencies": {
+    "@types/jest": "^20.0.2",
+    "@types/node": "^8.0.2",
+    "jest": "^20.0.4",
+    "jest-cli": "^20.0.0",
+    "nsp": "^2.6.3",
+    "ts-jest": "^20.0.6",
+    "tslint": "~5.7.0",
+    "typescript": "~2.4.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bbalvanera/protego-pdf.git"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json"
+    ]
+  },
+  "license": "AGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/bbalvanera/protego-pdf/issues"
+  }
+}

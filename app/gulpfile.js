@@ -13,14 +13,22 @@ gulp.task('serve',
   gulp.series(
     buildPug,
     lint,
-    buildAngular,
-    buildElectron,
     gulp.parallel(
+      buildAngular,
+      buildElectron,
       watchPug,
-      watchElectron,
-      () => exec('electron ./dist/app.js --debug')
+      watchElectron
     )
   )
 );
 
 gulp.task(lint);
+
+gulp.task(buildElectron);
+
+gulp.task('watch',
+  gulp.parallel(
+    watchPug,
+    watchElectron
+  )
+);

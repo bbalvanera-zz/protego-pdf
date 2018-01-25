@@ -4,8 +4,7 @@ import { setTimeout } from 'timers';
 
 function buildAngular(done: TaskFunction) {
   exec('ng build -w');
-
-  setTimeout(() => done(), 20000);
+  done();
 }
 
 export = buildAngular;

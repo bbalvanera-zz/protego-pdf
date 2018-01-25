@@ -1,7 +1,7 @@
 {
   "name": "protego-pdf",
   "version": "0.1.0",
-  "license": "CC-BY-SA-4.0",
+  "license": "AGPL-3.0-or-later",
   "scripts": {
     "serve": "gulp serve"
   },
@@ -18,7 +18,7 @@
     "@angular/platform-browser-dynamic": "~5.2.0",
     "@angular/router": "~5.2.0",
     "core-js": "~2.5.3",
-    "electron": "^1.7.10",
+    "electron": "^1.7.11",
     "rxjs": "~5.5.6",
     "zone.js": "~0.8.20"
   },
