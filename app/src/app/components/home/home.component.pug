@@ -1,29 +1,29 @@
 .card
-  h5.card-header.bg-primary.text-light Proteger documento
+  h6.card-header.bg-primary.text-light Proteger documento
   .card-body.border.border-top-0.border-right-0.border-left-0
     .container.pr-0
       .row
         .col-9.pr-0.border.rounded
-          p#fileNameDisplay.mb-0 {{display}}
+          p#fileNameDisplay.mb-0.py-1 {{fileName}}
         .col-3
-          button.btn.btn-primary.btn-block(type="button") Examinar
+          button.btn.btn-primary.btn-sm.btn-block(type="button") Examinar
   .card-body
     .container.p-0
       .row
         .col
-          button.btn.btn-link.pl-1.text-primary(type="button") Obtener una contraseña
+          button.btn.btn-link.btn-sm.pl-1.text-primary(type="button") Obtener una contraseña
       .row
         .col-9.pr-0
-          .input-group.mb-1
+          .input-group.input-group-sm.mb-1
             input.form-control(type="text", placeholder="Contraseña para abrir el documento")
             .input-group-append
               span.input-group-text Seguro
-          input.form-control(type="password", placeholder="Confirmar contraseña")
+          input.form-control.form-control-sm(type="password", placeholder="Confirmar contraseña")
           .form-control-feedback
         .col-3
-          button#protectButton.btn.btn-primary.btn-block(type="button") Proteger
+          button#protectButton.btn.btn-primary.btn-block.btn-sm(type="button") Proteger
   .card-footer
-    button.btn.btn-outline-secondary(type="button")
+    button.btn.btn-sm.btn-outline-secondary(type="button")
       i.fa.fa-cog(aria-hidden="true")
-    button.btn.btn-outline-secondary(type="button")
+    button.btn.btn-sm.btn-outline-secondary(type="button")
       i.fa.fa-question-circle(aria-hidden="true")

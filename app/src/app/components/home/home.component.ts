@@ -6,9 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  public display = '';
+  public fileName = '';
 
   public ngOnInit() {
-    this.display = 'Arrastre aqui su archivo o de clic en Examinar';
+    this.fileName = 'Arrastre aqui su archivo o de clic en Examinar';
   }
 }
