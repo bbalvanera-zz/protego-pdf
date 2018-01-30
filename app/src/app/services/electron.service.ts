@@ -8,21 +8,28 @@ declare global {
 /* tslint:enable:interface-name */
 
 import { Subject } from 'rxjs/Subject';
-import { ChildProcess } from 'child_process';
+import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
+import { IEventArgs } from '../../electron/IEventArgs';
 
 @Injectable()
 export class ElectronService {
   private ipcRenderer: Electron.IpcRenderer;
-  private childProcess: ChildProcess;
-  private selectFileSubject = new Subject<string>();
+
+  private selectFileSubject = new Subject<string[]>();
 
   constructor() {
     if (this.electron()) {
       this.ipcRenderer = window.require('electron').ipcRenderer;
-      this.childProcess = window.require('child_process');
 
-      this.ipcRenderer.on('file-selected', (e: Electron.Event, file: string) => this.selectFileSubject.next(file));
+      this.ipcRenderer.on('ELECTRON_RENDERER_PROC', (event: Electron.Event, args: IEventArgs) => {
+        switch (args.message) {
+          case 'OPEN_FILE_DIALOG':
+            this.selectFileSubject.next(args.data);
+            break;
+        }
+      });
     }
   }
 
@@ -30,11 +37,21 @@ export class ElectronService {
     return window && window.process && window.process.type;
   }
 
-  public selectFile(): Subject<string> {
+  public selectFile(): Observable<string[]> {
     if (!this.electron()) {
       throw new Error('InvalidOperation: Can only call within an electron process');
     }
 
-    return this.selectFileSubject;
+    this.send('OPEN_FILE_DIALOG');
+    return this.selectFileSubject.pipe(first());
+  }
+
+  private send(message: any, data?: any) {
+    const ipcMessage: IEventArgs = {
+      message,
+      data
+    };
+
+    this.ipcRenderer.send('ELECTRON_MAIN_PROC', ipcMessage);
   }
 }

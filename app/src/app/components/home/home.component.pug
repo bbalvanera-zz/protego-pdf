@@ -1,12 +1,19 @@
-.card
+.card((dragenter)="showDropLocation($event.dataTransfer.items[0])")
   h6.card-header.bg-primary.text-light Proteger documento
   .card-body.border.border-top-0.border-right-0.border-left-0
-    .container.pr-0
+    .container.p-0
       .row
-        .col-9.pr-0.border.rounded
+        //- .col-9.pr-0.pl-2.border.rounded
           p#fileNameDisplay.mb-0.py-1 {{fileName}}
+        .col-9.pr-0
+          input#fileNameDisplay.form-control.form-control-sm(
+            [value]="fileNameDisplay",
+            placeholder="Arrastre aqui un archivo o de clic en Examinar",
+            [ngClass]="{'is-invalid': invalidFile }",
+            disabled)
+          .invalid-feedback.pl-2 Invalid or corrupted PDF file
         .col-3
-          button.btn.btn-primary.btn-sm.btn-block(type="button") Examinar
+          button.btn.btn-primary.btn-sm.btn-block(type="button", (click)="browse()") Examinar
   .card-body
     .container.p-0
       .row
@@ -27,3 +34,11 @@
       i.fa.fa-cog(aria-hidden="true")
     button.btn.btn-sm.btn-outline-secondary(type="button")
       i.fa.fa-question-circle(aria-hidden="true")
+.drop-zone(*ngIf="draggingOver")
+  .drop-zone-layer
+    h1
+      i.fa.fa-file-pdf-o(aria-hidden="true")
+    p Suelte el archivo aqui
+  .drop-zone-overlay((dragleave)="hideDropLocation()", (drop)="handleFileDrop($event.dataTransfer)")
+
+

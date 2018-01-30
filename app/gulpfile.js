@@ -14,7 +14,6 @@ gulp.task('serve',
     buildPug,
     lint,
     gulp.parallel(
-      buildAngular,
       buildElectron,
       watchPug,
       watchElectron
@@ -23,7 +22,7 @@ gulp.task('serve',
 );
 
 gulp.task(lint);
-
+gulp.task(buildPug);
 gulp.task(buildElectron);
 
 gulp.task('watch',

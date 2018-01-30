@@ -1,7 +1,10 @@
+/* tslint:disable */
 import * as path from 'path';
 import * as reload from 'electron-reload';
 import * as devtron from 'devtron';
-import { app, BrowserWindow, ipcMain } from 'electron';
+
+import { app, BrowserWindow, ipcMain, dialog, WebContents, OpenDialogOptions} from 'electron';
+import { IEventArgs } from './IEventArgs';
 
 let win: Electron.BrowserWindow;
 const debugMode = /--debug/.test(process.argv[2]);
@@ -24,6 +27,14 @@ app.on('activate', () => {
   }
 });
 
+ipcMain.on('ELECTRON_MAIN_PROC', (event: Electron.Event, args: IEventArgs) => {
+  switch (args.message) {
+    case 'OPEN_FILE_DIALOG':
+      openFileDialog(event.sender);
+      break;
+  }
+});
+
 function createWindow() {
   win = new BrowserWindow({
     width: 550,
@@ -42,5 +53,26 @@ function createWindow() {
 
   win.on('closed', () => {
     win = null;
+  });
+}
+
+function openFileDialog(sender: WebContents) {
+  const options: OpenDialogOptions = {
+    properties: ['openFile'],
+    filters: [
+      {
+        name: 'Pdf files',
+        extensions: ['pdf']
+      }
+    ]
+  };
+
+  dialog.showOpenDialog(options, (files: string[]) => {
+    const message: IEventArgs = {
+      message: 'OPEN_FILE_DIALOG',
+      data: files
+    };
+
+    sender.send('ELECTRON_RENDERER_PROC', message);
   });
 }

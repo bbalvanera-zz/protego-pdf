@@ -6,8 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 import { ElectronService } from './services/electron.service';
-
-import './rxjs-extensions';
+import { PdfProtectService } from './services/pdf-protect.service';
 
 @NgModule({
   declarations: [
@@ -19,7 +18,10 @@ import './rxjs-extensions';
     BrowserModule,
     FormsModule
   ],
-  providers: [ElectronService],
+  providers: [
+    ElectronService,
+    PdfProtectService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

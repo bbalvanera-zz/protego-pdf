@@ -1,8 +1,53 @@
+@import "../../../assets/scss/variables";
+
 #protectButton {
   height: 100%;
 }
 
+/* bootstrap overrides */
 #fileNameDisplay {
-  padding: 0.375rem 0;
-  font-size: 0.875rem;
+  background-color: inherit;
+}
+
+.form-control.is-invalid ~ .invalid-feedback {
+  visibility: visible;
+}
+
+.invalid-feedback {
+  display: block;
+  visibility: hidden;
+}
+/* end bootstrap overrides */
+
+$drop-zone-color: $gray-300;
+$drop-zone-bgcolor: rgba($primary, 0.9);
+
+%fill {
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  position: fixed;
+}
+
+.drop-zone {
+  @extend %fill;
+  background-color: $drop-zone-bgcolor;
+  padding: 0.7rem;
+
+  .drop-zone-layer {
+    @extend %fill;
+    position: relative;
+    text-align: center;
+    border: 0.2rem dashed $drop-zone-color;
+    padding-top: 25%;
+
+    h1, p {
+      color: $drop-zone-color;
+    }
+  }
+
+  .drop-zone-overlay {
+    @extend %fill;
+  }
 }
