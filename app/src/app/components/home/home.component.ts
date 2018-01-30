@@ -1,7 +1,10 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { ElectronService } from '../../services/electron.service';
 import { PdfProtectService } from '../../services/pdf-protect.service';
+
 const path = window.require('path');
+const zxcvbn = window.require('zxcvbn');
+const DEFAULT_PWD_SCORE = -1;
 
 @Component({
   selector: 'app-home',
@@ -10,6 +13,9 @@ const path = window.require('path');
 })
 export class HomeComponent {
   public fileNameDisplay = '';
+  public password = '';
+  public passwordConfirm = '';
+  public passwordScore = DEFAULT_PWD_SCORE;
   public draggingOver = false;
   public invalidFile = false;
 
@@ -49,6 +55,16 @@ export class HomeComponent {
     this.setFileName(transferItem.files[0].path);
     this.draggingOver = false;
   }
+
+  public updatePasswordScore(): void {
+    if (!this.password || this.password.length === 0) {
+        this.passwordScore = DEFAULT_PWD_SCORE;
+        return;
+    }
+
+    const result = zxcvbn(this.password);
+    this.passwordScore = result.score;
+}
 
   private setFileName(filePath: string): void {
     const fileName = path.basename(filePath);
