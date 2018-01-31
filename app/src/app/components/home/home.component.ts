@@ -18,6 +18,7 @@ export class HomeComponent {
   public passwordScore = DEFAULT_PWD_SCORE;
   public draggingOver = false;
   public invalidFile = false;
+  public readyToProtect = false;
 
   private  selectedFile = '';
 
@@ -33,6 +34,9 @@ export class HomeComponent {
         if (files && files.length > 0) {
           this.setFileName(files[0]);
         }
+      },
+      (error) => {
+        console.log(error);
       }
     );
   }
@@ -64,7 +68,11 @@ export class HomeComponent {
 
     const result = zxcvbn(this.password);
     this.passwordScore = result.score;
-}
+  }
+
+  public passwordsMatch(): boolean {
+    return !(this.password === this.passwordConfirm);
+  }
 
   private setFileName(filePath: string): void {
     const fileName = path.basename(filePath);

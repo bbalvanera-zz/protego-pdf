@@ -3,8 +3,6 @@
   .card-body.border.border-top-0.border-right-0.border-left-0
     .container.p-0
       .row
-        //- .col-9.pr-0.pl-2.border.rounded
-          p#fileNameDisplay.mb-0.py-1 {{fileName}}
         .col-9.pr-0
           input#fileNameDisplay.form-control.form-control-sm(
             [value]="fileNameDisplay",
@@ -38,8 +36,13 @@
                   '4' : 'strong'\
                 }[passwordScore]"
               )
-          input.form-control.form-control-sm(type="password", placeholder="Confirmar contraseña")
-          .form-control-feedback
+          input.form-control.form-control-sm(
+            type="password",
+            [(ngModel)]="passwordConfirm",
+            [ngClass]="{ 'is-invalid': passwordsMatch() }"
+            placeholder="Confirmar contraseña"
+          )
+          .invalid-feedback.pl-2 Passwords do not match
         .col-3
           button#protectButton.btn.btn-primary.btn-block.btn-sm(type="button") Proteger
   .card-footer
