@@ -1,70 +1,38 @@
-import { Component, Input, forwardRef, Output, EventEmitter } from '@angular/core';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-
-const PASSWORD_OPTIONS_CONTROL_VALUE_ACCESSOR = {
-  provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => PasswordOptionsComponent),
-  multi: true
-};
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-password-options',
   templateUrl: './password-options.component.html',
   styleUrls: ['./password-options.component.scss'],
-  providers: [PASSWORD_OPTIONS_CONTROL_VALUE_ACCESSOR]
 })
-export class PasswordOptionsComponent implements ControlValueAccessor {
-  private model = new PasswordOptions();
+export class PasswordOptionsComponent {
+  private _options: PasswordOptions;
 
-  private onChange = (value: PasswordOptions): void => {};
-  private onTouched = (): void => {};
+  @Input() public set options(value: PasswordOptions) {
+    if (value === null) {
+      return;
+    }
+
+    if (value !== this._options) {
+      if (this._options) {
+        this.optionsChange.emit(this._options);
+      }
+      this._options = value;
+    }
+  }
 
   public get options(): PasswordOptions {
-    return this.model;
+    return this._options || new PasswordOptions();
   }
 
-  public set options(value: PasswordOptions) {
-    if (value !== this.model) {
-      this.model = value;
-      this.onChange(value);
+  @Output() optionsChange = new EventEmitter<PasswordOptions>();
+
+  public optionChanged(option: string, value: boolean) {
+    if (value !== this._options[option]) {
+      this._options[option] = value;
+      this.optionsChange.emit(this._options);
     }
   }
-
-  public optionChanged(option: string, value: boolean): void {
-    if (value !== this.model[option]) {
-      this.options[option] = value;
-      this.onChange(this.model);
-    }
-  }
-
-  public writeValue(value: PasswordOptions) {
-    if (value !== this.model) {
-      this.model = value;
-    }
-  }
-
-  public registerOnChange(fn: (value: PasswordOptions) => void) {
-    this.onChange = fn;
-  }
-
-  public registerOnTouched(fn: () => void) {
-    this.onTouched = fn;
-  }
-  // private _options = new PasswordOptions();
-
-  // @Input()
-  // public set options(otherOptions: PasswordOptions) {
-  //   this._options = new PasswordOptions(otherOptions);
-  //   this._options.onChange = () => {
-  //     this.optionsChange.emit(new PasswordOptions(this._options));
-  //   }
-  // }
-
-  // public get options(): PasswordOptions {
-  //   return this._options;
-  // }
-
-  // @Output() public optionsChange = new EventEmitter<PasswordOptions>();
 }
 
 export class PasswordOptions {
@@ -73,48 +41,4 @@ export class PasswordOptions {
   public numbers = false;
   public specialChars = false;
   public passwordLength = 0;
-
-  // protected _lowerCase = false;
-  // protected _upperCase = false;
-  // protected _numbers = false;
-  // protected _specialChars = false;
-
-  // public get lowerCase(): boolean { return this._lowerCase; }
-  // public set lowerCase(value: boolean) { this._lowerCase = value; }
-
-  // public get upperCase(): boolean { return this._upperCase; }
-  // public set upperCase(value: boolean) { this._upperCase = value; }
-
-  // public get numbers(): boolean { return this._numbers; }
-  // public set numbers(value: boolean) { this._numbers = value; }
-
-  // public get specialCharacters(): boolean { return this._specialChars; }
-  // public set specialCharacters(value: boolean) { this._specialChars = value; }
-
-  // constructor(options?: PasswordOptions) {
-  //   if (options) {
-  //     this.lowerCase = options.lowerCase;
-  //     this.upperCase = options.upperCase;
-  //     this.numbers = options.numbers;
-  //     this.specialCharacters = options.specialCharacters;
-  //   }
-  // }
 }
-
-// class PasswordOptionsNotifier extends PasswordOptions {
-//   public onChange = (): void => {};
-
-//   public set lowerCase(value: boolean) {
-//     if (value !== this._lowerCase) {
-//       this._lowerCase = value;
-//       this.onChange();
-//     }
-//   }
-
-//   public set upperCase(value: boolean) {
-//     if (value !== this._upperCase) {
-//       this._upperCase = value;
-//       this.onChange();
-//     }
-//   }
-// }
