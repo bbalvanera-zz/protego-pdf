@@ -12,6 +12,8 @@ const DEFAULT_PWD_SCORE = -1;
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
+  private  selectedFile = '';
+
   public fileNameDisplay = '';
   public password = '';
   public passwordConfirm = '';
@@ -19,8 +21,6 @@ export class HomeComponent {
   public draggingOver = false;
   public invalidFile = false;
   public readyToProtect = false;
-
-  private  selectedFile = '';
 
   constructor(
     private electronService: ElectronService,
