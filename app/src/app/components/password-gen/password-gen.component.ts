@@ -10,7 +10,12 @@ import { PasswordOptions } from './password-options/password-options.component';
 export class PasswordGenComponent {
   public passwordOptions = new PasswordOptions();
 
-  public regeneratePassword(options: PasswordOptions) {
+  constructor() {
+    this.passwordOptions.lowerCase = true;
+    this.passwordOptions.upperCase = true;
+  }
+
+  public generatePassword(options: PasswordOptions) {
     console.log(`will regenerate password with: `);
     console.log(options);
   }
