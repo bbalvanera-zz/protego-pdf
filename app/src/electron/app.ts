@@ -37,8 +37,8 @@ ipcMain.on('ELECTRON_MAIN_PROC', (event: Electron.Event, args: IEventArgs) => {
 
 function createWindow() {
   win = new BrowserWindow({
-    width: 550,
-    height: 445,
+    width: 600,
+    height: 500,
     resizable: true
   });
 

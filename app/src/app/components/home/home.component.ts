@@ -1,6 +1,8 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ElectronService } from '../../services/electron.service';
 import { PdfProtectService } from '../../services/pdf-protect.service';
+import { Subscription } from 'rxjs/Subscription';
 
 const path = window.require('path');
 const zxcvbn = window.require('zxcvbn');
@@ -11,7 +13,10 @@ const DEFAULT_PWD_SCORE = -1;
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit, OnDestroy {
+  private subscription: Subscription;
+  private selectedFile = '';
+
   public fileNameDisplay = '';
   public password = '';
   public passwordConfirm = '';
@@ -20,12 +25,24 @@ export class HomeComponent {
   public invalidFile = false;
   public readyToProtect = false;
 
-  private  selectedFile = '';
-
   constructor(
     private electronService: ElectronService,
     private pdfService: PdfProtectService,
-    private changeDetector: ChangeDetectorRef) {
+    private changeDetector: ChangeDetectorRef,
+    private route: ActivatedRoute) {
+  }
+
+  public ngOnInit() {
+    this.subscription = this.route.queryParams.subscribe((params) => {
+      if (params.pwd) {
+        this.passwordConfirm = this.password = params.pwd;
+        this.updatePasswordScore();
+      }
+    });
+  }
+
+  public ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   public browse() {
