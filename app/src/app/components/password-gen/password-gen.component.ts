@@ -3,7 +3,16 @@ import { FormControl } from '@angular/forms';
 import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators/takeUntil';
 
-import { PasswordOptions } from './password-options/PasswordOptions';
+import { PasswordOptions } from '../../core/PasswordOptions';
+import { PasswordGenerator } from '../../core/PasswordGenerator';
+
+const DEFAULT_PASSWORD_OPTIONS: PasswordOptions = {
+  lowerCase: true,
+  upperCase: true,
+  numbers: true,
+  specialChars: true,
+  passwordLength: 20
+};
 
 @Component({
   selector: 'app-password-gen',
@@ -13,18 +22,22 @@ import { PasswordOptions } from './password-options/PasswordOptions';
 export class PasswordGenComponent implements OnInit {
   private unsubscribe = new Subject<void>();
 
-  public passwordOptions = new FormControl();
+  public passwordOptions = new FormControl(DEFAULT_PASSWORD_OPTIONS);
+  public password = new FormControl();
 
   public ngOnInit() {
     this.passwordOptions.valueChanges
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((passwordOptions) => {
-        this.generatePassword(passwordOptions);
+        this.generatePassword();
       });
+
+    this.generatePassword();
   }
 
-  public generatePassword(options: PasswordOptions) {
-    console.log(`will regenerate password with: `);
-    console.log(options);
+  public generatePassword() {
+    const options = this.passwordOptions.value;
+    const pwd = PasswordGenerator.generate(options);
+    this.password.setValue(pwd);
   }
 }
