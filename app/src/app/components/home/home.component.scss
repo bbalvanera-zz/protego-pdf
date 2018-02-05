@@ -1,23 +1,25 @@
 @import "../../../assets/scss/variables";
 
-#protectButton {
+.btn-tall {
   height: 66px;
 }
 
-/* bootstrap overrides */
-#fileNameDisplay {
+.bg-color-normal {
   background-color: inherit;
 }
 
-.form-control.is-invalid ~ .invalid-feedback {
-  visibility: visible;
+/* make .invalid-feedback control take up space and prevent window resize */
+.form-control, .input-group {
+  &.is-invalid ~ .invalid-feedback {
+    display: block;
+  }
 }
 
-.invalid-feedback {
-  display: block;
-  visibility: hidden;
+.input-group-item {
+  background-color: $white;
+  border-top: 1px solid $gray-400;
+  border-bottom: 1px solid $gray-400;
 }
-/* end bootstrap overrides */
 
 $drop-zone-color: $gray-300;
 $drop-zone-bgcolor: rgba($primary, 0.9);
@@ -55,9 +57,11 @@ $drop-zone-bgcolor: rgba($primary, 0.9);
 .password-strength {
   width: 5rem;
   color: $white;
+  border: none;
 
   &.default {
     color: #7b8a8b;
+    border: 1px solid $gray-400;
 
     &::after {
       content: "Strength";

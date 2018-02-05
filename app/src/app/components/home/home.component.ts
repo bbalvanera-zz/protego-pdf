@@ -1,12 +1,25 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { FormBuilder, FormGroup, AbstractControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { Subject } from 'rxjs/Subject';
+import { takeUntil } from 'rxjs/operators/takeUntil';
+import { filter } from 'rxjs/operators/filter';
+import { map } from 'rxjs/operators/map';
+import { debounceTime } from 'rxjs/operators/debounceTime';
+
 import { ElectronService } from '../../services/electron.service';
 import { PdfProtectService } from '../../services/pdf-protect.service';
-import { Subscription } from 'rxjs/Subscription';
+import { CustomValidators } from '../../core/validators/CustomValidators';
 
 const path = window.require('path');
 const zxcvbn = window.require('zxcvbn');
 const DEFAULT_PWD_SCORE = -1;
+
+function passwordMatchValidator(form: FormGroup) {
+  return !(this.password === this.passwordConfirm)
+    ? { notIdentical: true }
+    : null;
+}
 
 @Component({
   selector: 'app-home',
@@ -14,96 +27,143 @@ const DEFAULT_PWD_SCORE = -1;
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  private subscription: Subscription;
-  private selectedFile = '';
+  private unsubscriber = new Subject();
 
-  public fileNameDisplay = '';
-  public password = '';
-  public passwordConfirm = '';
+  public protectPdf: FormGroup;
+  public selectedFile: AbstractControl;
+  public password: AbstractControl;
+  public passwordConfirm: AbstractControl;
+
   public passwordScore = DEFAULT_PWD_SCORE;
-  public draggingOver = false;
-  public invalidFile = false;
-  public readyToProtect = false;
+  public readyForDataTransfer = false;
+  public viewPassword = false;
 
   constructor(
+    formBuilder: FormBuilder,
     private electronService: ElectronService,
     private pdfService: PdfProtectService,
-    private changeDetector: ChangeDetectorRef,
-    private route: ActivatedRoute) {
+    private route: ActivatedRoute,
+    private changeDetector: ChangeDetectorRef) {
+
+    this.createForm(pdfService, formBuilder);
+    this.selectedFile    = this.protectPdf.get('selectedFile');
+    this.password        = this.protectPdf.get('password');
+    this.passwordConfirm = this.protectPdf.get('passwordConfirm');
   }
 
-  public ngOnInit(): void {
-    this.subscription = this.route.queryParams.subscribe((params) => {
-      if (params.pwd) {
-        this.passwordConfirm = this.password = params.pwd;
-        this.updatePasswordScore();
-      }
-    });
+  public ngOnInit() {
+    this.selectedFile.statusChanges
+      .pipe(
+        takeUntil(this.unsubscriber),
+        filter((status) => status !== 'PENDING')
+      )
+      .subscribe((status) => {
+        this.changeDetector.detectChanges();
+      });
+
+    this.password.valueChanges
+      .pipe(
+        takeUntil(this.unsubscriber),
+        debounceTime(250)
+      )
+      .subscribe((_) => this.updatePasswordScore());
+
+    this.route.queryParams
+      .pipe(takeUntil(this.unsubscriber))
+      .subscribe(params => {
+        if (params.pwd) {
+          this.protectPdf.patchValue({ password: params.pwd, passwordConfirm: params.pwd });
+        }
+      });
   }
 
-  public ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+  public ngOnDestroy() {
+    this.unsubscriber.next();
   }
 
   public browse(): void {
     this.electronService.selectFile()
-      .subscribe((files) => {
-        if (files && files.length > 0) {
-          this.setFileName(files[0]);
-        }
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+      .pipe(
+        filter((files) => files && files.length > 0),
+        map((files) => files[0])
+      )
+      .subscribe((file) => this.setFileName(file));
   }
 
-  public showDropLocation(transferItem: DataTransferItem): void {
+  public prepareForDataTransfer(transferItem: DataTransferItem): void {
     if (transferItem.kind === 'file' && transferItem.type === 'application/pdf') {
-      this.draggingOver = true;
+      this.readyForDataTransfer = true;
     }
   }
 
-  public hideDropLocation(): void {
-    this.draggingOver = false;
-  }
-
-  public handleFileDrop(transferItem: DataTransfer): void {
+  public acceptDataTransfer(transferItem: DataTransfer): void {
     if (transferItem.files.length === 0) {
       return; // nothing to work with
     }
 
     this.setFileName(transferItem.files[0].path);
-    this.draggingOver = false;
+    this.readyForDataTransfer = false;
   }
 
-  public updatePasswordScore(): void {
-    if (!this.password || this.password.length === 0) {
-        this.passwordScore = DEFAULT_PWD_SCORE;
-        return;
+  public cancelDataTransfer(): void {
+    this.readyForDataTransfer = false;
+  }
+
+  public togglePasswordView(): void {
+    if (this.password.value) {
+      this.viewPassword = !this.viewPassword
+    }
+  }
+
+  public protectDocument(): void {
+    if (!this.valid()) {
+      return;
     }
 
-    const result = zxcvbn(this.password);
+    console.log('document protected!');
+  }
+
+  private setFileName(selectedFile: string) {
+    const fileName = path.basename(selectedFile);
+    this.protectPdf.patchValue({ fileName, selectedFile }, { emitEvent: true });
+    this.selectedFile.markAsDirty();
+  }
+
+  private updatePasswordScore() {
+    if (this.password.value === null ||
+        this.password.value === undefined ||
+        this.password.value.length === 0) {
+
+      this.passwordScore = DEFAULT_PWD_SCORE;
+      return;
+    }
+
+    const result = zxcvbn(this.password.value);
     this.passwordScore = result.score;
   }
 
-  public passwordsMatch(): boolean {
-    return !(this.password === this.passwordConfirm);
+  private valid(): boolean {
+    for(const controlName in this.protectPdf.controls) {
+      const control = this.protectPdf.get(controlName);
+      control.markAsDirty();
+    }
+
+    return this.protectPdf.valid;
   }
 
-  private setFileName(filePath: string): void {
-    const fileName = path.basename(filePath);
+  private createForm(pdfService: PdfProtectService, formBuilder: FormBuilder) {
+    const pdfDocumentValidator = CustomValidators.pdfDocument(pdfService);
+    const fieldCompareValidator = CustomValidators.fieldCompare('password', 'passwordConfirm');
 
-    this.selectedFile = filePath;
-    this.fileNameDisplay = fileName;
-
-    this.pdfService.pdfDocument(filePath)
-      .subscribe(
-        (isPdf) => {
-          this.invalidFile = !isPdf;
-          this.changeDetector.detectChanges();
-        },
-        (error) => console.log(error)
-      );
+    this.protectPdf = formBuilder.group(
+    {
+      selectedFile: ['', Validators.required, pdfDocumentValidator],
+      fileName: '',
+      password: ['', Validators.required],
+      passwordConfirm: ['', Validators.required]
+    },
+    {
+      validator: fieldCompareValidator
+    });
   }
 }
