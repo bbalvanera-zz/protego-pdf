@@ -22,7 +22,7 @@ export class PasswordOptionComponent implements OnInit, OnDestroy, ControlValueA
   public radioGroup = new FormControl();
   @Input() public label = '';
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     this.radioGroup.valueChanges
       .pipe(takeUntil(this.unsubscriber))
       .subscribe((value: boolean) => {
@@ -31,22 +31,22 @@ export class PasswordOptionComponent implements OnInit, OnDestroy, ControlValueA
       });
   }
 
-  public ngOnDestroy() {
+  public ngOnDestroy(): void {
     this.unsubscriber.next();
   }
 
-  public writeValue(value: boolean) {
+  public writeValue(value: boolean): void {
     if (value !== undefined && value !== this.innerValue) {
       this.innerValue = value;
       this.radioGroup.setValue(value, { onlySelf: true, emitEvent: false, emitModelToViewChange: true });
     }
   }
 
-  public registerOnChange(fn: (value: boolean) => void) {
+  public registerOnChange(fn: (value: boolean) => void): void {
     this.onChange = fn;
   }
 
-  public registerOnTouched(fn: () => void) {
+  public registerOnTouched(fn: () => void): void {
     this.onTouch = fn;
   }
 

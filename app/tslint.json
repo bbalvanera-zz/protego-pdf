@@ -41,6 +41,12 @@
       "ban-keywords",
       "check-format",
       "allow-leading-underscore"
+    ],
+    "typedef": [
+      true,
+      "call-signature",
+      "parameter",
+      "property-declaration"
     ]
   }
 }

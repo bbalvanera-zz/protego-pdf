@@ -9,7 +9,7 @@ const CHARS = {
 };
 
 export class PasswordGenerator {
-  public static generate(options: PasswordOptions) {
+  public static generate(options: PasswordOptions): string {
     if (options.passwordLength < 0 || options.passwordLength > 100) {
       throw new Error('ArgumentOutOfRange');
     }
@@ -26,7 +26,7 @@ export class PasswordGenerator {
     return pwd.join('');
   }
 
-  private static getChars(options: PasswordOptions) {
+  private static getChars(options: PasswordOptions): string {
     let retVal = '';
 
     retVal += options.lowerCase ? CHARS.lower : '';
