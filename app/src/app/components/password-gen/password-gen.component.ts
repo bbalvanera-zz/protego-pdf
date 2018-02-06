@@ -25,7 +25,7 @@ export class PasswordGenComponent implements OnInit {
   public passwordOptions = new FormControl(DEFAULT_PASSWORD_OPTIONS);
   public password = new FormControl();
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     this.passwordOptions.valueChanges
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((passwordOptions) => {
@@ -35,7 +35,7 @@ export class PasswordGenComponent implements OnInit {
     this.generatePassword();
   }
 
-  public generatePassword() {
+  public generatePassword(): void {
     const options = this.passwordOptions.value;
     const pwd = PasswordGenerator.generate(options);
     this.password.setValue(pwd);

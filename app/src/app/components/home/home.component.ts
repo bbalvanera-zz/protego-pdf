@@ -32,7 +32,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute) {
   }
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     this.subscription = this.route.queryParams.subscribe((params) => {
       if (params.pwd) {
         this.passwordConfirm = this.password = params.pwd;
@@ -41,11 +41,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
-  public ngOnDestroy() {
+  public ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
-  public browse() {
+  public browse(): void {
     this.electronService.selectFile()
       .subscribe((files) => {
         if (files && files.length > 0) {
