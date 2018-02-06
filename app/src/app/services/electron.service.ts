@@ -46,7 +46,7 @@ export class ElectronService {
     return this.selectFileSubject.pipe(first());
   }
 
-  private send(message: any, data?: any) {
+  private send(message: any, data?: any): void {
     const ipcMessage: IEventArgs = {
       message,
       data

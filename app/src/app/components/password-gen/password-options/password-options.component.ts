@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, forwardRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators/takeUntil';
 import { debounceTime } from 'rxjs/operators/debounceTime';
@@ -26,13 +26,13 @@ export class PasswordOptionsComponent implements OnInit, OnDestroy, ControlValue
 
   public passwordOptions: FormGroup;
 
-  public get passwordLength() { return this.passwordOptions.get('passwordLength'); }
+  public get passwordLength(): AbstractControl { return this.passwordOptions.get('passwordLength'); }
 
   constructor(formBuilder: FormBuilder) {
     this.createForm(formBuilder);
   }
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     this.passwordOptions.valueChanges
       .pipe(
         takeUntil(this.unsubscriber),
@@ -55,26 +55,26 @@ export class PasswordOptionsComponent implements OnInit, OnDestroy, ControlValue
       });
   }
 
-  public ngOnDestroy() {
+  public ngOnDestroy(): void {
     this.unsubscriber.next();
   }
 
-  public writeValue(value: PasswordOptions) {
+  public writeValue(value: PasswordOptions): void {
     if (value && !PasswordOptions.equal(value, this.innerValue)) {
       this.innerValue = value;
       this.passwordOptions.setValue(value);
     }
   }
 
-  public registerOnChange(fn: (value: PasswordOptions) => void) {
+  public registerOnChange(fn: (value: PasswordOptions) => void): void {
     this.onChange = fn;
   }
 
-  public registerOnTouched(fn: () => void) {
+  public registerOnTouched(fn: () => void): void {
     this.onTouch = fn;
   }
 
-  private createForm(builder: FormBuilder) {
+  private createForm(builder: FormBuilder): void {
     const { passwordLength, lowerCase, upperCase, numbers, specialChars } = this.innerValue;
 
     this.passwordOptions = builder.group({
