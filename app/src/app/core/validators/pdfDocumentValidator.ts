@@ -20,6 +20,6 @@ export function pdfDocumentValidator(pdfService: PdfProtectService): AsyncValida
     }
 
     return pdfService.pdfDocument(value)
-      .pipe(map((isPdf) => isPdf ? null : { notAPdfDocument : true }));
+      .pipe(map(isPdf => isPdf ? null : { notAPdfDocument : true }));
   };
 }

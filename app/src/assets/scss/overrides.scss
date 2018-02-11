@@ -1,0 +1,32 @@
+// overrides for default bootstrap style
+.was-validated .form-control:invalid:focus,
+.form-control.is-invalid:focus,
+.was-validated .custom-select:invalid:focus,
+.custom-select.is-invalid:focus {
+  box-shadow: none;
+}
+
+.form-control:focus {
+  box-shadow: none;
+  border-color: $blue
+}
+
+.btn {
+  &:focus, .focus {
+    box-shadow: none;
+  }
+}
+
+.btn-primary:focus {
+  border-color: darken($blue, 50%);
+}
+
+.btn-outline-secondary:focus {
+  border-color: darken($gray-500, 20%);
+}
+
+[class*="btn-"]:not(:disabled):not(.disabled):active:focus,
+[class*="btn-"]:not(:disabled):not(.disabled).active:focus,
+.show > [class*="btn-"].dropdown-toggle:focus {
+  box-shadow: none;
+}

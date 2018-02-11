@@ -11,6 +11,8 @@ import { PdfProtectService } from './services/pdf-protect.service';
 import { PasswordGenComponent } from './components/password-gen/password-gen.component';
 import { PasswordOptionComponent } from './components/password-gen/password-options/password-option/password-option.component';
 import { PasswordOptionsComponent } from './components/password-gen/password-options/password-options.component';
+import { PasswordFieldComponent } from './components/home/password-field/password-field.component';
+import { FocusWithinDirective } from './components/home/password-field/focus-within/focus-within.directive';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,9 @@ import { PasswordOptionsComponent } from './components/password-gen/password-opt
     HomeComponent,
     PasswordGenComponent,
     PasswordOptionComponent,
-    PasswordOptionsComponent
+    PasswordOptionsComponent,
+    PasswordFieldComponent,
+    FocusWithinDirective
   ],
   imports: [
     AppRoutingModule,

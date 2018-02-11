@@ -8,19 +8,6 @@
   background-color: inherit;
 }
 
-/* make .invalid-feedback control take up space and prevent window resize */
-.form-control, .input-group {
-  &.is-invalid ~ .invalid-feedback {
-    display: block;
-  }
-}
-
-.input-group-item {
-  background-color: $white;
-  border-top: 1px solid $gray-400;
-  border-bottom: 1px solid $gray-400;
-}
-
 $drop-zone-color: $gray-300;
 $drop-zone-bgcolor: rgba($primary, 0.9);
 
@@ -51,52 +38,5 @@ $drop-zone-bgcolor: rgba($primary, 0.9);
 
   .drop-zone-overlay {
     @extend %fill;
-  }
-}
-
-.password-strength {
-  width: 5rem;
-  color: $white;
-  border: none;
-
-  &.default {
-    color: #7b8a8b;
-    border: 1px solid $gray-400;
-
-    &::after {
-      content: "Strength";
-    }
-  }
-
-  &.weak {
-    background-color: #8b0000;
-
-    &::after {
-      content: "Weak";
-    }
-  }
-
-  &.medium {
-    background-color: #ffa500;
-
-    &::after {
-      content: "Medium";
-    }
-  }
-
-  &.good {
-    background-color: #4169e1;
-
-    &::after {
-      content: "Good";
-    }
-  }
-
-  &.strong {
-    background-color: #006400;
-
-    &::after {
-      content: "Strong";
-    }
   }
 }
