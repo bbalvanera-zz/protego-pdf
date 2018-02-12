@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -30,7 +30,6 @@ import { PasswordStrengthMeterDirective } from './components/home/password-field
     AppRoutingModule,
     BrowserModule,
     ReactiveFormsModule,
-    FormsModule,
     NgbModule.forRoot()
   ],
   providers: [

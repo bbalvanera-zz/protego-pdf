@@ -50,6 +50,7 @@ export class PasswordStrengthMeterDirective implements OnInit, OnDestroy {
   private updatePasswordScore(value: any): void {
     if (!value || value.length === 0) {
       this.setCssClass(-1);
+      return;
     }
 
     const result = zxcvbn(value);
