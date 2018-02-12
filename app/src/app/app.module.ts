@@ -13,6 +13,7 @@ import { PasswordOptionComponent } from './components/password-gen/password-opti
 import { PasswordOptionsComponent } from './components/password-gen/password-options/password-options.component';
 import { PasswordFieldComponent } from './components/home/password-field/password-field.component';
 import { FocusWithinDirective } from './components/home/password-field/focus-within/focus-within.directive';
+import { PasswordStrengthMeterDirective } from './components/home/password-field/password-strength-meter/password-strength-meter.directive';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { FocusWithinDirective } from './components/home/password-field/focus-wit
     PasswordOptionComponent,
     PasswordOptionsComponent,
     PasswordFieldComponent,
-    FocusWithinDirective
+    FocusWithinDirective,
+    PasswordStrengthMeterDirective
   ],
   imports: [
     AppRoutingModule,
