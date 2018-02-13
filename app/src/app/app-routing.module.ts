@@ -7,11 +7,11 @@ import { PasswordGenComponent } from './components/password-gen/password-gen.com
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent
+    loadChildren: 'app/components/home/home.module#HomeModule'
   },
   {
     path: 'password-gen',
-    component: PasswordGenComponent
+    loadChildren: 'app/components/password-gen/password-gen.module#PasswordGenModule'
   }
 ];
 

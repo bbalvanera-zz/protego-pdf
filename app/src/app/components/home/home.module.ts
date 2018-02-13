@@ -4,6 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { PasswordFieldModule } from './password-field/password-field.module';
 import { HomeComponent } from './home.component';
+import { HomeRoutingModule } from './home-routing.module';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,8 @@ import { HomeComponent } from './home.component';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    PasswordFieldModule
+    PasswordFieldModule,
+    HomeRoutingModule
   ],
   exports: [
     HomeComponent
