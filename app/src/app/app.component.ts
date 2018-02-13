@@ -12,9 +12,9 @@ export class AppComponent {
 
   private disableDragDrop(): any {
     if (window) {
-      window.onload = (event) => {
-        document.addEventListener('dragover', (e) => e.preventDefault());
-        document.addEventListener('drop', (e) => e.preventDefault());
+      window.onload = event => {
+        document.addEventListener('dragover', e => e.preventDefault());
+        document.addEventListener('drop', e => e.preventDefault());
       };
     }
   }

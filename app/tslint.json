@@ -47,6 +47,7 @@
       "call-signature",
       "parameter",
       "property-declaration"
-    ]
+    ],
+    "arrow-parens": [true, "ban-single-arg-parens"]
   }
 }

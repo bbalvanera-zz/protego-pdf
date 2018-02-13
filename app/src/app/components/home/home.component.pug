@@ -1,60 +1,40 @@
-.card((dragenter)="showDropLocation($event.dataTransfer.items[0])")
+.card((dragenter)="prepareForDataTransfer($event.dataTransfer.items[0])")
   h6.card-header.bg-primary.text-light Proteger documento
-  .card-body.border.border-top-0.border-right-0.border-left-0
-    .container.p-0
-      .row
-        .col-9.pr-0
-          input#fileNameDisplay.form-control.form-control-sm(
-            [value]="fileNameDisplay",
-            placeholder="Arrastre aqui un archivo o de clic en Examinar",
-            [ngClass]="{'is-invalid': invalidFile }",
-            disabled)
-          .invalid-feedback.pl-2 Invalid or corrupted PDF file
-        .col-3
-          button.btn.btn-primary.btn-sm.btn-block(type="button", (click)="browse()") Examinar
-  .card-body
-    .container.p-0
-      .row
-        .col
-          button.btn.btn-link.btn-sm.pl-1.text-primary(type="button", routerLink="/password-gen") Obtener una contraseña
-      .row
-        .col-9.pr-0
-          .input-group.input-group-sm.mb-1
-            input.form-control(
+  form([formGroup]="form")
+    .card-body.border.border-top-0.border-right-0.border-left-0
+      .container.p-0
+        .row
+          .col-9.pr-0
+            input.form-control.form-control-sm.bg-color-normal(
               type="text",
-              [(ngModel)]="password",
-              (ngModelChange)="updatePasswordScore()",
-              placeholder="Contraseña para abrir el documento")
-            .input-group-append
-              span.input-group-text.password-strength(
-                [ngClass]="{\
-                  '-1': 'default',\
-                  '0' : 'weak',\
-                  '1' : 'weak',\
-                  '2' : 'medium',\
-                  '3' : 'good',\
-                  '4' : 'strong'\
-                }[passwordScore]"
-              )
-          input.form-control.form-control-sm(
-            type="password",
-            [(ngModel)]="passwordConfirm",
-            [ngClass]="{ 'is-invalid': passwordsMatch() }"
-            placeholder="Confirmar contraseña"
-          )
-          .invalid-feedback.pl-2 Passwords do not match
-        .col-3
-          button#protectButton.btn.btn-primary.btn-block.btn-sm(type="button") Proteger
+              formControlName="fileName",
+              placeholder="Arrastre aqui un archivo o de clic en Examinar",
+              [ngClass]="{'is-invalid': selectedFile.invalid && selectedFile.dirty}",
+              readonly
+            )
+            .invalid-feedback.pl-2(*ngIf="selectedFile.errors?.notAPdfDocument") Invalid or corrupted PDF file
+            .invalid-feedback.pl-2(*ngIf="selectedFile.errors?.required") Please select a file to protect
+            input(type="hidden", formControlName="selectedFile")
+          .col-3
+            button.btn.btn-primary.btn-sm.btn-block(type="button", (click)="browse()") Examinar
+    .card-body
+      .container.p-0
+        .row
+          .col
+            button.btn.btn-link.btn-sm.pl-1.text-primary(type="button", routerLink="/password-gen") Obtener una contraseña
+        .row
+          .col-9.pr-0
+            app-password-field(formControlName="password")
+          .col-3
+            button.btn.btn-primary.btn-block.btn-sm.btn-tall(type="button", (click)="protectDocument()") Proteger
   .card-footer
     button.btn.btn-sm.btn-outline-secondary(type="button")
       i.fa.fa-cog(aria-hidden="true")
     button.btn.btn-sm.btn-outline-secondary(type="button")
       i.fa.fa-question-circle(aria-hidden="true")
-.drop-zone(*ngIf="draggingOver")
+.drop-zone(*ngIf="readyForDataTransfer")
   .drop-zone-layer
     h1
       i.fa.fa-file-pdf-o(aria-hidden="true")
     p Suelte el archivo aqui
-  .drop-zone-overlay((dragleave)="hideDropLocation()", (drop)="handleFileDrop($event.dataTransfer)")
-
-
+  .drop-zone-overlay((dragleave)="cancelDataTransfer()", (drop)="acceptDataTransfer($event.dataTransfer)")

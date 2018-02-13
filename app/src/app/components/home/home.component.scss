@@ -1,23 +1,12 @@
 @import "../../../assets/scss/variables";
 
-#protectButton {
+.btn-tall {
   height: 66px;
 }
 
-/* bootstrap overrides */
-#fileNameDisplay {
+.bg-color-normal {
   background-color: inherit;
 }
-
-.form-control.is-invalid ~ .invalid-feedback {
-  visibility: visible;
-}
-
-.invalid-feedback {
-  display: block;
-  visibility: hidden;
-}
-/* end bootstrap overrides */
 
 $drop-zone-color: $gray-300;
 $drop-zone-bgcolor: rgba($primary, 0.9);
@@ -49,50 +38,5 @@ $drop-zone-bgcolor: rgba($primary, 0.9);
 
   .drop-zone-overlay {
     @extend %fill;
-  }
-}
-
-.password-strength {
-  width: 5rem;
-  color: $white;
-
-  &.default {
-    color: #7b8a8b;
-
-    &::after {
-      content: "Strength";
-    }
-  }
-
-  &.weak {
-    background-color: #8b0000;
-
-    &::after {
-      content: "Weak";
-    }
-  }
-
-  &.medium {
-    background-color: #ffa500;
-
-    &::after {
-      content: "Medium";
-    }
-  }
-
-  &.good {
-    background-color: #4169e1;
-
-    &::after {
-      content: "Good";
-    }
-  }
-
-  &.strong {
-    background-color: #006400;
-
-    &::after {
-      content: "Strong";
-    }
   }
 }
