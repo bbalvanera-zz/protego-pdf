@@ -12,7 +12,7 @@
 }
 
 .btn {
-  &:focus, .focus {
+  &:focus, .focus, &.active.focus {
     box-shadow: none;
   }
 }
