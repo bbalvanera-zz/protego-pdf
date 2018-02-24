@@ -1,11 +1,11 @@
 import { Directive, ElementRef, Renderer2, OnInit, OnDestroy } from '@angular/core';
 import { fromEvent } from 'rxjs/observable/fromEvent';
 import { takeUntil } from 'rxjs/operators/takeUntil';
-import { filter } from 'rxjs/operators/filter';
+import { merge } from 'rxjs/observable/merge';
 import { Subject } from 'rxjs/Subject';
 
 const zxcvbn = window.require('zxcvbn');
-const cssClasses = {
+const CSS_STRENGTH_MAP = {
   '-1': 'default',
   '0' : 'weak',
   '1' : 'weak',
@@ -13,7 +13,7 @@ const cssClasses = {
   '3' : 'good',
   '4' : 'strong'
 };
-const DEFAULT_CSS_CLASS = -1;
+const DEFAULT_STRENGTH = -1;
 
 @Directive({
   selector: '[appPasswordStrengthMeter]'
@@ -26,7 +26,7 @@ export class PasswordStrengthMeterDirective implements OnInit, OnDestroy {
   private target: HTMLElement;
 
   constructor(private el: ElementRef, private renderer: Renderer2) {
-    this.currentCssClass = cssClasses[DEFAULT_CSS_CLASS];
+    this.currentCssClass = CSS_STRENGTH_MAP[DEFAULT_STRENGTH];
   }
 
   public ngOnInit(): void {
@@ -34,33 +34,37 @@ export class PasswordStrengthMeterDirective implements OnInit, OnDestroy {
     this.source = parent.querySelector('.password-input') as HTMLInputElement;
     this.target = parent.querySelector('.password-strength') as HTMLElement;
 
-    const input = fromEvent<string>(this.source, 'input');
+    const input   = fromEvent<void>(this.source, 'input');
+    const change  = fromEvent<void>(this.source, 'change');
+    const handler = merge(input, change);
 
-    input
+    handler
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe(value => this.updatePasswordScore(this.source.value));
+      .subscribe(() => this.updatePasswordStrength());
 
-    this.setCssClass(DEFAULT_CSS_CLASS);
+    this.setStrength(DEFAULT_STRENGTH);
   }
 
   public ngOnDestroy(): void {
     this.unsubscribe.next();
   }
 
-  private updatePasswordScore(value: any): void {
+  public updatePasswordStrength(): void {
+    const value = this.source.value;
+
     if (!value || value.length === 0) {
-      this.setCssClass(-1);
+      this.setStrength(DEFAULT_STRENGTH);
       return;
     }
 
     const result = zxcvbn(value);
-    this.setCssClass(result.score);
+    this.setStrength(result.score);
   }
 
-  private setCssClass(id: number): void {
+  private setStrength(strength: number): void {
     this.renderer.removeClass(this.target, this.currentCssClass);
 
-    const cssClass = cssClasses[id];
+    const cssClass = CSS_STRENGTH_MAP[strength];
     this.renderer.addClass(this.target, cssClass);
     this.currentCssClass = cssClass;
   }

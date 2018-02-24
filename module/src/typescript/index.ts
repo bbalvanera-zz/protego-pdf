@@ -3,6 +3,9 @@ import { PdfProtectionOptions } from './pdfProtectionOptions';
 import { PdfOptions } from './pdfOptions';
 import { OperationResult } from './operationResult';
 
+export { PdfProtectionOptions } from './pdfProtectionOptions';
+export { EncryptionMode, EncryptionOption, PdfPermissions } from './enums';
+
 export function isPdfDocument(filePath: string): Promise<boolean> {
   const options = {
     source: filePath

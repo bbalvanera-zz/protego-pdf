@@ -7,14 +7,16 @@
           .col-9.pr-0
             input.form-control.form-control-sm.bg-color-normal(
               type="text",
-              formControlName="fileName",
+              formControlName="displayName",
               placeholder="Arrastre aqui un archivo o de clic en Examinar",
-              [ngClass]="{'is-invalid': selectedFile.invalid && selectedFile.dirty}",
+              [ngClass]="{'is-invalid': fileName.invalid && fileName.dirty}",
               readonly
             )
-            .invalid-feedback.pl-2(*ngIf="selectedFile.errors?.notAPdfDocument") Invalid or corrupted PDF file
-            .invalid-feedback.pl-2(*ngIf="selectedFile.errors?.required") Please select a file to protect
-            input(type="hidden", formControlName="selectedFile")
+            .invalid-feedback.pl-2(*ngIf="fileName.errors?.notAPdfDocument && fileName.dirty") Invalid or corrupted PDF file. Please select another file
+            .invalid-feedback.pl-2(*ngIf="fileName.errors?.fileAccessError && fileName.dirty") File open in another program. Please select another file
+            .invalid-feedback.pl-2(*ngIf="fileName.errors?.required && fileName.dirty") Please select a file to protect
+            //- use this field to hold full file name and use it for validation since #displayName only holds filename without path
+            input(type="hidden", formControlName="fileName")
           .col-3
             button.btn.btn-primary.btn-sm.btn-block(type="button", (click)="browse()") Examinar
     .card-body
@@ -24,7 +26,30 @@
             button.btn.btn-link.btn-sm.pl-1.text-primary(type="button", routerLink="/password-gen") Obtener una contraseña
         .row
           .col-9.pr-0
-            app-password-field(formControlName="password")
+            .input-group.input-group-sm.mb-1.password-field(
+              appFocusWithin,
+              appPasswordStrengthMeter,
+              [ngClass]="{'is-invalid': password.invalid && password.dirty}"
+            )
+              input.form-control.password-input(
+                [type]="showPassword ? 'text' : 'password'",
+                placeholder="Contraseña para abrir el documento",
+                formControlName="password"
+              )
+              .input-group-append
+                .btn-group.btn-group-toggle
+                  label.btn.btn-sm
+                    input(type="checkbox", value="false", #passwordToggle, (change)="togglePasswordVisibility(passwordToggle.checked)")
+                    i.fa(aria-hidden="true", [ngClass]="{'fa-eye': !showPassword, 'fa-eye-slash': showPassword}")
+                span.input-group-text.password-strength
+            .invalid-feedback.pl-2.mb-2(*ngIf="password.errors?.required && password.dirty") Please specify a password
+            input.password-input.form-control.form-control-sm(
+              type="password",
+              placeholder="Confirmar contraseña",
+              formControlName="passwordConfirm",
+              [ngClass]="{'is-invalid': form.errors?.mismatch}"
+            )
+            .invalid-feedback.pl-2(*ngIf="form.errors?.mismatch") Passwords do not match
           .col-3
             button.btn.btn-primary.btn-block.btn-sm.btn-tall(type="button", (click)="protectDocument()") Proteger
   .card-footer

@@ -1,15 +1,17 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators/takeUntil';
 import { filter } from 'rxjs/operators/filter';
 import { map } from 'rxjs/operators/map';
+import { PdfProtectionOptions } from 'protego-pdf-helper';
 
 import { ElectronService } from '../../services/electron.service';
 import { PdfProtectService } from '../../services/pdf-protect.service';
 import { CustomValidators } from '../../core/validators/CustomValidators';
-import { PasswordFieldComponent } from './password-field/password-field.component';
+import { FileInfo } from '../../core/FileInfo';
+import { PasswordStrengthMeterDirective } from './password-strength-meter/password-strength-meter.directive';
 
 const path = window.require('path');
 
@@ -18,13 +20,15 @@ const path = window.require('path');
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild(PasswordStrengthMeterDirective)
+  private passwordStrengthMeter: PasswordStrengthMeterDirective;
   private unsubscriber = new Subject();
   private form: FormGroup;
+  private selectedFile: FileInfo;
 
-  @ViewChild(PasswordFieldComponent)
-  public passwordFieldComponent: PasswordFieldComponent;
-  public readyForDataTransfer = false; // used by view
+  public readonly readyForDataTransfer = false; // used only by the view
+  public readonly showPassword         = false; // used only by the view;
 
   constructor(
     formBuilder: FormBuilder,
@@ -35,11 +39,12 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.createForm(pdfService, formBuilder);
   }
 
-  public get selectedFile(): FormControl { return this.form.get('selectedFile') as FormControl; }
-  public get password(): FormControl { return this.form.get('password') as FormControl; }
+  private get fileName(): FormControl { return this.form.get('fileName') as FormControl; }
+  private get password(): FormControl { return this.form.get('password') as FormControl; }
+  private get passwordConfirm(): FormControl { return this.form.get('passwordConfirm') as FormControl; }
 
   public ngOnInit(): void {
-    this.selectedFile.statusChanges
+    this.fileName.statusChanges
       .pipe(
         takeUntil(this.unsubscriber),
         filter(status => status !== 'PENDING')
@@ -47,18 +52,21 @@ export class HomeComponent implements OnInit, OnDestroy {
       .subscribe(status => {
         this.changeDetector.detectChanges();
       });
-
-    this.route.queryParams
-      .pipe(takeUntil(this.unsubscriber))
-      .subscribe(params => {
-        if (params.pwd) {
-          this.password.setValue(params.pwd);
-        }
-      });
   }
 
   public ngOnDestroy(): void {
     this.unsubscriber.next();
+  }
+
+  public ngAfterViewInit(): void {
+    this.route.queryParams
+      .pipe(takeUntil(this.unsubscriber))
+      .subscribe(params => {
+        if (params.pwd) {
+          this.form.patchValue({ password: params.pwd, passwordConfirm: params.pwd });
+          this.passwordStrengthMeter.updatePasswordStrength();
+        }
+      });
   }
 
   public browse(): void {
@@ -72,7 +80,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   public prepareForDataTransfer(transferItem: DataTransferItem): void {
     if (transferItem.kind === 'file' && transferItem.type === 'application/pdf') {
-      this.readyForDataTransfer = true;
+      (this as { readyForDataTransfer: boolean }).readyForDataTransfer = true;
     }
   }
 
@@ -82,42 +90,101 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     this.setFileName(transferItem.files[0].path);
-    this.readyForDataTransfer = false;
+    (this as { readyForDataTransfer: boolean }).readyForDataTransfer = false;
   }
 
   public cancelDataTransfer(): void {
-    this.readyForDataTransfer = false;
+    (this as { readyForDataTransfer: boolean }).readyForDataTransfer = false;
   }
 
   public protectDocument(): void {
     if (!this.valid()) {
-      console.log('not protected');
       return;
     }
 
-    console.log('document protected!');
+    const newName = `${this.selectedFile.nameWithoutExtension}.locked${this.selectedFile.extension}`;
+    const source  = this.selectedFile.fullName;
+    const target  = path.join(this.selectedFile.directoryName, newName);
+    const opts: PdfProtectionOptions = {
+      userPassword: this.password.value,
+      encryptionMode: 2, // aes128
+      permissions: 3900 // all permissions. Only ask for a 'open document password' do not block anything else
+    };
+
+    this.pdfService.protect(source, target, undefined, opts)
+      .subscribe(
+        _ => {
+          this.form.reset('', { onlySelf: true, emitEvent: false });
+          this.passwordStrengthMeter.updatePasswordStrength();
+          this.electronService.showInfoBox('ProtegoPdf', 'Your file has been protected.');
+        },
+        err => {
+          let msg = '';
+
+          if (err.errorType === 'File_Access_Error') {
+            msg = 'Could not protect your file. The file is open in another program.';
+            this.fileName.setErrors({ fileAccessError: true });
+          } else if (err.errorType === 'Insufficient_Permissions') {
+            msg = 'Could not protect your file. Access denied by operating system.';
+          } else {
+            msg = `Could not protect your file. General error. ${err.errorDescription}`;
+          }
+
+          this.electronService.showErrorBox('ProtegoPdf', msg);
+        },
+        ()  => console.log('complete')
+      );
   }
 
-  private setFileName(selectedFile: string): void {
-    const fileName = path.basename(selectedFile);
-    this.form.patchValue({ fileName, selectedFile }, { emitEvent: true });
-    this.selectedFile.markAsDirty();
+  public togglePasswordVisibility(state: boolean): void {
+    (this as { showPassword: boolean }).showPassword = state;
+
+    if (this.showPassword) {
+      this.form.clearValidators();
+      this.passwordConfirm.setValue('', { onlySelf: true, emitEvent: false });
+      this.passwordConfirm.disable();
+    } else {
+      this.passwordConfirm.enable();
+      this.passwordConfirm.setValue(this.password.value, { onlySelf: true, emitEvent: false });
+      this.form.setValidators(CustomValidators.fieldCompare('password', 'passwordConfirm'));
+    }
+  }
+
+  private setFileName(fileName: string): void {
+    this.selectedFile = new FileInfo(fileName);
+    const displayName = this.selectedFile.name;
+
+    this.form.patchValue({ displayName, fileName }, { emitEvent: true });
+    this.fileName.markAsDirty(); // trigger validation
   }
 
   private valid(): boolean {
-    this.selectedFile.markAsDirty();
-    this.passwordFieldComponent.markAsDirty();
+    const controls = this.form.controls;
+
+    for (const controlName in controls) {
+      if (controls.hasOwnProperty(controlName)) {
+        const control = this.form.get(controlName);
+        control.markAsDirty();
+      }
+    }
 
     return this.form.valid;
   }
 
   private createForm(pdfService: PdfProtectService, formBuilder: FormBuilder): void {
     const pdfDocumentValidator = CustomValidators.pdfDocument(pdfService);
+    const fieldCompare         = CustomValidators.fieldCompare('password', 'passwordConfirm');
 
-    this.form = formBuilder.group({
-      selectedFile: ['', Validators.required, pdfDocumentValidator],
-      fileName: '',
-      password: ['', Validators.required],
-    });
+    this.form = formBuilder.group(
+      {
+        fileName: ['', Validators.required, pdfDocumentValidator],
+        displayName: '',
+        password: ['', Validators.required],
+        passwordConfirm: ['']
+      },
+      {
+        validator: fieldCompare
+      }
+    );
   }
 }

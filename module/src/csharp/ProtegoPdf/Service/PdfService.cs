@@ -41,14 +41,21 @@ namespace ProtegoPdf.Service
 
         public void Protect(PdfOptions args)
         {
-            var tempTarget = Path.GetTempFileName();
+            var tempTarget  = Path.GetTempFileName();
 
-            var reader = new PdfReader(args.Source, new ReaderProperties().SetPassword(args.PasswordArray));
+            var reader      = new PdfReader(args.Source, new ReaderProperties().SetPassword(args.PasswordArray));
+            var permissions = args.Permissions ?? unchecked((int)reader.GetPermissions());
+            var encryption  = args.EncryptionLevel ?? reader.GetCryptoMode();
+
+            // reader.GetCryptoMode() returns -1 when no encryption is set and this is not a valid encryption.
+            // use AES 128 encryption by default.
+            encryption = encryption != -1 ? encryption : EncryptionConstants.ENCRYPTION_AES_128;
+
             var writer = new PdfWriter(tempTarget, new WriterProperties().SetStandardEncryption(
                 args.UserPasswordArray,
                 args.OwnerPasswordArray ?? args.UserPasswordArray,
-                args.Permissions.GetValueOrDefault(),
-                args.EncryptionLevel.GetValueOrDefault())
+                permissions,
+                encryption)
             );
 
             var doc = new PdfDocument(reader, writer);
