@@ -7,7 +7,7 @@ namespace ProtegoPdf.Tests
 {
     public class PdfCommandTester
     {
-        public static PdfCommand GetTarget() => new PdfCommand();
+        public static PdfCommand GetSubject() => new PdfCommand();
 
         [TestClass]
         public class When_checking_If_PdfDocument
@@ -16,7 +16,7 @@ namespace ProtegoPdf.Tests
             [TestMethod]
             public async Task Should_return_OperationResult_Type()
             {
-                var subject = GetTarget();
+                var subject = GetSubject();
 
                 var result = await subject.IsPdfDocument(new Service.PdfOptions { Source = "file.pdf" }); // any file works
                 
@@ -29,7 +29,7 @@ namespace ProtegoPdf.Tests
             [DataRow("TestData/test.v1.6.restricted[][test].pdf")]
             public async Task Should_succeed_on_valid_file(string f)
             {
-                var subject = GetTarget();
+                var subject = GetSubject();
 
                 var result = await subject.IsPdfDocument(new PdfOptions { Source = f });
 
@@ -46,7 +46,7 @@ namespace ProtegoPdf.Tests
             [DataRow("1")]
             public async Task Should_fail_on_invalid_argument(string f)
             {
-                var subject = GetTarget();
+                var subject = GetSubject();
 
                 var result = await subject.IsPdfDocument(new PdfOptions { Source = f });
 
@@ -61,9 +61,11 @@ namespace ProtegoPdf.Tests
             [DataRow("TestData/test.v1.5.invalid.pdf")]
             public async Task Should_succeed_even_if_invalid_file(string f)
             {
-                var target = GetTarget();
+                // if the file is invalid, it should return false to IsPdfDocument
+                // but no exceptions should be thrown
+                var subject = GetSubject();
 
-                var result = await target.IsPdfDocument(new PdfOptions { Source = f });
+                var result = await subject.IsPdfDocument(new PdfOptions { Source = f });
 
                 Assert.IsTrue(result.Success);
                 Assert.IsFalse(result.Result);
@@ -77,14 +79,28 @@ namespace ProtegoPdf.Tests
                 
                 using (var blocker = File.Open(f, FileMode.Open, FileAccess.Read, FileShare.None))
                 {
-                    var target = GetTarget();
+                    var subject = GetSubject();
 
-                    var result = await target.IsPdfDocument(new PdfOptions { Source = f });
+                    var result = await subject.IsPdfDocument(new PdfOptions { Source = f });
 
                     Assert.AreEqual("File_Access_Error", result.ErrorType);
                     Assert.IsFalse(result.Success);
                     Assert.IsNull(result.Result);
                 }
+            }
+
+            [TestMethod]
+            [Description("Make this test work by denying all permissions at the OS level for this file")]
+            public async Task Should_fail_if_no_access_to_file()
+            {
+                string f = "TestData/test.v1.6.permission.denied.pdf";
+
+                var subject = GetSubject();
+
+                var result = await subject.IsPdfDocument(new PdfOptions { Source = f });
+
+                Assert.IsFalse(result.Success);
+                Assert.AreEqual("Insufficient_Permissions", result.ErrorType);
             }
         }
 
@@ -94,9 +110,9 @@ namespace ProtegoPdf.Tests
             [TestMethod]
             public async Task Should_return_OperationResult_Type()
             {
-                var target = GetTarget();
+                var subject = GetSubject();
 
-                var result = await target.IsProtected(new PdfOptions { Source = "file.pdf" });
+                var result = await subject.IsProtected(new PdfOptions { Source = "file.pdf" });
 
                 Assert.IsInstanceOfType(result, typeof(OperationResult));
             }
@@ -105,9 +121,9 @@ namespace ProtegoPdf.Tests
             [DataRow("TestData/test.v1.2.encrypted[test].pdf")]
             public async Task Should_succeed_on_valid_file(string f)
             {
-                var target = GetTarget();
+                var subject = GetSubject();
 
-                var result = await target.IsProtected(new PdfOptions { Source = f });
+                var result = await subject.IsProtected(new PdfOptions { Source = f });
 
                 Assert.IsTrue(result.Success);
                 Assert.IsTrue(result.Result);
@@ -123,9 +139,9 @@ namespace ProtegoPdf.Tests
             [DataRow("1")]
             public async Task Should_fail_on_invalid_argument(string f)
             {
-                var target = GetTarget();
+                var subject = GetSubject();
 
-                var result = await target.IsProtected(new PdfOptions { Source = f });
+                var result = await subject.IsProtected(new PdfOptions { Source = f });
 
                 Assert.AreEqual("Invalid_Argument", result.ErrorType);
                 Assert.IsFalse(result.Success);
@@ -137,9 +153,9 @@ namespace ProtegoPdf.Tests
             [DataRow("TestData/test.v1.5.invalid.pdf")]
             public async Task Should_fail_on_invalid_file(string f)
             {
-                var target = GetTarget();
+                var subject = GetSubject();
 
-                var result = await target.IsProtected(new PdfOptions { Source = f });
+                var result = await subject.IsProtected(new PdfOptions { Source = f });
 
                 Assert.IsFalse(result.Success);
                 Assert.IsNull(result.Result);
@@ -152,14 +168,28 @@ namespace ProtegoPdf.Tests
                 string f = "TestData/test.v1.4.clear.pdf";
                 using (var blocker = File.Open(f, FileMode.Open, FileAccess.Read, FileShare.None))
                 {
-                    var target = GetTarget();
+                    var subject = GetSubject();
 
-                    var result = await target.IsPdfDocument(new PdfOptions { Source = f });
+                    var result = await subject.IsProtected(new PdfOptions { Source = f });
 
                     Assert.AreEqual("File_Access_Error", result.ErrorType);
                     Assert.IsFalse(result.Success);
                     Assert.IsNull(result.Result);
                 }
+            }
+
+            [TestMethod]
+            [Description("Make this test work by denying all permissions at the OS level for this file")]
+            public async Task Should_fail_if_no_access_to_file()
+            {
+                string f = "TestData/test.v1.6.permission.denied.pdf";
+
+                var subject = GetSubject();
+
+                var result = await subject.IsProtected(new PdfOptions { Source = f });
+
+                Assert.IsFalse(result.Success);
+                Assert.AreEqual("Insufficient_Permissions", result.ErrorType);
             }
         }
 
@@ -169,6 +199,7 @@ namespace ProtegoPdf.Tests
             [DataTestMethod]
             [DataRow("TestData/test.v1.2.clear.pdf")]
             [DataRow("TestData/test.v1.3.clear.pdf")]
+            [DataRow("TestData/test.v1.3.clear2.pdf")]
             [DataRow("TestData/test.v1.4.clear.pdf")]
             [DataRow("TestData/test.v1.5.clear.pdf")]
             [DataRow("TestData/test.v1.6.clear.pdf")]
@@ -179,16 +210,17 @@ namespace ProtegoPdf.Tests
                 {
                     Source = sourceFile,
                     Target = targetFile,
-                    UserPassword = "hello!"
+                    UserPassword = "hello!",
+                    Permissions = 0xf3c // all permissions granted
                 };
-                var target = GetTarget();
+                var subject = GetSubject();
 
-                var result = await target.Protect(request);
+                var result = await subject.Protect(request);
 
                 Assert.IsTrue(result.Success);
                 Assert.IsTrue(File.Exists(targetFile));
 
-                result = await target.IsProtected(new PdfOptions { Source = targetFile });
+                result = await subject.IsProtected(new PdfOptions { Source = targetFile });
                 Assert.IsTrue(result.Success);
                 Assert.IsTrue(result.Result);
                 File.Delete(targetFile);
@@ -205,23 +237,23 @@ namespace ProtegoPdf.Tests
                 var targetFile = $"{sourceFile}.encrypted.pdf";
                 try
                 {
-                    File.Copy(sourceFile, targetFile, true); // source is a clean file, copy it and avoid overwriting orinal one
+                    File.Copy(sourceFile, targetFile, true); // source is a clean file, copy it and avoid overwriting original one
                     var request = new PdfOptions
                     {
                         Source = targetFile,
                         Target = targetFile,
                         UserPassword = "hello!"
                     };
-                    var target = GetTarget();
-                    var result = await target.IsProtected(new PdfOptions { Source = targetFile });
+                    var subject = GetSubject();
+                    var result = await subject.IsProtected(new PdfOptions { Source = targetFile });
                     Assert.IsFalse(result.Result); // make sure to start with an unprotected file.
 
-                    result = await target.Protect(request);
+                    result = await subject.Protect(request);
 
                     Assert.IsTrue(result.Success);
                     Assert.IsTrue(File.Exists(targetFile));
 
-                    result = await target.IsProtected(new PdfOptions { Source = targetFile });
+                    result = await subject.IsProtected(new PdfOptions { Source = targetFile });
                     Assert.IsTrue(result.Success);
                     Assert.IsTrue(result.Result);
                 }
@@ -244,9 +276,9 @@ namespace ProtegoPdf.Tests
                     Target = targetFile,
                     UserPassword = "hello!"
                 };
-                var target = GetTarget();
+                var subject = GetSubject();
 
-                var result = await target.Protect(request);
+                var result = await subject.Protect(request);
 
                 Assert.IsFalse(result.Success);
                 Assert.AreEqual("Insufficient_Permissions", result.ErrorType);
@@ -266,9 +298,9 @@ namespace ProtegoPdf.Tests
                     Target = targetFile,
                     UserPassword = "hello!"
                 };
-                var target = GetTarget();
+                var subject = GetSubject();
 
-                var result = await target.Protect(request);
+                var result = await subject.Protect(request);
 
                 Assert.IsFalse(result.Success);
                 Assert.AreEqual("Invalid_Argument", result.ErrorType);
@@ -287,12 +319,64 @@ namespace ProtegoPdf.Tests
                     Target = targetFile,
                     UserPassword = "hello!"
                 };
-                var target = GetTarget();
+                var subject = GetSubject();
 
-                var result = await target.Protect(request);
+                var result = await subject.Protect(request);
 
                 Assert.IsFalse(result.Success);
                 Assert.AreEqual("Invalid_Argument", result.ErrorType);
+            }
+
+            [TestMethod]
+            public async Task Should_fail_if_blocked_file()
+            {
+                var sourceFile = "TestData/test.v1.2.clear.pdf";
+                var targetFile = $"{sourceFile}.encrypted.pdf";
+                try
+                {
+                    File.Copy(sourceFile, targetFile, true); // source is a clean file, copy it and avoid overwriting original one
+                    var request = new PdfOptions
+                    {
+                        Source = targetFile,
+                        Target = targetFile,
+                        UserPassword = "hello!"
+                    };
+                    var subject = GetSubject();
+                    var result = await subject.IsProtected(new PdfOptions { Source = targetFile });
+                    Assert.IsFalse(result.Result); // make sure to start with an unprotected file.
+
+                    using (var blocker = File.Open(targetFile, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+                    {
+                        result = await subject.Protect(request);
+
+                        Assert.IsFalse(result.Success);
+                        Assert.AreEqual("File_Access_Error", result.ErrorType);
+                    }
+                }
+                finally
+                {
+                    if (File.Exists(targetFile))
+                        File.Delete(targetFile);
+                }
+            }
+
+            [TestMethod]
+            [Description("Make this test work by denying all permissions at the OS level for this file")]
+            public async Task Should_fail_if_no_access_to_file()
+            {
+                string f = "TestData/test.v1.6.permission.denied.pdf";
+                var request = new PdfOptions
+                {
+                    Source = f,
+                    Target = f,
+                    UserPassword = "hello!"
+                };
+                var subject = GetSubject();
+
+                var result = await subject.Protect(request);
+
+                Assert.IsFalse(result.Success);
+                Assert.AreEqual("Insufficient_Permissions", result.ErrorType);
             }
         }
     }

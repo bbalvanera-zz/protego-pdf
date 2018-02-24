@@ -46,6 +46,28 @@ export class ElectronService {
     return this.selectFileSubject.pipe(first());
   }
 
+  public showInfoBox(title?: string, message?: string): void {
+    const opts = {
+      type: 'info',
+      title,
+      message,
+      buttons: ['Ok']
+    };
+
+    this.send('MESSAGE_BOX', opts);
+  }
+
+  public showErrorBox(title?: string, message?: string): void {
+    const opts = {
+      type: 'error',
+      title,
+      message,
+      buttons: ['Ok']
+    };
+
+    this.send('MESSAGE_BOX', opts);
+  }
+
   private send(message: any, data?: any): void {
     const ipcMessage: IEventArgs = {
       message,

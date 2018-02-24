@@ -32,6 +32,9 @@ ipcMain.on('ELECTRON_MAIN_PROC', (event: Electron.Event, args: IEventArgs) => {
     case 'OPEN_FILE_DIALOG':
       openFileDialog(event.sender);
       break;
+    case 'MESSAGE_BOX':
+      showMessageBox(args.data);
+      break;
   }
 });
 
@@ -75,4 +78,8 @@ function openFileDialog(sender: WebContents) {
 
     sender.send('ELECTRON_RENDERER_PROC', message);
   });
+}
+
+function showMessageBox(options: any) {
+  dialog.showMessageBox(options);
 }

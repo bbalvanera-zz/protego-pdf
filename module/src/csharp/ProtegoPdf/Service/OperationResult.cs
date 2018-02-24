@@ -6,11 +6,6 @@ namespace ProtegoPdf.Service
 {
     public class OperationResult
     {
-        //public bool Success;
-        //public string ErrorType;
-        //public string ErrorDescription;
-        //public dynamic Result;
-
         public bool Success { get; set; }
 
         public string ErrorType { get; set; }

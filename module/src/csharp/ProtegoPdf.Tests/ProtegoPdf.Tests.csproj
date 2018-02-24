@@ -66,6 +66,9 @@
     <None Include="TestData\test.v1.3.clear.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\test.v1.3.clear2.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\test.v1.3.encrypted[test][test1].pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

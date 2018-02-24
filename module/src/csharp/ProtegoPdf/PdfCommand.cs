@@ -38,7 +38,7 @@ namespace ProtegoPdf
         public async Task<OperationResult> IsPdfDocument(PdfOptions options)
         {
             var fileName = options.Source;
-            
+
             if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
             {
                 return InvalidArgument();
@@ -52,6 +52,10 @@ namespace ProtegoPdf
             catch (IOException ex)
             {
                 return FileAccessError(ex.Message);
+            }
+            catch (SystemException ex) when (ex is UnauthorizedAccessException || ex is NotSupportedException)
+            {
+                return InsufficientPermissions(ex.Message);
             }
             catch (Exception ex)
             {
@@ -68,11 +72,15 @@ namespace ProtegoPdf
                 return InvalidArgument();
             }
 
-            var isPdf = await IsPdfDocument(options);
+            var opResult = await IsPdfDocument(options);
 
-            if (!(isPdf.Success && isPdf.Result))
+            if (opResult.Success && opResult.Result == false)
             {
                 return NotAPdfDocument();
+            }
+            else if (!opResult.Success && !string.IsNullOrEmpty(opResult.ErrorType))
+            {
+                return opResult;
             }
 
             try
@@ -96,13 +104,13 @@ namespace ProtegoPdf
 
         public async Task<OperationResult> Protect(PdfOptions options)
         {
-            if (!ValidProtectOptions(options))
-            {
-                return InvalidArgument();
-            }
-
             try
             {
+                if (!ValidProtectOptions(options))
+                {
+                    return InvalidArgument();
+                }
+
                 await Task.Run(() => service.Protect(options));
                 return Successful();
             }
@@ -145,10 +153,10 @@ namespace ProtegoPdf
                 return GeneralFailure(ex.Message);
             }
         }
-        
+
         private MethodInfo GetCommand(PdfCommandName command)
         {
-            var type   = GetType();
+            var type = GetType();
             var method = type.GetMethod(command.ToString());
 
             if (method == null)
