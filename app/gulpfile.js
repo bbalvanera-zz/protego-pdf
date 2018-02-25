@@ -4,7 +4,7 @@ const exec = require('child_process').exec;
 const lint = require('./gulp-tasks/lint');
 const cleanDist = require('./gulp-tasks/clean-dist');
 const buildPug = require('./gulp-tasks/build-pug');
-const spawnAngular = require('./gulp-tasks/spawn-angular');
+const buildAngular = require('./gulp-tasks/build-angular');
 const buildElectron = require('./gulp-tasks/build-electron');
 const runElectron = require('./gulp-tasks/run-electron');
 const watchPug = require('./gulp-tasks/watch-pug');
@@ -16,7 +16,7 @@ gulp.task('serve',
       cleanDist,
       buildPug,
       lint,
-      spawnAngular,
+      buildAngular,
       buildElectron,
       runElectron
     ),
@@ -26,13 +26,13 @@ gulp.task('serve',
 );
 
 gulp.task(lint);
-gulp.task('angular', spawnAngular);
+gulp.task('angular', buildAngular);
 gulp.task('pug', buildPug);
 gulp.task('electron', buildElectron);
 
 gulp.task('watch',
   gulp.parallel(
-    spawnAngular,
+    buildAngular,
     watchPug,
     watchElectron
   )
