@@ -33,11 +33,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   public readonly showPassword         = false; // used only by the view;
 
   constructor(
-    formBuilder: FormBuilder,
     private electronService: ElectronService,
     private pdfService: PdfProtectService,
     private route: ActivatedRoute,
-    private changeDetector: ChangeDetectorRef) {
+    private changeDetector: ChangeDetectorRef,
+    formBuilder: FormBuilder) {
       this.unsubscriber = new Subject<void>();
       this.createForm(pdfService, formBuilder);
   }
