@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { HomeRoutingModule } from './home-routing.module';
 import { FocusWithinDirective } from './focus-within/focus-within.directive';
@@ -16,6 +17,7 @@ import { HomeComponent } from './home.component';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    NgbModule,
     HomeRoutingModule
   ],
   exports: [

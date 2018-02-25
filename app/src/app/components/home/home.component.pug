@@ -51,7 +51,14 @@
             )
             .invalid-feedback.pl-2(*ngIf="form.errors?.mismatch") Passwords do not match
           .col-3
-            button.btn.btn-primary.btn-block.btn-sm.btn-tall(type="button", (click)="protectDocument()") Proteger
+            .btn-group.d-flex
+              button.btn.btn-primary.btn-sm.btn-block.btn-tall(type="button", (click)="protectDocument(1)") Proteger
+              .btn-group(ngbDropdown, placement="bottom-right", role="group", aria-label="Protect options dropdown")
+                button.btn.btn-primary.dropdown-toggle-split(ngbDropdownToggle)
+                .dropdown-menu(ngbDropdownMenu)
+                  button.btn-sm.dropdown-item((click)="protectDocument(0)") Overwrite Existing File
+                  button.btn-sm.dropdown-item((click)="protectDocument(1)") Save to a New File
+                  button.btn-sm.dropdown-item((click)="protectDocument(2)") Save As
   .card-footer
     button.btn.btn-sm.btn-outline-secondary(type="button")
       i.fa.fa-cog(aria-hidden="true")

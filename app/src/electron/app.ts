@@ -4,7 +4,7 @@ import * as reload from 'electron-reload';
 import * as devtron from 'devtron';
 
 import { app, BrowserWindow, ipcMain, dialog, WebContents, OpenDialogOptions} from 'electron';
-import { IEventArgs } from './IEventArgs';
+import { EventArgs } from './EventArgs';
 
 let win: Electron.BrowserWindow;
 const debugMode = /--debug/.test(process.argv[2]);
@@ -27,13 +27,16 @@ app.on('activate', () => {
   }
 });
 
-ipcMain.on('ELECTRON_MAIN_PROC', (event: Electron.Event, args: IEventArgs) => {
+ipcMain.on('ELECTRON_MAIN_PROC', (event: Electron.Event, args: EventArgs) => {
   switch (args.message) {
     case 'OPEN_FILE_DIALOG':
-      openFileDialog(event.sender);
+      openFileDialog(event.sender, args.data);
+      break;
+    case 'SAVE_FILE_DIALOG':
+      openSaveDialog(event.sender, args.data);
       break;
     case 'MESSAGE_BOX':
-      showMessageBox(args.data);
+      dialog.showMessageBox(args.data);
       break;
   }
 });
@@ -59,19 +62,9 @@ function createWindow() {
   });
 }
 
-function openFileDialog(sender: WebContents) {
-  const options: OpenDialogOptions = {
-    properties: ['openFile'],
-    filters: [
-      {
-        name: 'Pdf files',
-        extensions: ['pdf']
-      }
-    ]
-  };
-
-  dialog.showOpenDialog(options, (files: string[]) => {
-    const message: IEventArgs = {
+function openFileDialog(sender: WebContents, options: OpenDialogOptions) {
+  dialog.showOpenDialog(win, options, (files: string[]) => {
+    const message: EventArgs = {
       message: 'OPEN_FILE_DIALOG',
       data: files
     };
@@ -80,6 +73,13 @@ function openFileDialog(sender: WebContents) {
   });
 }
 
-function showMessageBox(options: any) {
-  dialog.showMessageBox(options);
+function openSaveDialog(sender: WebContents, options: OpenDialogOptions) {
+  dialog.showSaveDialog(win, options, file => {
+    const message: EventArgs = {
+      message: 'SAVE_FILE_DIALOG',
+      data: file
+    };
+
+    sender.send('ELECTRON_RENDERER_PROC', message);
+  });
 }
