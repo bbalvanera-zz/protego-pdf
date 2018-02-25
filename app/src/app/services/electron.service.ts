@@ -7,26 +7,32 @@ declare global {
 }
 /* tslint:enable:interface-name */
 
+import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
-import { Injectable } from '@angular/core';
-import { IEventArgs } from '../../electron/IEventArgs';
+import { OpenDialogOptions } from 'electron';
+
+import { EventArgs } from '../../electron/EventArgs';
 
 @Injectable()
 export class ElectronService {
   private ipcRenderer: Electron.IpcRenderer;
 
   private selectFileSubject = new Subject<string[]>();
+  private savePathSubject = new Subject<string>();
 
   constructor() {
     if (this.electron()) {
       this.ipcRenderer = window.require('electron').ipcRenderer;
 
-      this.ipcRenderer.on('ELECTRON_RENDERER_PROC', (event: Electron.Event, args: IEventArgs) => {
+      this.ipcRenderer.on('ELECTRON_RENDERER_PROC', (event: Electron.Event, args: EventArgs) => {
         switch (args.message) {
           case 'OPEN_FILE_DIALOG':
             this.selectFileSubject.next(args.data);
+            break;
+          case 'SAVE_FILE_DIALOG':
+            this.savePathSubject.next(args.data);
             break;
         }
       });
@@ -42,8 +48,38 @@ export class ElectronService {
       throw new Error('InvalidOperation: Can only call within an electron process');
     }
 
-    this.send('OPEN_FILE_DIALOG');
+    const opts: OpenDialogOptions = {
+      title: 'Open Pdf document',
+      properties: ['openFile'],
+      filters: [
+        {
+          name: 'Pdf files',
+          extensions: ['pdf']
+        }
+      ]
+    };
+
+    this.send('OPEN_FILE_DIALOG', opts);
     return this.selectFileSubject.pipe(first());
+  }
+
+  public getSavePath(): Observable<string> {
+    if (!this.electron()) {
+      throw new Error('InvalidOperation: Can only call within an electron process');
+    }
+
+    const opts: OpenDialogOptions = {
+      title: 'Save protected Pdf file',
+      filters: [
+        {
+          name: 'Pdf files',
+          extensions: ['pdf']
+        }
+      ]
+    };
+
+    this.send('SAVE_FILE_DIALOG', opts);
+    return this.savePathSubject.pipe(first());
   }
 
   public showInfoBox(title?: string, message?: string): void {
@@ -69,7 +105,7 @@ export class ElectronService {
   }
 
   private send(message: any, data?: any): void {
-    const ipcMessage: IEventArgs = {
+    const ipcMessage: EventArgs = {
       message,
       data
     };

@@ -30,3 +30,15 @@
 .show > [class*="btn-"].dropdown-toggle:focus {
   box-shadow: none;
 }
+
+.dropdown-menu {
+  padding: 0.2rem 0;
+  min-width: 7rem;
+}
+
+.dropdown-item {
+  &:hover, &:focus {
+    color: $white;
+    background-color: $primary;
+  }
+}

@@ -10,10 +10,11 @@ import { PdfProtectionOptions } from 'protego-pdf-helper';
 import { ElectronService } from '../../services/electron.service';
 import { PdfProtectService } from '../../services/pdf-protect.service';
 import { CustomValidators } from '../../core/validators/CustomValidators';
-import { FileInfo } from '../../core/FileInfo';
+import { PdfProtectMode } from '../../core/PdfProtectMode';
+import { PdfProtector } from '../../core/PdfProtector';
 import { PasswordStrengthMeterDirective } from './password-strength-meter/password-strength-meter.directive';
 
-const path = window.require('path');
+const fieldCompareValidator = CustomValidators.fieldCompare('password', 'passwordConfirm');
 
 @Component({
   selector: 'app-home',
@@ -21,11 +22,12 @@ const path = window.require('path');
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
+
   @ViewChild(PasswordStrengthMeterDirective)
   private passwordStrengthMeter: PasswordStrengthMeterDirective;
   private unsubscriber = new Subject();
   private form: FormGroup;
-  private selectedFile: FileInfo;
+  private selectedFile: PdfProtector;
 
   public readonly readyForDataTransfer = false; // used only by the view
   public readonly showPassword         = false; // used only by the view;
@@ -64,6 +66,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe(params => {
         if (params.pwd) {
           this.form.patchValue({ password: params.pwd, passwordConfirm: params.pwd });
+          // ask the directive to update itself after setting a new password
           this.passwordStrengthMeter.updatePasswordStrength();
         }
       });
@@ -97,21 +100,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     (this as { readyForDataTransfer: boolean }).readyForDataTransfer = false;
   }
 
-  public protectDocument(): void {
+  public protectDocument(mode: PdfProtectMode): void {
     if (!this.valid()) {
       return;
     }
 
-    const newName = `${this.selectedFile.nameWithoutExtension}.locked${this.selectedFile.extension}`;
-    const source  = this.selectedFile.fullName;
-    const target  = path.join(this.selectedFile.directoryName, newName);
-    const opts: PdfProtectionOptions = {
-      userPassword: this.password.value,
-      encryptionMode: 2, // aes128
-      permissions: 3900 // all permissions. Only ask for a 'open document password' do not block anything else
-    };
-
-    this.pdfService.protect(source, target, undefined, opts)
+    this.selectedFile.protect(this.password.value, mode)
       .subscribe(
         _ => {
           this.form.reset('', { onlySelf: true, emitEvent: false });
@@ -131,8 +125,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           }
 
           this.electronService.showErrorBox('ProtegoPdf', msg);
-        },
-        ()  => console.log('complete')
+        }
       );
   }
 
@@ -146,12 +139,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     } else {
       this.passwordConfirm.enable();
       this.passwordConfirm.setValue(this.password.value, { onlySelf: true, emitEvent: false });
-      this.form.setValidators(CustomValidators.fieldCompare('password', 'passwordConfirm'));
+      this.form.setValidators(fieldCompareValidator);
     }
   }
 
   private setFileName(fileName: string): void {
-    this.selectedFile = new FileInfo(fileName);
+    this.selectedFile = new PdfProtector(fileName);
     const displayName = this.selectedFile.name;
 
     this.form.patchValue({ displayName, fileName }, { emitEvent: true });
@@ -173,7 +166,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private createForm(pdfService: PdfProtectService, formBuilder: FormBuilder): void {
     const pdfDocumentValidator = CustomValidators.pdfDocument(pdfService);
-    const fieldCompare         = CustomValidators.fieldCompare('password', 'passwordConfirm');
 
     this.form = formBuilder.group(
       {
@@ -183,7 +175,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         passwordConfirm: ['']
       },
       {
-        validator: fieldCompare
+        validator: fieldCompareValidator
       }
     );
   }

@@ -1,4 +1,4 @@
-export interface IEventArgs {
+export interface EventArgs {
   message: string;
   data: any;
 }
