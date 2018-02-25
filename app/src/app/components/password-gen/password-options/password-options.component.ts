@@ -78,7 +78,14 @@ export class PasswordOptionsComponent implements OnInit, OnDestroy, ControlValue
     const { passwordLength, lowerCase, upperCase, numbers, specialChars } = this.innerValue;
 
     this.passwordOptions = builder.group({
-      passwordLength: [passwordLength, Validators.compose([Validators.required, Validators.min(0), Validators.max(100)])],
+      passwordLength: [
+        passwordLength,
+        Validators.compose([
+          Validators.required,
+          Validators.min(0),
+          Validators.max(100)]
+        )
+      ],
       lowerCase,
       upperCase,
       numbers,

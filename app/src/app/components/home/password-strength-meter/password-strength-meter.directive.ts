@@ -21,9 +21,10 @@ const DEFAULT_STRENGTH = -1;
 export class PasswordStrengthMeterDirective implements OnInit, OnDestroy {
   private unsubscribe = new Subject<void>();
   private currentCssClass = '';
-
   private source: HTMLInputElement;
   private target: HTMLElement;
+
+  public readonly passwordStrength: number;
 
   constructor(private el: ElementRef, private renderer: Renderer2) {
     this.currentCssClass = CSS_STRENGTH_MAP[DEFAULT_STRENGTH];
@@ -51,21 +52,25 @@ export class PasswordStrengthMeterDirective implements OnInit, OnDestroy {
 
   public updatePasswordStrength(): void {
     const value = this.source.value;
+    let strength = DEFAULT_STRENGTH;
 
-    if (!value || value.length === 0) {
-      this.setStrength(DEFAULT_STRENGTH);
-      return;
+    if (value && value.length > 0) {
+      strength = zxcvbn(value).score;
     }
 
-    const result = zxcvbn(value);
-    this.setStrength(result.score);
+    this.setStrength(strength);
   }
 
   private setStrength(strength: number): void {
-    this.renderer.removeClass(this.target, this.currentCssClass);
+    if (strength === this.passwordStrength) {
+      return;
+    }
 
+    this.renderer.removeClass(this.target, this.currentCssClass);
     const cssClass = CSS_STRENGTH_MAP[strength];
+
     this.renderer.addClass(this.target, cssClass);
     this.currentCssClass = cssClass;
+    (this as { passwordStrength: number }).passwordStrength = strength;
   }
 }

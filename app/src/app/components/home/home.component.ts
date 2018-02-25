@@ -25,7 +25,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild(PasswordStrengthMeterDirective)
   private passwordStrengthMeter: PasswordStrengthMeterDirective;
-  private unsubscriber = new Subject();
+  private unsubscriber: Subject<void>;
   private form: FormGroup;
   private selectedFile: PdfProtector;
 
@@ -38,12 +38,14 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     private pdfService: PdfProtectService,
     private route: ActivatedRoute,
     private changeDetector: ChangeDetectorRef) {
+      this.unsubscriber = new Subject<void>();
       this.createForm(pdfService, formBuilder);
   }
 
   private get fileName(): FormControl { return this.form.get('fileName') as FormControl; }
   private get password(): FormControl { return this.form.get('password') as FormControl; }
   private get passwordConfirm(): FormControl { return this.form.get('passwordConfirm') as FormControl; }
+  private get passwordStrength(): number { return this.passwordStrengthMeter.passwordStrength; }
 
   public ngOnInit(): void {
     this.fileName.statusChanges
@@ -66,7 +68,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe(params => {
         if (params.pwd) {
           this.form.patchValue({ password: params.pwd, passwordConfirm: params.pwd });
-          // ask the directive to update itself after setting a new password
+          // setting the value of `password` through `patchValue`
+          // doesn't trigger the `change` or `input` event on the field
+          // so ask the directive to update itself after setting a new password
           this.passwordStrengthMeter.updatePasswordStrength();
         }
       });
@@ -89,7 +93,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public acceptDataTransfer(transferItem: DataTransfer): void {
     if (transferItem.files.length === 0) {
-      return; // nothing to work with
+      return;
     }
 
     this.setFileName(transferItem.files[0].path);
@@ -119,7 +123,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
             msg = 'Could not protect your file. The file is open in another program.';
             this.fileName.setErrors({ fileAccessError: true });
           } else if (err.errorType === 'Insufficient_Permissions') {
-            msg = 'Could not protect your file. Access denied by operating system.';
+            msg = 'Could not protect your file. Access is denied.';
           } else {
             msg = `Could not protect your file. General error. ${err.errorDescription}`;
           }
@@ -132,13 +136,18 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   public togglePasswordVisibility(state: boolean): void {
     (this as { showPassword: boolean }).showPassword = state;
 
+    const opts = {
+      onlySelf: true,
+      emitEvent: false
+    };
+
     if (this.showPassword) {
       this.form.clearValidators();
-      this.passwordConfirm.setValue('', { onlySelf: true, emitEvent: false });
+      this.passwordConfirm.setValue('', opts);
       this.passwordConfirm.disable();
     } else {
       this.passwordConfirm.enable();
-      this.passwordConfirm.setValue(this.password.value, { onlySelf: true, emitEvent: false });
+      this.passwordConfirm.setValue(this.password.value, opts);
       this.form.setValidators(fieldCompareValidator);
     }
   }
