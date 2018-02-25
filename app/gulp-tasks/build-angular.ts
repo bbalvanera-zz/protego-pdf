@@ -1,7 +1,7 @@
 import { TaskFunction } from 'gulp';
 import { fork } from 'child_process';
+import { setTimeout } from 'timers';
 import * as fs from 'fs';
-
 // this task depends on the ./dist folder being deleted before running this class.
 
 function buildAngular(done: TaskFunction): void {
