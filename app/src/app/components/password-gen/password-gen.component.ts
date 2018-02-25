@@ -28,7 +28,7 @@ export class PasswordGenComponent implements OnInit {
   public ngOnInit(): void {
     this.passwordOptions.valueChanges
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe(passwordOptions => {
+      .subscribe(_ => {
         this.generatePassword();
       });
 
@@ -37,7 +37,7 @@ export class PasswordGenComponent implements OnInit {
 
   public generatePassword(): void {
     const options = this.passwordOptions.value;
-    const pwd = PasswordGenerator.generate(options);
+    const pwd     = PasswordGenerator.generate(options);
     this.password.setValue(pwd);
   }
 }

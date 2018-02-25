@@ -21,16 +21,16 @@ const PASSWORD_OPTIONS_VALUE_ACCESSOR = {
   providers: [PASSWORD_OPTIONS_VALUE_ACCESSOR]
 })
 export class PasswordOptionsComponent implements OnInit, OnDestroy, ControlValueAccessor {
-  private innerValue = new PasswordOptions();
+  private innerValue   = new PasswordOptions();
   private unsubscriber = new Subject<void>();
 
   public passwordOptions: FormGroup;
 
-  public get passwordLength(): AbstractControl { return this.passwordOptions.get('passwordLength'); }
-
   constructor(formBuilder: FormBuilder) {
     this.createForm(formBuilder);
   }
+
+  public get passwordLength(): AbstractControl { return this.passwordOptions.get('passwordLength'); }
 
   public ngOnInit(): void {
     this.passwordOptions.valueChanges
@@ -78,7 +78,14 @@ export class PasswordOptionsComponent implements OnInit, OnDestroy, ControlValue
     const { passwordLength, lowerCase, upperCase, numbers, specialChars } = this.innerValue;
 
     this.passwordOptions = builder.group({
-      passwordLength: [passwordLength, Validators.compose([Validators.required, Validators.min(0), Validators.max(100)])],
+      passwordLength: [
+        passwordLength,
+        Validators.compose([
+          Validators.required,
+          Validators.min(0),
+          Validators.max(100)]
+        )
+      ],
       lowerCase,
       upperCase,
       numbers,

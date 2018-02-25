@@ -19,26 +19,29 @@ const DEFAULT_STRENGTH = -1;
   selector: '[appPasswordStrengthMeter]'
 })
 export class PasswordStrengthMeterDirective implements OnInit, OnDestroy {
-  private unsubscribe = new Subject<void>();
-  private currentCssClass = '';
-
+  private unsubscribe: Subject<void>;
+  private currentCssClass: string;
   private source: HTMLInputElement;
   private target: HTMLElement;
 
+  public readonly passwordStrength: number;
+
   constructor(private el: ElementRef, private renderer: Renderer2) {
+    this.unsubscribe     = new Subject<void>();
     this.currentCssClass = CSS_STRENGTH_MAP[DEFAULT_STRENGTH];
   }
 
   public ngOnInit(): void {
-    const parent = this.el.nativeElement as HTMLElement;
-    this.source = parent.querySelector('.password-input') as HTMLInputElement;
-    this.target = parent.querySelector('.password-strength') as HTMLElement;
+    const parent  = this.el.nativeElement as HTMLElement;
+    this.source   = parent.querySelector('.password-input') as HTMLInputElement;
+    this.target   = parent.querySelector('.password-strength') as HTMLElement;
 
     const input   = fromEvent<void>(this.source, 'input');
     const change  = fromEvent<void>(this.source, 'change');
-    const handler = merge(input, change);
 
-    handler
+    const onInputChange = merge(input, change);
+
+    onInputChange
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(() => this.updatePasswordStrength());
 
@@ -51,21 +54,25 @@ export class PasswordStrengthMeterDirective implements OnInit, OnDestroy {
 
   public updatePasswordStrength(): void {
     const value = this.source.value;
+    let strength = DEFAULT_STRENGTH;
 
-    if (!value || value.length === 0) {
-      this.setStrength(DEFAULT_STRENGTH);
-      return;
+    if (value && value.length > 0) {
+      strength = zxcvbn(value).score;
     }
 
-    const result = zxcvbn(value);
-    this.setStrength(result.score);
+    this.setStrength(strength);
   }
 
   private setStrength(strength: number): void {
-    this.renderer.removeClass(this.target, this.currentCssClass);
+    if (strength === this.passwordStrength) {
+      return;
+    }
 
+    this.renderer.removeClass(this.target, this.currentCssClass);
     const cssClass = CSS_STRENGTH_MAP[strength];
+
     this.renderer.addClass(this.target, cssClass);
     this.currentCssClass = cssClass;
+    (this as { passwordStrength: number }).passwordStrength = strength;
   }
 }

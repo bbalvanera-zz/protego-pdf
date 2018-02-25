@@ -41,7 +41,14 @@
                   label.btn.btn-sm
                     input(type="checkbox", value="false", #passwordToggle, (change)="togglePasswordVisibility(passwordToggle.checked)")
                     i.fa(aria-hidden="true", [ngClass]="{'fa-eye': !showPassword, 'fa-eye-slash': showPassword}")
-                span.input-group-text.password-strength
+                div.input-group-text.password-strength(style="justify-content:center")
+                  ng-container([ngSwitch]="passwordStrength")
+                    ng-container(*ngSwitchCase="-1") Strength
+                    ng-container(*ngSwitchCase="2") Medium
+                    ng-container(*ngSwitchCase="3") Good
+                    ng-container(*ngSwitchCase="4") Strong
+                    //- covers case 0 and 1 which a weak
+                    ng-container(*ngSwitchDefault) Weak
             .invalid-feedback.pl-2.mb-2(*ngIf="password.errors?.required && password.dirty") Please specify a password
             input.password-input.form-control.form-control-sm(
               type="password",
