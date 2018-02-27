@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
+import { _throw as ofError } from 'rxjs/observable/throw';
 import { mergeMap } from 'rxjs/operators/mergeMap';
 
 import { PdfProtectMode } from './PdfProtectMode';
@@ -38,6 +39,10 @@ export class PdfProtector {
   public protect(password: string, mode: PdfProtectMode): Observable<boolean> {
     return this.getTargetFileName(mode)
       .pipe(mergeMap(target => {
+        if (!target || target === '') { // if user cancel's save-file dialog, an empty file path is returned
+          return ofError({ errorType: 'Canceled_By_User' });
+        }
+
         const source = this.fileName;
         const opts: PdfProtectionOptions = {
           userPassword: password,
