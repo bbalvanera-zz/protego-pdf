@@ -117,6 +117,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           this.electronService.showInfoBox('ProtegoPdf', 'Your file has been protected.');
         },
         err => {
+          if (err.errorType === 'Canceled_By_User') {
+            return;
+          }
+
           let msg = '';
 
           if (err.errorType === 'File_Access_Error') {
