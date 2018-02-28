@@ -1,4 +1,8 @@
 // overrides for default bootstrap style
+body {
+  font-size: 0.875rem;
+}
+
 .was-validated .form-control:invalid:focus,
 .form-control.is-invalid:focus,
 .was-validated .custom-select:invalid:focus,
@@ -40,5 +44,13 @@
   &:hover, &:focus {
     color: $white;
     background-color: $primary;
+  }
+}
+
+// overrides ngx-toastr style
+.toast-container {
+  .toast {
+    min-width: 300px;
+    width: initial;
   }
 }

@@ -35,9 +35,6 @@ ipcMain.on('ELECTRON_MAIN_PROC', (event: Electron.Event, args: EventArgs) => {
     case 'SAVE_FILE_DIALOG':
       openSaveDialog(event.sender, args.data);
       break;
-    case 'MESSAGE_BOX':
-      dialog.showMessageBox(args.data);
-      break;
   }
 });
 
