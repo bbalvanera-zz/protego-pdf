@@ -77,3 +77,8 @@
       i.fa.fa-file-pdf-o(aria-hidden="true")
     p Suelte el archivo aqui
   .drop-zone-overlay((dragleave)="cancelDataTransfer()", (drop)="acceptDataTransfer($event.dataTransfer)")
+app-ui-messages
+  app-ui-message(id="Success_Message", title="File protected")
+  app-ui-message(id="File_Access_Error", title="Could not protect your file", message="The file is open in another program")
+  app-ui-message(id="Insufficient_Permissions", title="Could not protect your file", message="Access to the file is denied")
+  app-ui-message(id="General_Error", title="Could not protect your file", message="An unexpected error has ocurred")

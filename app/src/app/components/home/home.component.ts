@@ -1,18 +1,27 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  AfterViewInit,
+  ChangeDetectorRef,
+  ViewChild,
+  QueryList } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators/takeUntil';
 import { filter } from 'rxjs/operators/filter';
 import { map } from 'rxjs/operators/map';
+import { ToastrService } from 'ngx-toastr';
 import { PdfProtectionOptions } from 'protego-pdf-helper';
 
+import { PasswordStrengthMeterDirective } from './password-strength-meter/password-strength-meter.directive';
 import { ElectronService } from '../../services/electron.service';
 import { PdfProtectService } from '../../services/pdf-protect.service';
 import { CustomValidators } from '../../core/validators/CustomValidators';
 import { PdfProtectMode } from '../../core/PdfProtectMode';
 import { PdfProtector } from '../../core/PdfProtector';
-import { PasswordStrengthMeterDirective } from './password-strength-meter/password-strength-meter.directive';
+import { UIMessagesDirective } from '../../shared/ui-messages/ui-messages.directive';
 
 const fieldCompareValidator = CustomValidators.fieldCompare('password', 'passwordConfirm');
 
@@ -25,6 +34,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild(PasswordStrengthMeterDirective)
   private passwordStrengthMeter: PasswordStrengthMeterDirective;
+  @ViewChild(UIMessagesDirective)
+  private uiMessages: UIMessagesDirective;
   private unsubscriber: Subject<void>;
   private form: FormGroup;
   private selectedFile: PdfProtector;
@@ -37,6 +48,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     private pdfService: PdfProtectService,
     private route: ActivatedRoute,
     private changeDetector: ChangeDetectorRef,
+    private toastrService: ToastrService,
     formBuilder: FormBuilder) {
       this.unsubscriber = new Subject<void>();
       this.createForm(pdfService, formBuilder);
@@ -114,25 +126,28 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         _ => {
           this.form.reset('', { onlySelf: true, emitEvent: false });
           this.passwordStrengthMeter.updatePasswordStrength();
-          this.electronService.showInfoBox('ProtegoPdf', 'Your file has been protected.');
+
+          const { title, message } = this.uiMessages.get('Success_Message');
+          this.toastrService.success(message, title);
         },
         err => {
           if (err.errorType === 'Canceled_By_User') {
             return;
           }
 
-          let msg = '';
-
-          if (err.errorType === 'File_Access_Error') {
-            msg = 'Could not protect your file. The file is open in another program.';
-            this.fileName.setErrors({ fileAccessError: true });
-          } else if (err.errorType === 'Insufficient_Permissions') {
-            msg = 'Could not protect your file. Access is denied.';
-          } else {
-            msg = `Could not protect your file. General error. ${err.errorDescription}`;
+          let uiMessage: { title?: string, message?: string };
+          switch (err.errorType) {
+            case 'File_Access_Error':
+              this.fileName.setErrors({ fileAccessError: true });
+            case 'Insufficient_Permissions':
+              uiMessage = this.uiMessages.get(err.errorType);
+              break;
+            default:
+              uiMessage = this.uiMessages.get('General_Error');
+              break;
           }
 
-          this.electronService.showErrorBox('ProtegoPdf', msg);
+          this.toastrService.error(uiMessage.message, uiMessage.title);
         }
       );
   }

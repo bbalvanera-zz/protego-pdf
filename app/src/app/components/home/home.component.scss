@@ -23,6 +23,7 @@ $drop-zone-bgcolor: rgba($primary, 0.9);
   @extend %fill;
   background-color: $drop-zone-bgcolor;
   padding: 0.7rem;
+  z-index: 9999;
 
   .drop-zone-layer {
     @extend %fill;
