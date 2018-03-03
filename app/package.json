@@ -21,8 +21,9 @@
     "bootstrap": "^4.0.0",
     "core-js": "~2.5.3",
     "electron": "^1.7.11",
-    "ngx-toastr": "^8.2.1",
+    "ngx-toastr": "^8.3.0",
     "rxjs": "~5.5.6",
+    "underscore": "^1.8.3",
     "zone.js": "~0.8.20",
     "zxcvbn": "^4.4.2"
   },
@@ -33,6 +34,7 @@
     "@types/jasmine": "~2.5.54",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~6.0.96",
+    "@types/underscore": "^1.8.7",
     "codelyzer": "~4.0.2",
     "del": "^3.0.0",
     "devtron": "^1.4.0",

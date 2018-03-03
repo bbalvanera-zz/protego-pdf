@@ -45,7 +45,7 @@ export class PasswordStrengthMeterDirective implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(() => this.updatePasswordStrength());
 
-    this.setStrength(DEFAULT_STRENGTH);
+    this.updatePasswordStrength();
   }
 
   public ngOnDestroy(): void {

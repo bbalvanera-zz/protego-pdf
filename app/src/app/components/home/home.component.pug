@@ -1,6 +1,6 @@
 .card((dragenter)="prepareForDataTransfer($event.dataTransfer.items[0])")
   h6.card-header.bg-primary.text-light Proteger documento
-  form([formGroup]="form")
+  form([formGroup]="model")
     .card-body.border.border-top-0.border-right-0.border-left-0
       .container.p-0
         .row
@@ -9,12 +9,12 @@
               type="text",
               formControlName="displayName",
               placeholder="Arrastre aqui un archivo o de clic en Examinar",
-              [ngClass]="{'is-invalid': fileName.invalid && fileName.dirty}",
+              [ngClass]="{'is-invalid': model.fileName.invalid && model.fileName.dirty}",
               readonly
             )
-            .invalid-feedback.pl-2(*ngIf="fileName.errors?.notAPdfDocument && fileName.dirty") Invalid or corrupted PDF file. Please select another file
-            .invalid-feedback.pl-2(*ngIf="fileName.errors?.fileAccessError && fileName.dirty") File open in another program. Please select another file
-            .invalid-feedback.pl-2(*ngIf="fileName.errors?.required && fileName.dirty") Please select a file to protect
+            .invalid-feedback.pl-2(*ngIf="model.fileName.errors?.notAPdfDocument && model.fileName.dirty") Invalid or corrupted PDF file. Please select another file
+            .invalid-feedback.pl-2(*ngIf="model.fileName.errors?.fileAccessError && model.fileName.dirty") File open in another program. Please select another file
+            .invalid-feedback.pl-2(*ngIf="model.fileName.errors?.required && model.fileName.dirty") Please select a file to protect
             //- use this field to hold full file name and use it for validation since #displayName only holds filename without path
             input(type="hidden", formControlName="fileName")
           .col-3
@@ -29,34 +29,34 @@
             .input-group.input-group-sm.mb-1.password-field(
               appFocusWithin,
               appPasswordStrengthMeter,
-              [ngClass]="{'is-invalid': password.invalid && password.dirty}"
+              [ngClass]="{'is-invalid': model.password.invalid && model.password.dirty}"
             )
               input.form-control.password-input(
-                [type]="showPassword ? 'text' : 'password'",
+                [type]="model.passwordVisible ? 'text' : 'password'",
                 placeholder="Contraseña para abrir el documento",
                 formControlName="password"
               )
               .input-group-append
                 .btn-group.btn-group-toggle
                   label.btn.btn-sm
-                    input(type="checkbox", value="false", #passwordToggle, (change)="togglePasswordVisibility(passwordToggle.checked)")
-                    i.fa(aria-hidden="true", [ngClass]="{'fa-eye': !showPassword, 'fa-eye-slash': showPassword}")
+                    input(type="checkbox", formControlName="passwordVisible", #passwordVisible, (change)="togglePasswordVisibility(passwordVisible.checked)")
+                    i.fa(aria-hidden="true", [ngClass]="{'fa-eye': !model.passwordVisible, 'fa-eye-slash': model.passwordVisible}")
                 div.input-group-text.password-strength(style="justify-content:center")
-                  ng-container([ngSwitch]="passwordStrength")
+                  ng-container([ngSwitch]="model.passwordStrength")
                     ng-container(*ngSwitchCase="-1") Strength
                     ng-container(*ngSwitchCase="2") Medium
                     ng-container(*ngSwitchCase="3") Good
                     ng-container(*ngSwitchCase="4") Strong
                     //- covers case 0 and 1 which a weak
                     ng-container(*ngSwitchDefault) Weak
-            .invalid-feedback.pl-2.mb-2(*ngIf="password.errors?.required && password.dirty") Please specify a password
+            .invalid-feedback.pl-2.mb-2(*ngIf="model.password.errors?.required && model.password.dirty") Please specify a password
             input.password-input.form-control.form-control-sm(
               type="password",
               placeholder="Confirmar contraseña",
               formControlName="passwordConfirm",
-              [ngClass]="{'is-invalid': form.errors?.mismatch}"
+              [ngClass]="{'is-invalid': model.errors?.mismatch}"
             )
-            .invalid-feedback.pl-2(*ngIf="form.errors?.mismatch") Passwords do not match
+            .invalid-feedback.pl-2(*ngIf="model.errors?.mismatch") Passwords do not match
           .col-3
             .btn-group.d-flex
               button.btn.btn-primary.btn-sm.btn-block.btn-tall(type="button", (click)="protectDocument(1)") Proteger
