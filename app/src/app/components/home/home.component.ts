@@ -1,34 +1,25 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  AfterViewInit,
-  ChangeDetectorRef,
-  ViewChild,
-  QueryList } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { Router, ActivatedRoute, NavigationStart } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators/takeUntil';
 import { filter } from 'rxjs/operators/filter';
-import { map } from 'rxjs/operators/map';
-import { ToastrService } from 'ngx-toastr';
-import { PdfProtectionOptions } from 'protego-pdf-helper';
 
-import { PasswordStrengthMeterDirective } from './password-strength-meter/password-strength-meter.directive';
-import { ElectronService } from '../../services/electron.service';
-import { PdfProtectService } from '../../services/pdf-protect.service';
 import { CustomValidators } from '../../core/validators/CustomValidators';
 import { PdfProtectMode } from '../../core/PdfProtectMode';
-import { PdfProtector } from '../../core/PdfProtector';
+import { FileInfo } from '../../core/FileInfo';
+import { PasswordStrengthMeterDirective } from './password-strength-meter/password-strength-meter.directive';
 import { UIMessagesDirective } from '../../shared/ui-messages/ui-messages.directive';
+import { HomeModel } from './home.model';
+import { HomeFacade } from './home.facade';
 
 const fieldCompareValidator = CustomValidators.fieldCompare('password', 'passwordConfirm');
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
+  providers: [{ provide: HomeFacade, useClass: HomeFacade }]
 })
 export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -37,36 +28,46 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(UIMessagesDirective)
   private uiMessages: UIMessagesDirective;
   private unsubscriber: Subject<void>;
-  private form: FormGroup;
-  private selectedFile: PdfProtector;
 
   public readonly readyForDataTransfer = false; // used only by the view
-  public readonly showPassword         = false; // used only by the view;
+  public readonly model: HomeModel;
 
   constructor(
-    private electronService: ElectronService,
-    private pdfService: PdfProtectService,
-    private route: ActivatedRoute,
-    private changeDetector: ChangeDetectorRef,
-    private toastrService: ToastrService,
-    formBuilder: FormBuilder) {
+    private formBuilder: FormBuilder,
+    private facade: HomeFacade,
+    private router: Router,
+    private route: ActivatedRoute) {
       this.unsubscriber = new Subject<void>();
-      this.createForm(pdfService, formBuilder);
   }
 
-  private get fileName(): FormControl { return this.form.get('fileName') as FormControl; }
-  private get password(): FormControl { return this.form.get('password') as FormControl; }
-  private get passwordConfirm(): FormControl { return this.form.get('passwordConfirm') as FormControl; }
-  private get passwordStrength(): number { return this.passwordStrengthMeter.passwordStrength; }
-
   public ngOnInit(): void {
-    this.fileName.statusChanges
+    this.initModel();
+    this.loadState();
+
+    this.model.fileNameStatusChanges
+      .pipe(takeUntil(this.unsubscriber))
+      .subscribe(status => {
+        this.facade.detectChanges();
+      });
+
+    this.router.events
       .pipe(
         takeUntil(this.unsubscriber),
-        filter(status => status !== 'PENDING')
+        // Doing `event instanceOf NavigationStart && event.url === '/password-gen'` would have worked
+        // but I like it this way
+        filter(event => event instanceof NavigationStart),
+        filter((event: NavigationStart) => event.url === '/password-gen')
       )
-      .subscribe(status => {
-        this.changeDetector.detectChanges();
+      .subscribe(_ => {
+        this.saveState();
+      });
+
+    this.route.queryParams
+      .pipe(takeUntil(this.unsubscriber))
+      .subscribe(params => {
+        if (params.pwd) {
+          this.setPassword(params.pwd);
+        }
       });
   }
 
@@ -75,25 +76,19 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public ngAfterViewInit(): void {
-    this.route.queryParams
-      .pipe(takeUntil(this.unsubscriber))
-      .subscribe(params => {
-        if (params.pwd) {
-          this.form.patchValue({ password: params.pwd, passwordConfirm: params.pwd });
-          // setting the value of `password` through `patchValue`
-          // doesn't trigger the `change` or `input` event on the field
-          // so ask the directive to update itself after setting a new password
-          this.passwordStrengthMeter.updatePasswordStrength();
-        }
-      });
+    // When setting `password` through `patchValue`, neither `input` nor `change` events are triggered in the directive.
+    // If this component sets these values onInit (as part of `loadForm`),
+    // then force directive to update password strength.
+    this.model.updatePasswordStrength();
+
+    // This is necessary to prevent an angular error.
+    // Looks like angular doesn't like values to be changed AfterViewInit. If something changes
+    // between OnInit and this event, angular throws an error unless detectChanges is called.
+    this.facade.detectChanges();
   }
 
   public browse(): void {
-    this.electronService.selectFile()
-      .pipe(
-        filter(files => files && files.length > 0),
-        map(files => files[0])
-      )
+    this.facade.selectFile()
       .subscribe(file => this.setFileName(file));
   }
 
@@ -121,90 +116,112 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    this.selectedFile.protect(this.password.value, mode)
+    this.facade.protectFile(this.model.fileNameValue, this.model.passwordValue, mode)
       .subscribe(
         _ => {
-          this.form.reset('', { onlySelf: true, emitEvent: false });
-          this.passwordStrengthMeter.updatePasswordStrength();
+          this.reset();
 
-          const { title, message } = this.uiMessages.get('Success_Message');
-          this.toastrService.success(message, title);
+          const uiMessage = this.uiMessages.get('Success_Message');
+          this.facade.showSuccessMessage(uiMessage);
         },
         err => {
-          if (err.errorType === 'Canceled_By_User') {
-            return;
-          }
-
-          let uiMessage: { title?: string, message?: string };
-          switch (err.errorType) {
-            case 'File_Access_Error':
-              this.fileName.setErrors({ fileAccessError: true });
-            case 'Insufficient_Permissions':
-              uiMessage = this.uiMessages.get(err.errorType);
-              break;
-            default:
-              uiMessage = this.uiMessages.get('General_Error');
-              break;
-          }
-
-          this.toastrService.error(uiMessage.message, uiMessage.title);
+          this.handleProtectError(err);
         }
       );
   }
 
-  public togglePasswordVisibility(state: boolean): void {
-    (this as { showPassword: boolean }).showPassword = state;
-
-    const opts = {
-      onlySelf: true,
-      emitEvent: false
-    };
-
-    if (this.showPassword) {
-      this.form.clearValidators();
-      this.passwordConfirm.setValue('', opts);
-      this.passwordConfirm.disable();
-    } else {
-      this.passwordConfirm.enable();
-      this.passwordConfirm.setValue(this.password.value, opts);
-      this.form.setValidators(fieldCompareValidator);
-    }
+  public togglePasswordVisibility(visible: boolean): void {
+    visible
+      ? this.model.disablePasswordConfirm()
+      : this.model.enablePasswordConfirm(this.model.passwordValue, fieldCompareValidator);
   }
 
-  private setFileName(fileName: string): void {
-    this.selectedFile = new PdfProtector(fileName);
-    const displayName = this.selectedFile.name;
-
-    this.form.patchValue({ displayName, fileName }, { emitEvent: true });
-    this.fileName.markAsDirty(); // trigger validation
-  }
-
-  private valid(): boolean {
-    const controls = this.form.controls;
-
-    for (const controlName in controls) {
-      if (controls.hasOwnProperty(controlName)) {
-        const control = this.form.get(controlName);
-        control.markAsDirty();
-      }
-    }
-
-    return this.form.valid;
-  }
-
-  private createForm(pdfService: PdfProtectService, formBuilder: FormBuilder): void {
-    const pdfDocumentValidator = CustomValidators.pdfDocument(pdfService);
-
-    this.form = formBuilder.group(
+  private initModel(): void {
+    const form = this.formBuilder.group(
       {
-        fileName: ['', Validators.required, pdfDocumentValidator],
+        fileName: ['', Validators.required, this.facade.getPdfDocumentValidator()],
         displayName: '',
         password: ['', Validators.required],
-        passwordConfirm: ['']
+        passwordConfirm: [''],
+        passwordVisible: [false],
       },
       {
         validator: fieldCompareValidator
       }
     );
+
+    (this as { model: HomeModel }).model = new HomeModel(form, this.passwordStrengthMeter);
+  }
+
+  private setFileName(fileName: string): void {
+    const displayName = new FileInfo(fileName).name;
+
+    this.model.patchValue({ displayName, fileName }, { emitEvent: true });
+    this.model.markFileNameAsDirty();
+  }
+
+  private setPassword(password: string): void {
+    this.model.patchValue({
+      password,
+      passwordConfirm: this.model.passwordVisible ? '' : password
+    });
+  }
+
+  private valid(): boolean {
+    const controls = this.model.controls;
+
+    for (const controlName in controls) {
+      if (controls.hasOwnProperty(controlName)) {
+        const control = this.model.get(controlName);
+        control.markAsDirty();
+      }
+    }
+
+    return this.model.valid;
+  }
+
+  private reset(): void {
+    this.model.reset('', { onlySelf: true, emitEvent: false });
+    this.togglePasswordVisibility(false);
+  }
+
+  private handleProtectError(err: { errorType: string}): void {
+    if (err.errorType === 'Canceled_By_User') {
+      return;
+    }
+
+    let uiMessage: { title?: string, message?: string };
+    switch (err.errorType) {
+      case 'File_Access_Error':
+        this.model.setFileNameErrors({ fileAccessError: true });
+        // break; Yes, fall-through is intentional
+      case 'Insufficient_Permissions':
+        uiMessage = this.uiMessages.get(err.errorType);
+        break;
+      default:
+        uiMessage = this.uiMessages.get('General_Error');
+        break;
+    }
+
+    this.facade.showErrorMessage(uiMessage);
+  }
+
+  private saveState(): void {
+    this.facade.saveState(this.model.value);
+  }
+
+  private loadState(): void {
+    const state = this.facade.popState();
+
+    if (!state) {
+      return;
+    }
+
+    this.model.patchValue(state);
+    this.togglePasswordVisibility(state.passwordVisible);
+
+    if (state.fileName) {
+      this.model.markFileNameAsDirty();
+    }
   }
 }
