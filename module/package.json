@@ -12,6 +12,7 @@
   ],
   "scripts": {
     "prepublish": "nsp check",
+    "publish": "npm run compile",
     "install": "npm run compile",
     "compile": "tslint -c tslint.json -p tsconfig.json && tsc && node ./tools/build.js",
     "test": "jest"
