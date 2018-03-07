@@ -12,7 +12,8 @@
   ],
   "scripts": {
     "prepublish": "nsp check",
-    "compile": "tslint -c tslint.json -p tsconfig.json && tsc",
+    "install": "npm run compile",
+    "compile": "tslint -c tslint.json -p tsconfig.json && tsc && node ./tools/build.js",
     "test": "jest"
   },
   "main": "./lib/index.js",

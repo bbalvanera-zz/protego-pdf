@@ -11,7 +11,7 @@ module.exports = function() {
 function vswhere() {
   return new Promise((resolve, reject) => {
     // https://github.com/Microsoft/vswhere/wiki/Find-MSBuild
-    const where = spawn('./bin/vswhere.exe', [
+    const where = spawn(path.join(__dirname, 'bin/vswhere.exe'), [
       '-latest',
       '-products',
       '*',
@@ -27,8 +27,11 @@ function vswhere() {
       resolve(installPath);
     });
 
-    where.stderr.once('data', (err) => {
-      reject(err.toString('utf8'));
+    where.stderr.once('data', (data) => {
+      const err = data.toString('utf8');
+
+      console.error(err);
+      reject(err);
     });
   });
 }
