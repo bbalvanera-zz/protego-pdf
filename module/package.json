@@ -13,7 +13,7 @@
   "scripts": {
     "prepublish": "nsp check",
     "install": "npm run compile",
-    "compile": "tslint -c tslint.json -p tsconfig.json && tsc && node ./tools/build.js",
+    "compile": "node ./tools/build.js && tslint -c tslint.json -p tsconfig.json && tsc",
     "test": "jest"
   },
   "main": "./lib/index.js",

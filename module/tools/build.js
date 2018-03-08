@@ -1,15 +1,14 @@
 if (process.platform !== 'win32') {
   throw Error('unsupported platform');
 }
+
 const { spawn } = require('child_process');
 
-const fs       = require('fs');
-const path     = require('path');
-const where    = require('./whereMsBuild');
-const nuget    = './bin/nuget.exe';
-const solution = path.join(__dirname, '..', 'src', 'csharp', 'ProtegoPdf.sln');
+const path       = require('path');
+const getMsBuildPath = require('./whereMsBuild');
+const solution   = path.join(__dirname, '..', 'src', 'csharp', 'ProtegoPdf.sln');
 
-where().then(msbuild => {
+getMsBuildPath().then(msbuild => {
   if (msbuild === '') {
     console.error('Could not find MSBuild.exe');
     console.log('Please install Visual Studio 2017 or Build Tools for Visual Studio 2017');
@@ -18,21 +17,28 @@ where().then(msbuild => {
     return;
   }
 
-  restore(msbuild, () => {
-    build(msbuild, () => {
-      console.log('Done');
-    });
-  });
+  restore()
+    .then(getMsBuildPath)
+    .then(build)
+    .then(_ => console.log('Done'))
+    .catch(err => console.error(err));
 });
 
-function restore(msbuild, cb) {
-  console.log('Restoring required dependencies');
-  spawn(msbuild, [solution, '/t:Restore', '/p:Configuration=Release'], { stdio: 'inherit' })
-    .on('close', cb);
+function restore() {
+  return new Promise((resolve, reject) => {
+    console.log('Restoring required dependencies');
+
+    const nuget = path.join(__dirname, 'bin/nuget.exe');
+    spawn(nuget, ['restore', solution], { stdio: 'inherit' })
+      .on('error', (err) => reject(err))
+      .on('close', (code) => resolve(code));
+  });
 }
 
-function build(msbuild, cb) {
-  console.log('Building protego-pdf-helper');
-  spawn(msbuild, [solution, '/t:Build', '/p:Configuration=Release'], { stdio: 'inherit' })
-    .on('close', cb);
+function build(msbuild) {
+  return new Promise((resolve, reject) => {
+    spawn(msbuild, [solution, '/t:Build', '/p:Configuration=Release'], { stdio: 'inherit' })
+      .on('error', (err) => reject(err))
+      .on('close', (code) => resolve(code));
+  });
 }
