@@ -4,7 +4,7 @@ const msbuild = 'MSBuild\\15.0\\Bin\\MSBuild.exe';
 
 module.exports = function() {
   return vswhere().then(installPath => {
-    return path.join(installPath, msbuild);
+    return installPath === '' ? installPath : path.join(installPath, msbuild);
   });
 };
 
@@ -33,5 +33,7 @@ function vswhere() {
       console.error(err);
       reject(err);
     });
+
+    where.once('close', () => resolve(''));
   });
 }
