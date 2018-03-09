@@ -91,6 +91,7 @@ namespace ProtegoPdf.Tests
 
             [TestMethod]
             [Description("Make this test work by denying all permissions at the OS level for this file")]
+            [Ignore]
             public async Task Should_fail_if_no_access_to_file()
             {
                 string f = "TestData/test.v1.6.permission.denied.pdf";
@@ -179,6 +180,7 @@ namespace ProtegoPdf.Tests
             }
 
             [TestMethod]
+            [Ignore]
             [Description("Make this test work by denying all permissions at the OS level for this file")]
             public async Task Should_fail_if_no_access_to_file()
             {
@@ -361,6 +363,7 @@ namespace ProtegoPdf.Tests
             }
 
             [TestMethod]
+            [Ignore]
             [Description("Make this test work by denying all permissions at the OS level for this file")]
             public async Task Should_fail_if_no_access_to_file()
             {

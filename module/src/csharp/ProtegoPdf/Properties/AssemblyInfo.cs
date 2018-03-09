@@ -1,17 +1,19 @@
-﻿using System.Reflection;
+using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ProtegoPdf")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("ProtegoPdf Helper App")]
+[assembly: AssemblyDescription("The helper application to ProtegoPdf application")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ProtegoPdf")]
-[assembly: AssemblyCopyright("Copyright Bernardo Balvanera © 2017")]
+[assembly: AssemblyProduct("ProtegoPdf Helper")]
+[assembly: AssemblyCopyright("Copyright Bernardo Balvanera © 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+[assembly: CLSCompliant(false)]
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from
