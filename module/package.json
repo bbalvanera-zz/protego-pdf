@@ -13,7 +13,7 @@
   "scripts": {
     "prepare": "nsp check",
     "install": "npm run compile",
-    "compile": "node ./tools/build.js && tslint -c tslint.json -p tsconfig.json && tsc",
+    "compile": "node ./tools/buildHelper.js && tslint -c tslint.json -p tsconfig.json && tsc",
     "test": "jest"
   },
   "main": "./lib/index.js",

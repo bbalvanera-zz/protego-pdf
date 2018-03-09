@@ -8,35 +8,40 @@ const path       = require('path');
 const getMsBuildPath = require('./whereMsBuild');
 const solution   = path.join(__dirname, '..', 'src', 'csharp', 'ProtegoPdf.sln');
 
-getMsBuildPath().then(msbuild => {
-  if (msbuild === '') {
-    console.error('Could not find MSBuild.exe');
-    console.log('Please install Visual Studio 2017 or Build Tools for Visual Studio 2017');
-    console.log('More info can be found at: https://www.visualstudio.com/downloads/');
+getMsBuildPath()
+  .then(validateMsbuild)
+  .then(restore)
+  .then(build)
+  .then(_ => console.log('Done building'))
+  .catch(err => console.error(err))
 
-    return;
+function validateMsbuild(msbuild) {
+  if (msbuild === '') {
+    const msg = `Could not find MSBuild.exe.
+    Please install Visual Studio 2017 or Build Tools for Visual Studio 2017.
+    More info can be found at: https://www.visualstudio.com/downloads/`;
+
+    throw new Error(msg)
   }
 
-  restore()
-    .then(getMsBuildPath)
-    .then(build)
-    .then(_ => console.log('Done'))
-    .catch(err => console.error(err));
-});
+  return msbuild;
+}
 
-function restore() {
+function restore(msbuild) {
   return new Promise((resolve, reject) => {
-    console.log('Restoring required dependencies');
+    console.log('Restoring dependencies');
 
     const nuget = path.join(__dirname, 'bin/nuget.exe');
     spawn(nuget, ['restore', solution], { stdio: 'inherit' })
       .on('error', (err) => reject(err))
-      .on('close', (code) => resolve(code));
+      .on('close', (code) => resolve(msbuild));
   });
 }
 
 function build(msbuild) {
   return new Promise((resolve, reject) => {
+    console.log(`Building protego-pdf-helper.`);
+
     spawn(msbuild, [solution, '/t:Build', '/p:Configuration=Release'], { stdio: 'inherit' })
       .on('error', (err) => reject(err))
       .on('close', (code) => resolve(code));
