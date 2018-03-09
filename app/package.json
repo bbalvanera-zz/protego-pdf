@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "license": "AGPL-3.0-or-later",
   "scripts": {
-    "serve": "gulp serve"
+    "compile": "tsc -p gulp-tasks/tsconfig.json",
+    "serve": "npm run compile && gulp serve"
   },
   "main": "app.js",
   "private": true,
