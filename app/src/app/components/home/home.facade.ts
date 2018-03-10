@@ -9,8 +9,9 @@ import { map } from 'rxjs/operators/map';
 import { mergeMap } from 'rxjs/operators/mergeMap';
 import { PdfProtectionOptions } from 'protego-pdf-helper';
 
+import { ParsedPath } from 'path';
+
 import { PdfProtectMode } from '../../core/PdfProtectMode';
-import { FileInfo } from '../../core/FileInfo';
 import { ElectronService } from '../../services/electron.service';
 import { PdfProtectService } from '../../services/pdf-protect.service';
 import { CustomValidators } from '../../core/validators/CustomValidators';
@@ -44,12 +45,8 @@ export class HomeFacade {
       );
   }
 
-  public detectChanges(): void {
-    this.changeDetector.detectChanges();
-  }
-
   public protectFile(fileName: string, password: string, mode: PdfProtectMode): Observable<boolean> {
-    const fileInfo = new FileInfo(fileName);
+    const fileInfo = path.parse(fileName) as ParsedPath;
 
     return this.getTargetFileName(fileInfo, mode)
       .pipe(mergeMap(target => {
@@ -57,7 +54,7 @@ export class HomeFacade {
           return observableThrow({ errorType: 'Canceled_By_User' });
         }
 
-        const source = fileInfo.fullName;
+        const source = fileName;
         const opts: PdfProtectionOptions = {
           userPassword: password,
           encryptionMode: 2, // aes128,
@@ -87,16 +84,16 @@ export class HomeFacade {
     this.toastrService.success(message, title);
   }
 
-  private getTargetFileName(fileInfo: FileInfo, mode: PdfProtectMode): Observable<string> {
+  private getTargetFileName(fileInfo: ParsedPath, mode: PdfProtectMode): Observable<string> {
     let retVal: Observable<string>;
 
     switch (mode) {
       case PdfProtectMode.overwrite:
-        retVal = observableOf(fileInfo.fullName);
+        retVal = observableOf(path.join(fileInfo.dir, fileInfo.base));
         break;
       case PdfProtectMode.saveNew:
-        const newName = `${fileInfo.nameWithoutExtension}.locked${fileInfo.extension}`;
-        retVal = observableOf(path.join(fileInfo.directoryName, newName));
+        const newName = `${fileInfo.name}.locked${fileInfo.ext}`;
+        retVal = observableOf(path.join(fileInfo.dir, newName));
         break;
       case PdfProtectMode.saveAs:
         retVal = this.electronService.getSavePath();
