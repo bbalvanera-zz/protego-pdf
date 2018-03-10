@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, NgZone } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, NavigationStart } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
@@ -7,12 +7,12 @@ import { filter } from 'rxjs/operators/filter';
 
 import { CustomValidators } from '../../core/validators/CustomValidators';
 import { PdfProtectMode } from '../../core/PdfProtectMode';
-import { FileInfo } from '../../core/FileInfo';
 import { PasswordStrengthMeterDirective } from './password-strength-meter/password-strength-meter.directive';
 import { UIMessagesDirective } from '../../shared/ui-messages/ui-messages.directive';
 import { HomeModel } from './home.model';
 import { HomeFacade } from './home.facade';
 
+const path = window.require('path');
 const fieldCompareValidator = CustomValidators.fieldCompare('password', 'passwordConfirm');
 
 @Component({
@@ -36,19 +36,14 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     private formBuilder: FormBuilder,
     private facade: HomeFacade,
     private router: Router,
-    private route: ActivatedRoute) {
+    private route: ActivatedRoute,
+    private zone: NgZone) {
       this.unsubscriber = new Subject<void>();
   }
 
   public ngOnInit(): void {
     this.initModel();
     this.loadState();
-
-    this.model.fileNameStatusChanges
-      .pipe(takeUntil(this.unsubscriber))
-      .subscribe(status => {
-        this.facade.detectChanges();
-      });
 
     this.router.events
       .pipe(
@@ -76,20 +71,16 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public ngAfterViewInit(): void {
-    // When setting `password` through `patchValue`, neither `input` nor `change` events are triggered in the directive.
-    // If this component sets these values onInit (as part of `loadForm`),
-    // then force directive to update password strength.
-    this.model.updatePasswordStrength();
-
-    // This is necessary to prevent an angular error.
-    // Looks like angular doesn't like values to be changed AfterViewInit. If something changes
-    // between OnInit and this event, angular throws an error unless detectChanges is called.
-    this.facade.detectChanges();
+    // `setTimeout` is required since angular doesn't like view changes inside this method.
+    // It works since it is actually another thread the one modifying the view not the current one.
+    setTimeout(() => this.model.updatePasswordStrength());
   }
 
   public browse(): void {
     this.facade.selectFile()
-      .subscribe(file => this.setFileName(file));
+      .subscribe(file => {
+        this.zone.run(() => this.setFileName(file));
+      });
   }
 
   public prepareForDataTransfer(transferItem: DataTransferItem): void {
@@ -119,10 +110,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.facade.protectFile(this.model.fileNameValue, this.model.passwordValue, mode)
       .subscribe(
         _ => {
-          this.reset();
+          this.zone.run(() => {
+            this.reset();
 
-          const uiMessage = this.uiMessages.get('Success_Message');
-          this.facade.showSuccessMessage(uiMessage);
+            const uiMessage = this.uiMessages.get('Success_Message');
+            this.facade.showSuccessMessage(uiMessage);
+          });
         },
         err => {
           this.handleProtectError(err);
@@ -154,7 +147,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private setFileName(fileName: string): void {
-    const displayName = new FileInfo(fileName).name;
+    const displayName = path.parse(fileName).base;
 
     this.model.patchValue({ displayName, fileName }, { emitEvent: true });
     this.model.markFileNameAsDirty();
