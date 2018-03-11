@@ -1,3 +1,4 @@
+import { InjectionToken, Provider } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, ValidationErrors } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { of as observableOf } from 'rxjs/observable/of';
@@ -5,9 +6,17 @@ import { map } from 'rxjs/operators/map';
 import { catchError } from 'rxjs/operators/catchError';
 import * as utils from 'underscore';
 
-import { PdfProtectService } from '../../services/pdf-protect.service';
+import { PdfProtectService } from '../../../../services/pdf-protect.service';
 
 const fs = window.require('fs');
+
+export const PDF_DOCUMENT_VALIDATOR = new InjectionToken<string>('pdfDocumentValidation');
+
+export const pdfDocumentValidatorProvider: Provider = {
+  provide: PDF_DOCUMENT_VALIDATOR,
+  useFactory: pdfDocumentValidator,
+  deps: [PdfProtectService]
+};
 
 export function pdfDocumentValidator(pdfService: PdfProtectService): AsyncValidatorFn {
   // Use debounce as per https://github.com/angular/angular/issues/21500

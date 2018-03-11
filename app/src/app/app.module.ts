@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule, Injector } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { ToastrModule } from 'ngx-toastr';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -10,7 +10,6 @@ import { PasswordGenModule } from './components/password-gen/password-gen.module
 import { ServicesModule } from './services/services.module';
 
 import { AppComponent } from './app.component';
-import { ServiceLocator } from './core/ServiceLocator';
 
 @NgModule({
   declarations: [
@@ -31,7 +30,5 @@ import { ServiceLocator } from './core/ServiceLocator';
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(injector: Injector) {
-    ServiceLocator.injector = injector;
-  }
+
 }

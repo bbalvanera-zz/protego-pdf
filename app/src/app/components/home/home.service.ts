@@ -1,5 +1,5 @@
-import { Injectable, ChangeDetectorRef } from '@angular/core';
-import { ValidatorFn } from '@angular/forms';
+import { Injectable } from '@angular/core';
+import { AsyncValidatorFn } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs/Observable';
 import { of as observableOf } from 'rxjs/observable/of';
@@ -11,30 +11,20 @@ import { PdfProtectionOptions } from 'protego-pdf-helper';
 
 import { ParsedPath } from 'path';
 
-import { PdfProtectMode } from '../../core/PdfProtectMode';
+import { PdfProtectMode } from './classes/PdfProtectMode';
 import { ElectronService } from '../../services/electron.service';
 import { PdfProtectService } from '../../services/pdf-protect.service';
-import { CustomValidators } from '../../core/validators/CustomValidators';
-import { HomeModel } from './home.model';
 
 const path = window.require('path');
 const HOME_SESSION_KEY = 'HomeComponent.state';
 
 @Injectable()
-export class HomeFacade {
-
-  private readonly pdfDocumentValidator: ValidatorFn;
+export class HomeService {
 
   constructor(
     private electronService: ElectronService,
     private pdfService: PdfProtectService,
-    private changeDetector: ChangeDetectorRef,
     private toastrService: ToastrService) {
-      this.pdfDocumentValidator = CustomValidators.pdfDocument(this.pdfService);
-  }
-
-  public getPdfDocumentValidator(): ValidatorFn {
-    return this.pdfDocumentValidator;
   }
 
   public selectFile(): Observable<string> {
@@ -50,7 +40,7 @@ export class HomeFacade {
 
     return this.getTargetFileName(fileInfo, mode)
       .pipe(mergeMap(target => {
-        if (!target || target === '') { // if user cancel's save-file dialog, an empty file path is returned
+        if (!target || target === '') { // if user cancels save-file dialog, an empty file path is returned
           return observableThrow({ errorType: 'Canceled_By_User' });
         }
 
