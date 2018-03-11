@@ -1,55 +1,57 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, NgZone } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { Component, OnInit, OnDestroy, ViewChild, NgZone, Inject } from '@angular/core';
+import { AsyncValidatorFn } from '@angular/forms';
 import { Router, ActivatedRoute, NavigationStart } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators/takeUntil';
 import { filter } from 'rxjs/operators/filter';
 
-import { CustomValidators } from '../../core/validators/CustomValidators';
-import { PdfProtectMode } from '../../core/PdfProtectMode';
-import { PasswordStrengthMeterDirective } from './password-strength-meter/password-strength-meter.directive';
+import { PdfProtectMode } from './classes/PdfProtectMode';
+import { HomeForm } from './classes/HomeForm';
+import { HomeService } from './home.service';
 import { UIMessagesDirective } from '../../shared/ui-messages/ui-messages.directive';
-import { HomeModel } from './home.model';
-import { HomeFacade } from './home.facade';
+import { PasswordInputComponent } from './password-input/password-input.component';
+import { PDF_DOCUMENT_VALIDATOR, PdfDocumentValidatorProvider } from './password-input/classes/PdfDocumentValidatorProvider';
 
 const path = window.require('path');
-const fieldCompareValidator = CustomValidators.fieldCompare('password', 'passwordConfirm');
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  providers: [{ provide: HomeFacade, useClass: HomeFacade }]
+  providers: [HomeService, PdfDocumentValidatorProvider]
 })
-export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
+export class HomeComponent implements OnInit, OnDestroy {
 
-  @ViewChild(PasswordStrengthMeterDirective)
-  private passwordStrengthMeter: PasswordStrengthMeterDirective;
   @ViewChild(UIMessagesDirective)
   private uiMessages: UIMessagesDirective;
+  @ViewChild(PasswordInputComponent)
+  private passwordInput: PasswordInputComponent;
+
   private unsubscriber: Subject<void>;
 
-  public readonly readyForDataTransfer = false; // used only by the view
-  public readonly model: HomeModel;
+  public readonly readyForDataTransfer: boolean; // used only by the view
+  public readonly form: HomeForm;
 
   constructor(
-    private formBuilder: FormBuilder,
-    private facade: HomeFacade,
+    @Inject(PDF_DOCUMENT_VALIDATOR)
+    private pdfDocumentValidator: AsyncValidatorFn,
+    private homeService: HomeService,
     private router: Router,
     private route: ActivatedRoute,
     private zone: NgZone) {
       this.unsubscriber = new Subject<void>();
+      this.readyForDataTransfer = false;
   }
 
   public ngOnInit(): void {
-    this.initModel();
+    this.initForm();
     this.loadState();
 
     this.router.events
       .pipe(
         takeUntil(this.unsubscriber),
         // Doing `event instanceOf NavigationStart && event.url === '/password-gen'` would have worked
-        // but I like it this way
+        // but I like it this way.
         filter(event => event instanceof NavigationStart),
         filter((event: NavigationStart) => event.url === '/password-gen')
       )
@@ -70,15 +72,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.unsubscriber.next();
   }
 
-  public ngAfterViewInit(): void {
-    // `setTimeout` is required since angular doesn't like view changes inside this method.
-    // It works since it is actually another thread the one modifying the view not the current one.
-    setTimeout(() => this.model.updatePasswordStrength());
-  }
-
   public browse(): void {
-    this.facade.selectFile()
+    this.homeService.selectFile()
       .subscribe(file => {
+        // use ngZone since this call comes from a different thread (MainProcess thread).
         this.zone.run(() => this.setFileName(file));
       });
   }
@@ -107,14 +104,16 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    this.facade.protectFile(this.model.fileNameValue, this.model.passwordValue, mode)
+    this.homeService.protectFile(this.form.fileNameValue, this.form.passwordValue, mode)
       .subscribe(
         _ => {
+          // use ngZone since this could potentially be called by a different thread (MainProcess thread)
+          // usually when `Save As` is selected.
           this.zone.run(() => {
             this.reset();
 
             const uiMessage = this.uiMessages.get('Success_Message');
-            this.facade.showSuccessMessage(uiMessage);
+            this.homeService.showSuccessMessage(uiMessage);
           });
         },
         err => {
@@ -123,70 +122,36 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       );
   }
 
-  public togglePasswordVisibility(visible: boolean): void {
-    visible
-      ? this.model.disablePasswordConfirm()
-      : this.model.enablePasswordConfirm(this.model.passwordValue, fieldCompareValidator);
-  }
-
-  private initModel(): void {
-    const form = this.formBuilder.group(
-      {
-        fileName: ['', Validators.required, this.facade.getPdfDocumentValidator()],
-        displayName: '',
-        password: ['', Validators.required],
-        passwordConfirm: [''],
-        passwordVisible: [false],
-      },
-      {
-        validator: fieldCompareValidator
-      }
-    );
-
-    (this as { model: HomeModel }).model = new HomeModel(form, this.passwordStrengthMeter);
-  }
-
   private setFileName(fileName: string): void {
     const displayName = path.parse(fileName).base;
 
-    this.model.patchValue({ displayName, fileName }, { emitEvent: true });
-    this.model.markFileNameAsDirty();
+    this.form.patchValue({ displayName, fileName }, { emitEvent: true });
+    this.form.markFileNameAsDirty();
   }
 
   private setPassword(password: string): void {
-    this.model.patchValue({
-      password,
-      passwordConfirm: this.model.passwordVisible ? '' : password
-    });
+    this.form.patchValue({ password: { password } });
   }
 
   private valid(): boolean {
-    const controls = this.model.controls;
-
-    for (const controlName in controls) {
-      if (controls.hasOwnProperty(controlName)) {
-        const control = this.model.get(controlName);
-        control.markAsDirty();
-      }
-    }
-
-    return this.model.valid;
+    // if validation errors exist, show them
+    this.form.showValidation();
+    return this.form.valid;
   }
 
   private reset(): void {
-    this.model.reset('', { onlySelf: true, emitEvent: false });
-    this.togglePasswordVisibility(false);
+    this.form.reset();
   }
 
   private handleProtectError(err: { errorType: string}): void {
     if (err.errorType === 'Canceled_By_User') {
-      return;
+      return; // when user cancels `Save As` dialog
     }
 
     let uiMessage: { title?: string, message?: string };
     switch (err.errorType) {
       case 'File_Access_Error':
-        this.model.setFileNameErrors({ fileAccessError: true });
+        this.form.setFileNameErrors({ fileAccessError: true });
         // break; Yes, fall-through is intentional
       case 'Insufficient_Permissions':
         uiMessage = this.uiMessages.get(err.errorType);
@@ -196,25 +161,28 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         break;
     }
 
-    this.facade.showErrorMessage(uiMessage);
+    this.homeService.showErrorMessage(uiMessage);
   }
 
   private saveState(): void {
-    this.facade.saveState(this.model.value);
+    this.homeService.saveState(this.form.value);
   }
 
   private loadState(): void {
-    const state = this.facade.popState();
+    const state = this.homeService.popState();
 
     if (!state) {
       return;
     }
 
-    this.model.patchValue(state);
-    this.togglePasswordVisibility(state.passwordVisible);
+    this.form.setValue(state);
 
     if (state.fileName) {
-      this.model.markFileNameAsDirty();
+      this.form.markFileNameAsDirty();
     }
+  }
+
+  private initForm(): void {
+    (this as { form: HomeForm }).form = new HomeForm(this.passwordInput, this.pdfDocumentValidator);
   }
 }

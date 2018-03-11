@@ -32,12 +32,12 @@ export class PasswordStrengthMeterDirective implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    const parent  = this.el.nativeElement as HTMLElement;
-    this.source   = parent.querySelector('.password-input') as HTMLInputElement;
-    this.target   = parent.querySelector('.password-strength') as HTMLElement;
+    const parent = this.el.nativeElement as HTMLElement;
+    this.source  = parent.querySelector('.password-input') as HTMLInputElement;
+    this.target  = parent.querySelector('.password-strength') as HTMLElement;
 
-    const input   = fromEvent<void>(this.source, 'input');
-    const change  = fromEvent<void>(this.source, 'change');
+    const input  = fromEvent<void>(this.source, 'input');
+    const change = fromEvent<void>(this.source, 'change');
 
     const onInputChange = merge(input, change);
 
