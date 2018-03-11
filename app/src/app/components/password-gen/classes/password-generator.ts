@@ -1,4 +1,4 @@
-import { PasswordOptions } from './PasswordOptions';
+import { PasswordOptions } from './password-options';
 const crypto = window.require('crypto');
 
 const CHARS = {

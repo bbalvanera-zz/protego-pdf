@@ -5,12 +5,12 @@ import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators/takeUntil';
 import { filter } from 'rxjs/operators/filter';
 
-import { PdfProtectMode } from './classes/PdfProtectMode';
-import { HomeForm } from './classes/HomeForm';
+import { PdfProtectMode } from './classes/pdf-protect-mode.enum';
+import { HomeForm } from './classes/home.form';
 import { HomeService } from './home.service';
 import { UIMessagesDirective } from '../../shared/ui-messages/ui-messages.directive';
 import { PasswordInputComponent } from './password-input/password-input.component';
-import { PDF_DOCUMENT_VALIDATOR, pdfDocumentValidatorProvider } from './classes/validators/pdfDocumentValidator';
+import { PDF_DOCUMENT_VALIDATOR, pdfDocumentValidatorProvider } from './classes/pdf-document.validator';
 
 const path = window.require('path');
 

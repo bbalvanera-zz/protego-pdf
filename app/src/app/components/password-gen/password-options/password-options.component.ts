@@ -6,7 +6,7 @@ import { debounceTime } from 'rxjs/operators/debounceTime';
 import { map } from 'rxjs/operators/map';
 import { filter } from 'rxjs/operators/filter';
 
-import { PasswordOptions } from '../classes/PasswordOptions';
+import { PasswordOptions } from '../classes/password-options';
 
 const PASSWORD_OPTIONS_VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,

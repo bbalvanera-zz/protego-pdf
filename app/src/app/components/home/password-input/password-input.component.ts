@@ -3,8 +3,8 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators/takeUntil';
 
-import { PasswordInput } from './classes/PasswordInput';
-import { PasswordInputForm } from './classes/PasswordInputForm';
+import { PasswordInput } from './classes/password-input';
+import { PasswordInputForm } from './classes/password-input.form';
 import { PasswordStrengthMeterDirective } from './password-strength-meter/password-strength-meter.directive';
 
 const PASSWORD_INPUT_VALUE_ACCESSOR: Provider = {

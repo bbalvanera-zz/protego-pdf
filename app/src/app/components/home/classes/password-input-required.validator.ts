@@ -1,5 +1,5 @@
 import { FormControl, ValidationErrors } from '@angular/forms';
-import { PasswordInput } from '../../password-input/classes/PasswordInput';
+import { PasswordInput } from '../password-input/classes/password-input';
 
 export function passwordInputRequiredValidator(control: FormControl): ValidationErrors | null {
   const value = control.value as PasswordInput;

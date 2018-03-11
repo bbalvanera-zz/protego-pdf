@@ -11,7 +11,7 @@ import { PdfProtectionOptions } from 'protego-pdf-helper';
 
 import { ParsedPath } from 'path';
 
-import { PdfProtectMode } from './classes/PdfProtectMode';
+import { PdfProtectMode } from './classes/pdf-protect-mode.enum';
 import { ElectronService } from '../../services/electron.service';
 import { PdfProtectService } from '../../services/pdf-protect.service';
 

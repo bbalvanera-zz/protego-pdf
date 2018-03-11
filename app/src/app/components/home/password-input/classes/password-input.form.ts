@@ -1,7 +1,7 @@
 import { FormGroup, FormControl, ValidatorFn, AbstractControl, Validators, ValidationErrors } from '@angular/forms';
 
 import { PasswordStrengthMeterDirective } from '../password-strength-meter/password-strength-meter.directive';
-import { fieldCompareValidator } from './validators/fieldCompareValidator';
+import { fieldCompareValidator } from './field-compare.validator';
 
 /**
  * Provides convenience methods to work with the PasswordInput Form

@@ -3,8 +3,8 @@ import { FormControl } from '@angular/forms';
 import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators/takeUntil';
 
-import { PasswordOptions } from './classes/PasswordOptions';
-import { PasswordGenerator } from './classes/PasswordGenerator';
+import { PasswordOptions } from './classes/password-options';
+import { PasswordGenerator } from './classes/password-generator';
 
 const DEFAULT_PASSWORD_OPTIONS: PasswordOptions = {
   lowerCase: true,

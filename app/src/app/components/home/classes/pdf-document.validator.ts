@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators/map';
 import { catchError } from 'rxjs/operators/catchError';
 import * as utils from 'underscore';
 
-import { PdfProtectService } from '../../../../services/pdf-protect.service';
+import { PdfProtectService } from '../../../services/pdf-protect.service';
 
 const fs = window.require('fs');
 

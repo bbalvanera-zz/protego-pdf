@@ -3,8 +3,8 @@ import { Observable } from 'rxjs/Observable';
 import { filter } from 'rxjs/operators/filter';
 
 import { PasswordInputComponent } from '../password-input/password-input.component';
-import { PasswordInput } from '../password-input/classes/PasswordInput';
-import { passwordInputRequiredValidator } from './validators/passwordInputRequiredValidator';
+import { PasswordInput } from '../password-input/classes/password-input';
+import { passwordInputRequiredValidator } from './password-input-required.validator';
 
 const DEFAULT_VALUES = {
   fileName: '',
