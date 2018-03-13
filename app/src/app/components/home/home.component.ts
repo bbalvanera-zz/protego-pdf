@@ -8,7 +8,7 @@ import { filter } from 'rxjs/operators/filter';
 import { PdfProtectMode } from './classes/pdf-protect-mode.enum';
 import { HomeForm } from './classes/home.form';
 import { HomeService } from './home.service';
-import { UIMessagesDirective } from '../../shared/ui-messages/ui-messages.directive';
+import { UIMessagesDirective } from '../../shared/directives/ui-messages.directive';
 import { PasswordInputComponent } from './password-input/password-input.component';
 import { PDF_DOCUMENT_VALIDATOR, pdfDocumentValidatorProvider } from './classes/pdf-document.validator';
 

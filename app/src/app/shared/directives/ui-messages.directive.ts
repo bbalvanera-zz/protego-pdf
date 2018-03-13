@@ -1,6 +1,6 @@
 import { Directive, ContentChildren, QueryList } from '@angular/core';
 
-import { UIMessageDirective } from './ui-message/ui-message.directive';
+import { UIMessageDirective } from './ui-message.directive';
 
 /**
  * The UIMessage directive serves as a means to access ui-messages in code.
