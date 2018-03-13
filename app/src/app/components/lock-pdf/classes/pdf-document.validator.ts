@@ -18,16 +18,14 @@ export const pdfDocumentValidatorProvider: Provider = {
   deps: [PdfProtectService]
 };
 
-export function pdfDocumentValidator(pdfService: PdfProtectService): AsyncValidatorFn {
-  // Use debounce as per https://github.com/angular/angular/issues/21500
-  return utils.debounce(getValidator(pdfService), 250, true);
-}
+let timeout: NodeJS.Timer;
 
-function getValidator(pdfService: PdfProtectService): AsyncValidatorFn {
+export function pdfDocumentValidator(pdfService: PdfProtectService): AsyncValidatorFn {
   return (control: AbstractControl): Observable<ValidationErrors | null> => {
+    console.log('validation requested');
     const value = control.value;
 
-    if (value === null || value.length === 0) {
+    if (!value || value.length === 0) {
       return observableOf(null);
     }
 
@@ -35,11 +33,19 @@ function getValidator(pdfService: PdfProtectService): AsyncValidatorFn {
       return observableOf(null);
     }
 
-    return pdfService.pdfDocument(value)
-      .pipe(
-        map((isPdf: boolean): ValidationErrors | null => isPdf ? null : { notAPdfDocument : true }),
-        catchError(err => errorHandler(err))
-      );
+    // Use debounce as per https://github.com/angular/angular/issues/21500
+    clearTimeout(timeout);
+    return Observable.create(observer => {
+      timeout = setTimeout(() => {
+        timeout = null;
+        console.log('actual validation');
+        pdfService.pdfDocument(value)
+        .pipe(
+          map((isPdf: boolean): ValidationErrors | null => isPdf ? null : { notAPdfDocument : true }),
+          catchError(err => errorHandler(err))
+        ).subscribe(observer);
+      }, 50);
+    });
   };
 }
 

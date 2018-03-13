@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AsyncValidatorFn } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs/Observable';
 import { of as observableOf } from 'rxjs/observable/of';
 import { _throw as observableThrow } from 'rxjs/observable/throw';
+import { fromPromise as observableFromPromise } from 'rxjs/observable/fromPromise';
 import { filter } from 'rxjs/operators/filter';
 import { map } from 'rxjs/operators/map';
 import { mergeMap } from 'rxjs/operators/mergeMap';
@@ -14,17 +16,19 @@ import { ParsedPath } from 'path';
 import { PdfProtectMode } from './classes/pdf-protect-mode.enum';
 import { ElectronService } from '../../services/electron.service';
 import { PdfProtectService } from '../../services/pdf-protect.service';
+import { PasswordAddComponent } from './passwords-dropdown/password-add/password-add.component';
 
 const path = window.require('path');
-const HOME_SESSION_KEY = 'HomeComponent.state';
+const LOCKPDF_SESSION_KEY = 'LockPdfComponent.state';
 
 @Injectable()
-export class HomeService {
+export class LockPdfService {
 
   constructor(
     private electronService: ElectronService,
     private pdfService: PdfProtectService,
-    private toastrService: ToastrService) {
+    private toastrService: ToastrService,
+    private modalService: NgbModal) {
   }
 
   public selectFile(): Observable<string> {
@@ -55,23 +59,37 @@ export class HomeService {
       }));
   }
 
+  public savePassword(password: string): Observable<void> {
+    const modalOpts: NgbModalOptions = {
+      size: 'sm'
+    };
+    const modalRef = this.modalService.open(PasswordAddComponent, modalOpts);
+    modalRef.componentInstance.password = password;
+
+    return observableFromPromise(modalRef.result);
+  }
+
   public saveState(model: any): void {
-    sessionStorage.setItem(HOME_SESSION_KEY, JSON.stringify(model));
+    sessionStorage.setItem(LOCKPDF_SESSION_KEY, JSON.stringify(model));
   }
 
   public popState(): any {
-    const jsonState = sessionStorage.getItem(HOME_SESSION_KEY);
-    sessionStorage.removeItem(HOME_SESSION_KEY);
+    const jsonState = sessionStorage.getItem(LOCKPDF_SESSION_KEY);
+    sessionStorage.removeItem(LOCKPDF_SESSION_KEY);
 
     return JSON.parse(jsonState);
   }
 
-  public showErrorMessage({ title, message }: { title?: string, message?: string }): void {
-    this.toastrService.error(message, title);
-  }
-
   public showSuccessMessage({ title, message }: { title?: string, message?: string }): void {
     this.toastrService.success(message, title);
+  }
+
+  public showWarningMessage({ title, message }: { title?: string, message?: string }): void {
+    this.toastrService.warning(message, title);
+  }
+
+  public showErrorMessage({ title, message }: { title?: string, message?: string }): void {
+    this.toastrService.error(message, title);
   }
 
   private getTargetFileName(fileInfo: ParsedPath, mode: PdfProtectMode): Observable<string> {

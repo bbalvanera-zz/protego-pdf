@@ -1,13 +1,17 @@
+import { Provider } from '@angular/core';
+
 import { UIMessagesDirective } from './ui-messages.directive';
 import { UIMessageDirective } from './ui-message.directive';
-import { Provider } from '@angular/core';
+import { FocusWithinDirective } from './focus-within.directive';
 
 export {
   UIMessagesDirective,
-  UIMessageDirective
+  UIMessageDirective,
+  FocusWithinDirective
 };
 
 export const SHARED_DIRECTIVES: Provider[] = [
   UIMessagesDirective,
-  UIMessageDirective
+  UIMessageDirective,
+  FocusWithinDirective
 ];

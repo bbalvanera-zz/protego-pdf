@@ -5,9 +5,10 @@ import { ToastrModule } from 'ngx-toastr';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppRoutingModule } from './app-routing.module';
-import { HomeModule } from './components/home/home.module';
-import { PasswordGenModule } from './components/password-gen/password-gen.module';
 import { ServicesModule } from './services/services.module';
+import { LockPdfModule } from './components/lock-pdf/lock-pdf.module';
+import { PasswordGenModule } from './components/password-gen/password-gen.module';
+import { PasswordManagerModule } from './components/password-manager/password-manager.module';
 
 import { AppComponent } from './app.component';
 
@@ -23,9 +24,10 @@ import { AppComponent } from './app.component';
     ToastrModule.forRoot({
       positionClass: 'toast-bottom-right'
     }),
-    HomeModule,
+    ServicesModule,
+    LockPdfModule,
     PasswordGenModule,
-    ServicesModule
+    PasswordManagerModule
   ],
   bootstrap: [AppComponent]
 })

@@ -6,36 +6,39 @@ import { takeUntil } from 'rxjs/operators/takeUntil';
 import { filter } from 'rxjs/operators/filter';
 
 import { PdfProtectMode } from './classes/pdf-protect-mode.enum';
-import { HomeForm } from './classes/home.form';
-import { HomeService } from './home.service';
+import { LockPdfForm } from './classes/lock-pdf.form';
+import { LockPdfService } from './lock-pdf.service';
 import { UIMessagesDirective } from '../../shared/directives/ui-messages.directive';
 import { PasswordInputComponent } from './password-input/password-input.component';
+import { PasswordsDropdownComponent } from './passwords-dropdown/passwords-dropdown.component';
 import { PDF_DOCUMENT_VALIDATOR, pdfDocumentValidatorProvider } from './classes/pdf-document.validator';
 
 const path = window.require('path');
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
-  providers: [HomeService, pdfDocumentValidatorProvider]
+  selector: 'app-lock-pdf',
+  templateUrl: './lock-pdf.component.html',
+  styleUrls: ['./lock-pdf.component.scss'],
+  providers: [LockPdfService, pdfDocumentValidatorProvider]
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class LockPdfComponent implements OnInit, OnDestroy {
 
   @ViewChild(UIMessagesDirective)
   private uiMessages: UIMessagesDirective;
   @ViewChild(PasswordInputComponent)
   private passwordInput: PasswordInputComponent;
+  @ViewChild(PasswordsDropdownComponent)
+  private passwordsDropdown: PasswordsDropdownComponent;
 
   private unsubscriber: Subject<void>;
 
   public readonly readyForDataTransfer: boolean; // used only by the view
-  public readonly form: HomeForm;
+  public readonly form: LockPdfForm;
 
   constructor(
     @Inject(PDF_DOCUMENT_VALIDATOR)
     private pdfDocumentValidator: AsyncValidatorFn,
-    private homeService: HomeService,
+    private lockPdfService: LockPdfService,
     private router: Router,
     private route: ActivatedRoute,
     private zone: NgZone) {
@@ -52,8 +55,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         takeUntil(this.unsubscriber),
         // Doing `event instanceOf NavigationStart && event.url === '/password-gen'` would have worked
         // but I like it this way.
-        filter(event => event instanceof NavigationStart),
-        filter((event: NavigationStart) => event.url === '/password-gen')
+        filter(event => event instanceof NavigationStart)
       )
       .subscribe(_ => {
         this.saveState();
@@ -73,7 +75,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   public browse(): void {
-    this.homeService.selectFile()
+    this.lockPdfService.selectFile()
       .subscribe(file => {
         // use ngZone since this call comes from a different thread (MainProcess thread).
         this.zone.run(() => this.setFileName(file));
@@ -104,16 +106,14 @@ export class HomeComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.homeService.protectFile(this.form.fileNameValue, this.form.passwordValue, mode)
+    this.lockPdfService.protectFile(this.form.fileNameValue, this.form.passwordValue, mode)
       .subscribe(
         _ => {
           // use ngZone since this could potentially be called by a different thread (MainProcess thread)
           // usually when `Save As` is selected.
           this.zone.run(() => {
             this.reset();
-
-            const uiMessage = this.uiMessages.get('Success_Message');
-            this.homeService.showSuccessMessage(uiMessage);
+            this.showMessage('success', 'Success_Message');
           });
         },
         err => {
@@ -122,15 +122,33 @@ export class HomeComponent implements OnInit, OnDestroy {
       );
   }
 
+  public savePassword(): void {
+    if (!this.form.passwordValid) {
+      this.form.ensurePasswordValue();
+      this.showMessage('warning', 'Invalid_Password_To_Save');
+
+      return;
+    }
+
+    this.lockPdfService.savePassword(this.form.passwordValue)
+      .subscribe(
+        () => {
+          this.passwordsDropdown.refresh();
+          this.showMessage('success', 'PasswordSaved_SuccessMessage');
+        },
+        reason => console.log(reason) // add proper logging
+      );
+  }
+
+  public setPassword(password: string): void {
+    this.form.patchValue({ password: { password } });
+  }
+
   private setFileName(fileName: string): void {
     const displayName = path.parse(fileName).base;
 
     this.form.patchValue({ displayName, fileName }, { emitEvent: true });
     this.form.markFileNameAsDirty();
-  }
-
-  private setPassword(password: string): void {
-    this.form.patchValue({ password: { password } });
   }
 
   private valid(): boolean {
@@ -148,28 +166,45 @@ export class HomeComponent implements OnInit, OnDestroy {
       return; // when user cancels `Save As` dialog
     }
 
-    let uiMessage: { title?: string, message?: string };
     switch (err.errorType) {
       case 'File_Access_Error':
         this.form.setFileNameErrors({ fileAccessError: true });
         // break; Yes, fall-through is intentional
       case 'Insufficient_Permissions':
-        uiMessage = this.uiMessages.get(err.errorType);
+        this.showMessage('error', err.errorType);
         break;
       default:
-        uiMessage = this.uiMessages.get('General_Error');
+        this.showMessage('error', 'General_Error');
         break;
     }
+  }
 
-    this.homeService.showErrorMessage(uiMessage);
+  private showMessage(type: 'success' | 'error' | 'warning', id: string): void {
+    const uiMessage = this.uiMessages.get(id);
+
+    if (!uiMessage) {
+      throw Error('Could not find requested message');
+    }
+
+    switch (type) {
+      case 'success':
+        this.lockPdfService.showSuccessMessage(uiMessage);
+        break;
+      case 'error':
+        this.lockPdfService.showErrorMessage(uiMessage);
+        break;
+      case 'warning':
+        this.lockPdfService.showWarningMessage(uiMessage);
+        break;
+    }
   }
 
   private saveState(): void {
-    this.homeService.saveState(this.form.value);
+    this.lockPdfService.saveState(this.form.value);
   }
 
   private loadState(): void {
-    const state = this.homeService.popState();
+    const state = this.lockPdfService.popState();
 
     if (!state) {
       return;
@@ -183,6 +218,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private initForm(): void {
-    (this as { form: HomeForm }).form = new HomeForm(this.passwordInput, this.pdfDocumentValidator);
+    (this as { form: LockPdfForm }).form = new LockPdfForm(this.passwordInput, this.pdfDocumentValidator);
   }
 }

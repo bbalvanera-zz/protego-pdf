@@ -1,7 +1,7 @@
 import { FormControl, ValidationErrors } from '@angular/forms';
 import { PasswordInput } from '../password-input/classes/password-input';
 
-export function passwordInputRequiredValidator(control: FormControl): ValidationErrors | null {
+export function passwordRequiredValidator(control: FormControl): ValidationErrors | null {
   const value = control.value as PasswordInput;
 
   if (isEmptyPassword(value.password)) {

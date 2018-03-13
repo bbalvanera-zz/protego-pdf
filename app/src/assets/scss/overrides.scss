@@ -41,10 +41,16 @@ body {
 }
 
 .dropdown-item {
+  padding: 0.1rem 1.5rem;
+
   &:hover, &:focus {
     color: $white;
     background-color: $primary;
   }
+}
+
+.dropdown-header {
+  font-size: 0.75rem;
 }
 
 // overrides ngx-toastr style
@@ -53,4 +59,25 @@ body {
     min-width: 300px;
     width: initial;
   }
+}
+
+.input-group {
+  border-radius: 0.2rem;
+  border: 1px solid $gray-400;
+
+  * {
+    border: none;
+  }
+
+  &.focus {
+    border-color: $blue;
+  }
+
+  &.is-invalid {
+    border-color: $danger !important;
+  }
+}
+
+.invalid-feedback {
+  display: block;
 }

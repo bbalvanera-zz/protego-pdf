@@ -4,7 +4,7 @@ import { filter } from 'rxjs/operators/filter';
 
 import { PasswordInputComponent } from '../password-input/password-input.component';
 import { PasswordInput } from '../password-input/classes/password-input';
-import { passwordInputRequiredValidator } from './password-input-required.validator';
+import { passwordRequiredValidator } from './password-required.validator';
 
 const DEFAULT_VALUES = {
   fileName: '',
@@ -16,15 +16,15 @@ const DEFAULT_VALUES = {
 };
 
 /**
- * Provides convenience methods to interact with the HomeForm.
+ * Provides convenience methods to interact with the LockPdfForm.
  */
-export class HomeForm extends FormGroup {
+export class LockPdfForm extends FormGroup {
   private passwordInput: PasswordInputComponent;
 
   constructor(passwordInput: PasswordInputComponent, pdfDocumentValidator: AsyncValidatorFn) {
     const controls = {
       fileName: new FormControl(DEFAULT_VALUES.fileName, Validators.required, pdfDocumentValidator),
-      password: new FormControl(DEFAULT_VALUES.password, passwordInputRequiredValidator),
+      password: new FormControl(DEFAULT_VALUES.password, passwordRequiredValidator),
       displayName: new FormControl(DEFAULT_VALUES.displayName)
     };
 
@@ -38,6 +38,7 @@ export class HomeForm extends FormGroup {
 
   public get password(): FormControl { return this.get('password') as FormControl; }
   public get passwordValue(): string { return (this.password.value as PasswordInput).password; }
+  public get passwordValid(): boolean { return !this.get('password').errors; }
 
   public reset(): void {
     super.reset(DEFAULT_VALUES, { onlySelf: true, emitEvent: false });
@@ -65,6 +66,10 @@ export class HomeForm extends FormGroup {
       }
     }
 
+    this.passwordInput.showValidation();
+  }
+
+  public ensurePasswordValue(): void {
     this.passwordInput.showValidation();
   }
 }

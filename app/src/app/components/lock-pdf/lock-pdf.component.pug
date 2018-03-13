@@ -19,11 +19,11 @@
             input(type="hidden", formControlName="fileName")
           .col-3
             button.btn.btn-primary.btn-sm.btn-block(type="button", (click)="browse()") Examinar
-    .card-body
+    .card-body.pt-3
       .container.p-0
         .row
           .col
-            button.btn.btn-link.btn-sm.pl-1.text-primary(type="button", routerLink="/password-gen") Obtener una contraseña
+            app-passwords-dropdown((passwordSelected)="setPassword($event)", (savePassword)="savePassword()")
         .row
           .col-9.pr-0
             app-password-input(formControlName="password")
@@ -33,13 +33,13 @@
               .btn-group(ngbDropdown, placement="bottom-right", role="group", aria-label="Protect options dropdown")
                 button.btn.btn-primary.dropdown-toggle-split(ngbDropdownToggle)
                 .dropdown-menu(ngbDropdownMenu)
-                  button.btn-sm.dropdown-item((click)="protectDocument(0)") Overwrite Existing File
-                  button.btn-sm.dropdown-item((click)="protectDocument(1)") Save to a New File
-                  button.btn-sm.dropdown-item((click)="protectDocument(2)") Save As
+                  button.btn-sm.dropdown-item(type="button", (click)="protectDocument(0)") Overwrite Existing File
+                  button.btn-sm.dropdown-item(type="button", (click)="protectDocument(1)") Save to a New File
+                  button.btn-sm.dropdown-item(type="button", (click)="protectDocument(2)") Save As
   .card-footer
     button.btn.btn-sm.btn-outline-secondary(type="button")
       i.fa.fa-cog(aria-hidden="true")
-    button.btn.btn-sm.btn-outline-secondary(type="button")
+    button.btn.btn-sm.btn-outline-secondary(type="button", (click)="doDd()")
       i.fa.fa-question-circle(aria-hidden="true")
 .drop-zone(*ngIf="readyForDataTransfer")
   .drop-zone-layer
@@ -52,3 +52,5 @@ app-ui-messages
   app-ui-message(id="File_Access_Error", title="Could not protect your file", message="The file is open in another program")
   app-ui-message(id="Insufficient_Permissions", title="Could not protect your file", message="Access to the file is denied")
   app-ui-message(id="General_Error", title="Could not protect your file", message="An unexpected error has ocurred")
+  app-ui-message(id="Invalid_Password_To_Save", message="Please specify a valid password to save")
+  app-ui-message(id="PasswordSaved_SuccessMessage", message="Your password has been saved")
