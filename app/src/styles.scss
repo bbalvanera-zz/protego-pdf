@@ -6,3 +6,23 @@
 .main-container {
   padding: 0.2rem;
 }
+
+.password-input {
+  font-family: $font-family-monospace;
+
+  &::placeholder {
+    font-family: $font-family-sans-serif;
+  }
+
+  &[disabled]::placeholder {
+    color: $gray-200;
+  }
+
+  &[readonly] {
+    background-color: inherit;
+  }
+}
+
+.card-body.fixed-height {
+  height: 13.19rem;
+}
