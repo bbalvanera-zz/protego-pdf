@@ -38,13 +38,13 @@
                   button.btn-sm.dropdown-item(type="button", (click)="protectDocument(2)") Save As
   .card-footer
     button.btn.btn-sm.btn-outline-secondary(type="button")
-      i.fa.fa-cog(aria-hidden="true")
-    button.btn.btn-sm.btn-outline-secondary(type="button", (click)="doDd()")
-      i.fa.fa-question-circle(aria-hidden="true")
+      i.fas.fa-cog(aria-hidden="true")
+    button.btn.btn-sm.btn-outline-secondary(type="button")
+      i.fas.fa-question-circle(aria-hidden="true")
 .drop-zone(*ngIf="readyForDataTransfer")
   .drop-zone-layer
     h1
-      i.fa.fa-file-pdf-o(aria-hidden="true")
+      i.far.fa-file-pdf
     p Suelte el archivo aqui
   .drop-zone-overlay((dragleave)="cancelDataTransfer()", (drop)="acceptDataTransfer($event.dataTransfer)")
 app-ui-messages
