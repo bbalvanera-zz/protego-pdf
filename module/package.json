@@ -25,16 +25,16 @@
     "password",
     "service"
   ],
-  "dependencies": { },
+  "dependencies": {},
   "devDependencies": {
-    "@types/jest": "^20.0.2",
-    "@types/node": "^8.0.2",
-    "jest": "^20.0.4",
-    "jest-cli": "^20.0.0",
-    "nsp": "^2.6.3",
-    "ts-jest": "^20.0.6",
-    "tslint": "~5.7.0",
-    "typescript": "~2.4.2"
+    "@types/jest": "^22.2.0",
+    "@types/node": "^8.0.58",
+    "jest": "^22.4.2",
+    "jest-cli": "^22.4.2",
+    "nsp": "^3.2.1",
+    "ts-jest": "^22.4.1",
+    "tslint": "^5.9.1",
+    "typescript": "^2.7.2"
   },
   "repository": {
     "type": "git",
