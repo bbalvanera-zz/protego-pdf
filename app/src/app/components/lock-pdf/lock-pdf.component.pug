@@ -1,6 +1,6 @@
-.card((dragenter)="prepareForDataTransfer($event.dataTransfer.items[0])")
+.card.fixed-height((dragenter)="prepareForDataTransfer($event.dataTransfer.items[0])")
   h6.card-header.bg-primary.text-light Proteger documento
-  div([formGroup]="form")
+  div([formGroup]="form", style="height:283px")
     .card-body.border.border-top-0.border-right-0.border-left-0
       .container.p-0
         .row
@@ -19,7 +19,7 @@
             input(type="hidden", formControlName="fileName")
           .col-3
             button.btn.btn-primary.btn-sm.btn-block(type="button", (click)="browse()") Examinar
-    .card-body.pt-3
+    .card-body.h-100.pt-3
       .container.p-0
         .row
           .col

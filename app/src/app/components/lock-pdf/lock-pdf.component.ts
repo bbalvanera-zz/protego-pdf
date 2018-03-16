@@ -12,6 +12,7 @@ import { UIMessagesDirective } from '../../shared/directives/ui-messages.directi
 import { PasswordInputComponent } from './password-input/password-input.component';
 import { PasswordsDropdownComponent } from './passwords-dropdown/passwords-dropdown.component';
 import { PDF_DOCUMENT_VALIDATOR, pdfDocumentValidatorProvider } from './classes/pdf-document.validator';
+import { Logger } from '../../shared/logging/logger';
 
 const path = window.require('path');
 
@@ -53,8 +54,6 @@ export class LockPdfComponent implements OnInit, OnDestroy {
     this.router.events
       .pipe(
         takeUntil(this.unsubscriber),
-        // Doing `event instanceOf NavigationStart && event.url === '/password-gen'` would have worked
-        // but I like it this way.
         filter(event => event instanceof NavigationStart)
       )
       .subscribe(_ => {
@@ -76,10 +75,15 @@ export class LockPdfComponent implements OnInit, OnDestroy {
 
   public browse(): void {
     this.lockPdfService.selectFile()
-      .subscribe(file => {
-        // use ngZone since this call comes from a different thread (MainProcess thread).
-        this.zone.run(() => this.setFileName(file));
-      });
+      .subscribe(
+        file => {
+          // use ngZone since this call comes from a different thread (MainProcess thread).
+          this.zone.run(() => this.setFileName(file));
+        },
+        err => {
+          Logger.error(`[LockPdf.browse] Error in lockPdfService.selectFile: ${err.errorDescription}`);
+        }
+      );
   }
 
   public prepareForDataTransfer(transferItem: DataTransferItem): void {
@@ -135,8 +139,7 @@ export class LockPdfComponent implements OnInit, OnDestroy {
         () => {
           this.passwordsDropdown.refresh();
           this.showMessage('success', 'PasswordSaved_SuccessMessage');
-        },
-        reason => console.log(reason) // add proper logging
+        }
       );
   }
 
@@ -161,7 +164,7 @@ export class LockPdfComponent implements OnInit, OnDestroy {
     this.form.reset();
   }
 
-  private handleProtectError(err: { errorType: string}): void {
+  private handleProtectError(err: { errorType: string, errorDescription?: string }): void {
     if (err.errorType === 'Canceled_By_User') {
       return; // when user cancels `Save As` dialog
     }
@@ -174,6 +177,7 @@ export class LockPdfComponent implements OnInit, OnDestroy {
         this.showMessage('error', err.errorType);
         break;
       default:
+        Logger.error(`[LockPdf.protectDocument] Error in LockPdfService.protectDocument: ${err.errorDescription}`);
         this.showMessage('error', 'General_Error');
         break;
     }

@@ -82,8 +82,8 @@ export class PasswordOptionsComponent implements OnInit, OnDestroy, ControlValue
         passwordLength,
         Validators.compose([
           Validators.required,
-          Validators.min(0),
-          Validators.max(100)]
+          Validators.min(1),
+          Validators.max(32)]
         )
       ],
       lowerCase,

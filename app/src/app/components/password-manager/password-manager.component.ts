@@ -10,6 +10,7 @@ import { UIMessagesDirective } from '../../shared/directives';
 import { PasswordManagerForm } from './password-manager.form';
 import { UNIQUE_PASSWORD_NAME_VALIDATOR, uniquePasswordNameValidatorProvider } from '../../shared/unique-password-name.validator';
 import { takeUntil, tap } from 'rxjs/operators';
+import { Logger } from '../../shared/logging/logger';
 
 @Component({
   selector: 'app-password-manager',
@@ -22,7 +23,7 @@ export class PasswordManagerComponent implements OnInit {
   private uiMessages: UIMessagesDirective;
   private passwordCache: SavedPassword[];
 
-  public savedPasswords: Observable<SavedPassword[]>;
+  public savedPasswords: Observable<SavedPassword[]>; // to be used by the *ngFor directive
   public form: PasswordManagerForm;
 
   constructor(
@@ -51,11 +52,14 @@ export class PasswordManagerComponent implements OnInit {
     };
 
     this.savedPasswordsService.save(pwd)
-      .subscribe(_ => {
-        this.form.reset();
-        this.refresh();
-        this.showMessage('success', 'Success_Message');
-      });
+      .subscribe(
+        () => {
+          this.form.reset();
+          this.refresh();
+          this.showMessage('success', 'Success_Message');
+        },
+        err => Logger.error(`[PasswordManager.save] Error in SavedPasswordsService.save(): ${err.errorDescription}`)
+      );
   }
 
   public getItemId(index: number, pwd: SavedPassword): string {
@@ -68,7 +72,10 @@ export class PasswordManagerComponent implements OnInit {
     if (update) {
       update.favorite = Number(!update.favorite);
       this.savedPasswordsService.save(update)
-        .subscribe(() => this.refresh());
+        .subscribe(
+          () => this.refresh(),
+          err => Logger.error(`[PasswordManager.updateFavorite] Error in PwdService.save: ${err.errorDescription}`)
+        );
     }
   }
 
@@ -77,7 +84,10 @@ export class PasswordManagerComponent implements OnInit {
 
     if (del) {
       this.savedPasswordsService.delete(id)
-        .subscribe(() => this.refresh());
+        .subscribe(
+          () => this.refresh(),
+          err => Logger.error(`[PasswordManager.deletePassword] Error in PwdService.delete: ${err.errorDescription}`)
+        );
     }
   }
 
