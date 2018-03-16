@@ -1,0 +1,670 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="c5c0c64d95799690e807514d432f016c9ad8202a" datatype="html">
+        <source>Password to open the document</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/password-input/password-input.component.ts</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <note priority="1" from="description">Conveys that this input is to enter the password to open the document after locking it</note>
+        <note priority="1" from="meaning">password input</note>
+      <target>Contrase&amp;ntilde;a para abrir el documento</target></trans-unit>
+      <trans-unit id="3455d88c6ea361f6ad227dae434398ac21d90ae8" datatype="html">
+        <source>Hide password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/password-input/password-input.component.ts</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <note priority="1" from="description">Tooltip indicating that this button hides the password</note>
+        <note priority="1" from="meaning">hide password</note>
+      <target>Ocultar contrase&amp;ntilde;a</target></trans-unit>
+      <trans-unit id="06ce5d56e2186a2e00d63434b0c055a90603ac2b" datatype="html">
+        <source>Show password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/password-input/password-input.component.ts</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <note priority="1" from="description">Tooltip indicating that this button shows the password</note>
+        <note priority="1" from="meaning">show password</note>
+      <target>Mostrar contrase&amp;ntilde;a</target></trans-unit>
+      <trans-unit id="3384efc78ee4a9c01a165654f083c843bd82ade2" datatype="html">
+        <source>Strength</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/password-input/password-input.component.ts</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <note priority="1" from="description">When no strength is measured</note>
+        <note priority="1" from="meaning">default strength</note>
+      <target>Nivel</target></trans-unit>
+      <trans-unit id="5fbaf56b7df88336f15625fe696b3da1a515c02b" datatype="html">
+        <source>Medium</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/password-input/password-input.component.ts</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <note priority="1" from="description">When the password is of medium strength</note>
+        <note priority="1" from="meaning">medium strength</note>
+      <target>Medio</target></trans-unit>
+      <trans-unit id="2921c35de0130ad8fa93079d914fb4aee8658d2d" datatype="html">
+        <source>Good</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/password-input/password-input.component.ts</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <note priority="1" from="description">When password's strength is good</note>
+        <note priority="1" from="meaning">good strength</note>
+      <target>Aceptable</target></trans-unit>
+      <trans-unit id="58e917947a0629ef8ccfa113b0780622933f1c59" datatype="html">
+        <source>Strong</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/password-input/password-input.component.ts</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+        <note priority="1" from="description">When the password is strong</note>
+        <note priority="1" from="meaning">strong password</note>
+      <target>Seguro</target></trans-unit>
+      <trans-unit id="5d0299403dcec316821909381adf816a105a3f52" datatype="html">
+        <source>Weak</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/password-input/password-input.component.ts</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <note priority="1" from="description">When the password's strength is weak</note>
+        <note priority="1" from="meaning">weak password</note>
+      <target>D&amp;eacute;bil</target></trans-unit>
+      <trans-unit id="89d8a2171242b4a055058521c8330d5fa46417bc" datatype="html">
+        <source>Password strength meter</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/password-input/password-input.component.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <note priority="1" from="description">Tooltip indicating password strength meter</note>
+        <note priority="1" from="meaning">password strength</note>
+      <target>Nivel de seguridad de contrase&amp;ntilde;a</target></trans-unit>
+      <trans-unit id="pwdRequiredMessage" datatype="html">
+        <source>Please specify a password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/password-input/password-input.component.ts</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-manager/password-manager.component.ts</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <note priority="1" from="description">Lets the user know the field is required</note>
+        <note priority="1" from="meaning">password required msg</note>
+      <target>Escriba una contrase&amp;ntilde;a por favor</target></trans-unit>
+      <trans-unit id="pwdMaxLength" datatype="html">
+        <source>Please specify a password of no more than 32 chars.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/password-input/password-input.component.ts</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-manager/password-manager.component.ts</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <note priority="1" from="description">Lets the user know that the password should be less than 32 chars</note>
+        <note priority="1" from="meaning">password max length</note>
+      <target>Escriba una contrase&amp;ntilde;a de no mas de 32 caracteres</target></trans-unit>
+      <trans-unit id="1dbc83621c78f739da24cc55d7504b6711e20171" datatype="html">
+        <source>Repeat password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/password-input/password-input.component.ts</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <note priority="1" from="description">Conveys that this input is to enter the password a second time for confirmation</note>
+        <note priority="1" from="meaning">password confirm input</note>
+      <target>Confirmar contrase&amp;ntilde;a</target></trans-unit>
+      <trans-unit id="a57558fde1662ac49b1054d37009ab153b7bdd84" datatype="html">
+        <source>Passwords do not match</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/password-input/password-input.component.ts</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+        <note priority="1" from="description">Lets the user know that passwords don't match</note>
+        <note priority="1" from="meaning">password mismatch msg</note>
+      <target>Ambas contrase&amp;ntilde;as deben coincidir</target></trans-unit>
+      <trans-unit id="bdc8969da5383bbe8d1feb9794d888f1ac035991" datatype="html">
+        <source>Save password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/passwords-dropdown/password-add/password-add.component.ts</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <note priority="1" from="description">section title</note>
+      <target>Guardar contrase&amp;ntilde;a</target></trans-unit>
+      <trans-unit id="6375a78209ace58d332d6265d92ddc9543487856" datatype="html">
+        <source>Close</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/passwords-dropdown/password-add/password-add.component.ts</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <note priority="1" from="description">Tooltip indicating action: close this dialog</note>
+        <note priority="1" from="meaning">close</note>
+      <target>Cerrar</target></trans-unit>
+      <trans-unit id="f478a319df3426cdd1f6f4302d1ef9f8e7f0b907" datatype="html">
+        <source>Password name or description</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/passwords-dropdown/password-add/password-add.component.ts</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+        <note priority="1" from="description">Conveys that a name or description should be typed in this input</note>
+        <note priority="1" from="meaning">name or description</note>
+      <target>Nombre o descripci&amp;oacute;n</target></trans-unit>
+      <trans-unit id="markAsFavorite" datatype="html">
+        <source>Mark as favorite</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/passwords-dropdown/password-add/password-add.component.ts</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-manager/password-manager.component.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-manager/password-manager.component.ts</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+      <target>Marcar como favorito</target></trans-unit>
+      <trans-unit id="pwdNameRequired" datatype="html">
+        <source>Please specify a name or description</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/passwords-dropdown/password-add/password-add.component.ts</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-manager/password-manager.component.ts</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <note priority="1" from="description">Lets the user know that a name for the password to be saved needs to be specified</note>
+        <note priority="1" from="meaning">password name required</note>
+      <target>Escriba un nombre o descripci&amp;oacute;n por favor</target></trans-unit>
+      <trans-unit id="pwdNameMaxLength" datatype="html">
+        <source>Please specify a name of no more than 50 chars.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/passwords-dropdown/password-add/password-add.component.ts</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-manager/password-manager.component.ts</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <note priority="1" from="description">Lets the user know that a name of less than 50 chars should be specified</note>
+        <note priority="1" from="meaning">password name max</note>
+      <target>Escriba un nombre de no mas de 50 caracteres por favor</target></trans-unit>
+      <trans-unit id="pwdNameDupd" datatype="html">
+        <source>Please type another name. This one already exists</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/passwords-dropdown/password-add/password-add.component.ts</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-manager/password-manager.component.ts</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <note priority="1" from="description">Lets the user know that the typed name is already in use and another should be specified</note>
+        <note priority="1" from="meaning">password name duplicated</note>
+      <target>Escriba otro nombre por favor. Esta ya est&amp;aacute; en uso</target></trans-unit>
+      <trans-unit id="d95462c8fb437884957e2332e6e22b5911df8eff" datatype="html">
+        <source>Press ENTER to save or ESC to cancel</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/passwords-dropdown/password-add/password-add.component.ts</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      <target>Presione ENTER para guardar o ESC para cancelar</target></trans-unit>
+      <trans-unit id="pwdOptions" datatype="html">
+        <source>Password options</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/passwords-dropdown/passwords-dropdown.component.ts</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-gen/password-gen.component.ts</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+        <note priority="1" from="description">pwd options button</note>
+      <target>Opciones de contrase&amp;ntilde;a</target></trans-unit>
+      <trans-unit id="7ca40e67984f7de2d47a92184b0c62993cc9fe84" datatype="html">
+        <source>Favorite passwords</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/passwords-dropdown/passwords-dropdown.component.ts</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <note priority="1" from="description">label</note>
+      <target>Contrase&amp;ntilde;as favoritas</target></trans-unit>
+      <trans-unit id="3f6675e2bca390ee27520d49009d444adbb1d0bd" datatype="html">
+        <source>Generate a password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/passwords-dropdown/passwords-dropdown.component.ts</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-gen/password-gen.component.ts</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <note priority="1" from="description">action</note>
+      <target>Generar una contrase&amp;ntilde;a</target></trans-unit>
+      <trans-unit id="7625763f701223326f9ad85bbef58141a918ea10" datatype="html">
+        <source>Save typed password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/passwords-dropdown/passwords-dropdown.component.ts</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <note priority="1" from="description">action</note>
+      <target>Guardar contrase&amp;ntilde;a</target></trans-unit>
+      <trans-unit id="62ac803a6127b508faa712714fb5e95060bc851d" datatype="html">
+        <source>Password manager</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/passwords-dropdown/passwords-dropdown.component.ts</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-manager/password-manager.component.ts</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <note priority="1" from="description">action</note>
+      <target>Manejador de contrase&amp;ntilde;as</target></trans-unit>
+      <trans-unit id="4665abe8a409ba30eae7c25d0cf383264350668f" datatype="html">
+        <source>Password options dropdown</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/passwords-dropdown/passwords-dropdown.component.ts</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      <target>Lista de opciones de contrase&amp;ntilde;a</target></trans-unit>
+      <trans-unit id="16a9f0b6af01b347d80fd6d71ae71fef984fe45f" datatype="html">
+        <source>Protect PDF Document</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/lock-pdf.component.ts</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <note priority="1" from="description">component header</note>
+        <note priority="1" from="meaning">section title</note>
+      <target>Proteger Documento PDF</target></trans-unit>
+      <trans-unit id="b97a5ecbb393c7c4e4df77dcae84789f9d4d469a" datatype="html">
+        <source>Drag &amp; drop a file here or click to Browse</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/lock-pdf.component.ts</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <note priority="1" from="description">Conveys that the user can drag-&amp;-drop a file or click on browse button</note>
+        <note priority="1" from="meaning">file name input</note>
+      <target>Arrastre y suelte un archivo aqu&amp;iacute; o d&amp;eacute; clic en Examinar</target></trans-unit>
+      <trans-unit id="f47cc56af5eeaf336bb2b640bc2d777999fb34fb" datatype="html">
+        <source>Invalid or corrupted PDF file. Please select another file</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/lock-pdf.component.ts</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <note priority="1" from="description">Lets the user know that the file is invalid or corrupted</note>
+        <note priority="1" from="meaning">notAPdfDocument msg</note>
+      <target>Archivo PDF inv&amp;aacute;lido o corrompido. Seleccione otro por favor</target></trans-unit>
+      <trans-unit id="1ae0999e522412804426a01040dd7bca0e2c73bd" datatype="html">
+        <source>File open in another program. Please select another file</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/lock-pdf.component.ts</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <note priority="1" from="description">Lets the user know that the file is inaccessible</note>
+        <note priority="1" from="meaning">fileAccessError msg</note>
+      <target>Archivo abierto en otro programa. Seleccione otro por favor</target></trans-unit>
+      <trans-unit id="d73e79642f4edc646ea464bb31b559cc0f92da58" datatype="html">
+        <source>Please select a file to protect</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/lock-pdf.component.ts</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <note priority="1" from="description">Lets the user know that a file is required</note>
+        <note priority="1" from="meaning">file required msg</note>
+      <target>Seleccione un archivo para proteger por favor</target></trans-unit>
+      <trans-unit id="f670aaf7ba65f4ef7eb0b8e436a43b7ca28940a0" datatype="html">
+        <source>Browse</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/lock-pdf.component.ts</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <note priority="1" from="description">The button to browse for a file</note>
+        <note priority="1" from="meaning">browse button</note>
+      <target>Examinar</target></trans-unit>
+      <trans-unit id="01dbc965be9db1ac01f8cc67f76b64bc5e7b069d" datatype="html">
+        <source>Browse files</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/lock-pdf.component.ts</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <note priority="1" from="description">Tooltip indicating to browse file</note>
+        <note priority="1" from="meaning">browse files</note>
+      <target>Examinar archivos</target></trans-unit>
+      <trans-unit id="054d69e0d7d50e6c692183724907e6aa22b7bc58" datatype="html">
+        <source>Protect</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/lock-pdf.component.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+        <note priority="1" from="description">The button to protect the pdf document</note>
+        <note priority="1" from="meaning">protect button</note>
+      <target>Proteger</target></trans-unit>
+      <trans-unit id="2558816f10d54380522ecee5051fd2209170f3d3" datatype="html">
+        <source>Protect options</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/lock-pdf.component.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+        <note priority="1" from="description">Tooltip indicating these are additional protection options</note>
+        <note priority="1" from="meaning">protect options</note>
+      <target>Opciones de protecci&amp;oacute;n</target></trans-unit>
+      <trans-unit id="ccc80fa765da97845ff832c6ffa021b854e0e348" datatype="html">
+        <source>Overwrite Existing File</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/lock-pdf.component.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <note priority="1" from="description">Lets the user know this option will overwrite the existing file</note>
+        <note priority="1" from="meaning">overwrite option</note>
+      <target>Sobreescribir archivo</target></trans-unit>
+      <trans-unit id="8e616c4e20a75c6ab3fdf0feee9cc36090323a10" datatype="html">
+        <source>Save to a New File</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/lock-pdf.component.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <note priority="1" from="description">Lets the user know this option will create a new file</note>
+        <note priority="1" from="meaning">save new option</note>
+      <target>Crear nuevo archivo</target></trans-unit>
+      <trans-unit id="e8076e2948295d27ecfe51a24faf3f8f0737c77c" datatype="html">
+        <source>Save As</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/lock-pdf.component.ts</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+        <note priority="1" from="description">Lets the user know this option will open the `save as` dialog</note>
+        <note priority="1" from="meaning">save as option</note>
+      <target>Guardar como...</target></trans-unit>
+      <trans-unit id="554babba495d0c0a915c008313a52a58a3fb25a9" datatype="html">
+        <source>Protect options dropdown</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/lock-pdf.component.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+        <note priority="1" from="description">Aria label to let know that there is a dropdown available with more protection options</note>
+        <note priority="1" from="meaning">protect options dropdown</note>
+      <target>Lista de opciones de protecci&amp;oacute;n</target></trans-unit>
+      <trans-unit id="5114045703118cd703e6a287a0fae4954338e379" datatype="html">
+        <source>Settings</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/lock-pdf.component.ts</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+        <note priority="1" from="description">Tooltip indicating this is the settings button</note>
+        <note priority="1" from="meaning">settings</note>
+      <target>Opciones</target></trans-unit>
+      <trans-unit id="5f9aaf117ef9471cb297bd866e526716037f48e7" datatype="html">
+        <source>Help</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/lock-pdf.component.ts</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+        <note priority="1" from="description">Tooltip indicating this is the help button</note>
+        <note priority="1" from="meaning">help</note>
+      <target>Ayuda</target></trans-unit>
+      <trans-unit id="e0b5ab536f32c2d65b90ab5da4a86a867b4fecdb" datatype="html">
+        <source>Drop your file here</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/lock-pdf.component.ts</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+        <note priority="1" from="description">Lets the user know they can drop the file here</note>
+        <note priority="1" from="meaning">drop zone</note>
+      <target>Suelte el archivo aqu&amp;iacute;</target></trans-unit>
+      <trans-unit id="babaacfbeab0eb52055c5a7d6719ab6ec648e60b" datatype="html">
+        <source>File protected</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/lock-pdf.component.ts</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+        <note priority="1" from="description">Lets the user know that its Pdf file was protected</note>
+        <note priority="1" from="meaning">success msg title</note>
+      <target>Archivo protegido</target></trans-unit>
+      <trans-unit id="b7b8489cef1a7c4b7944223054f1d9e6900ffbec" datatype="html">
+        <source>The file is open in another program</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/lock-pdf.component.ts</context>
+          <context context-type="linenumber">63</context>
+        </context-group>
+        <note priority="1" from="description">Lets the user know the file is open in another program</note>
+        <note priority="1" from="meaning">fileaccess msg</note>
+      <target>El archivo esta abierto en otro programa</target></trans-unit>
+      <trans-unit id="couldNotProtect" datatype="html">
+        <source>Could not protect your file</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/lock-pdf.component.ts</context>
+          <context context-type="linenumber">63</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/lock-pdf.component.ts</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/lock-pdf.component.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <note priority="1" from="description">Lets the user know that the file could not be protected</note>
+        <note priority="1" from="meaning">fileaccess msg title</note>
+      <target>No se pudo proteger el archivo</target></trans-unit>
+      <trans-unit id="189abaeac2b0548682c0cf3222b4832d2efb7636" datatype="html">
+        <source>Access to the file is denied</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/lock-pdf.component.ts</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+        <note priority="1" from="description">Lets the user know the file could not be accessed</note>
+        <note priority="1" from="meaning">permissions msg</note>
+      <target>El acceso al archivo est&amp;aacute; restringido</target></trans-unit>
+      <trans-unit id="e631fb9594b8c23db6e7a8caeb653f795a193022" datatype="html">
+        <source>An unexpected error has ocurred</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/lock-pdf.component.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <note priority="1" from="description">Lets the user know there was an unexpected error</note>
+        <note priority="1" from="meaning">general error msg</note>
+      <target>Ha occurrido un error inesperado</target></trans-unit>
+      <trans-unit id="db05aa13decc0241ec3e2cd0882625d7ca9852b7" datatype="html">
+        <source>Please specify a valid password to save</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/lock-pdf.component.ts</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <note priority="1" from="description">Lets the user know that a valid password needs to be specified</note>
+      <target>Escriba una contrase&amp;ntilde;a v&amp;aacute;lida para guardar por favor</target></trans-unit>
+      <trans-unit id="passwordSaved" datatype="html">
+        <source>Your password has been saved</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/lock-pdf/lock-pdf.component.ts</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-manager/password-manager.component.ts</context>
+          <context context-type="linenumber">63</context>
+        </context-group>
+        <note priority="1" from="description">Lets the user know when a password was successfuly saved</note>
+      <target>Su contrase&amp;ntilde;a ha sido guardada</target></trans-unit>
+      <trans-unit id="8c25ca421c95912b3f7d6a277991c551d5439b4c" datatype="html">
+        <source>Use</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-gen/password-gen.component.ts</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <note priority="1" from="description">Use password button</note>
+      <target>Usar</target></trans-unit>
+      <trans-unit id="24813b8a3e45f0b57136c18d003027262cfe2d1f" datatype="html">
+        <source>Options</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-gen/password-gen.component.ts</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      <target>Opciones</target></trans-unit>
+      <trans-unit id="1d32e51e70d8606898eee18a8fdec9f5d7d8bc54" datatype="html">
+        <source>Generate again</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-gen/password-gen.component.ts</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+        <note priority="1" from="description">Conveys that a new password will be generated</note>
+        <note priority="1" from="meaning">action</note>
+      <target>Generar nuevamente</target></trans-unit>
+      <trans-unit id="9afd57d957cb81cb6e38b9a4500a1c43597000cd" datatype="html">
+        <source>Options dropdown</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-gen/password-gen.component.ts</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      <target>Lista de opciones</target></trans-unit>
+      <trans-unit id="6b9fb46967ab200f68c904cfee7c152db3c5ae67" datatype="html">
+        <source>Password name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-manager/password-manager.component.ts</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      <target>Nombre de la contrase&amp;ntilde;a</target></trans-unit>
+      <trans-unit id="c32ef07f8803a223a83ed17024b38e8d82292407" datatype="html">
+        <source>Password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-manager/password-manager.component.ts</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-manager/password-manager.component.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <note priority="1" from="description">password field</note>
+      <target>Contrase&amp;ntilde;a</target></trans-unit>
+      <trans-unit id="b176142bd3e7f188c6b4b6a2e4dfe0c52fdf5cc9" datatype="html">
+        <source>Remove from favorites</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-manager/password-manager.component.ts</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+        <note priority="1" from="description">Tooltip indicating to remove item from favorites</note>
+        <note priority="1" from="meaning">action</note>
+      <target>Quitar de favoritos</target></trans-unit>
+      <trans-unit id="52c9a103b812f258bcddc3d90a6e3f46871d25fe" datatype="html">
+        <source>Save</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-manager/password-manager.component.ts</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+        <note priority="1" from="description">save button</note>
+      <target>Guardar</target></trans-unit>
+      <trans-unit id="cff1428d10d59d14e45edec3c735a27b5482db59" datatype="html">
+        <source>Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-manager/password-manager.component.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        <note priority="1" from="description">column title</note>
+      <target>Nombre</target></trans-unit>
+      <trans-unit id="11a0771f88158a540a54e0e4ec5d25733d65fc0e" datatype="html">
+        <source>Favorite</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-manager/password-manager.component.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <note priority="1" from="description">column title</note>
+      <target>Favorito</target></trans-unit>
+      <trans-unit id="8c2e8b3db7094fde0ae5bcdd65bdadb53b2c26a9" datatype="html">
+        <source>Delete</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-manager/password-manager.component.ts</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+        <note priority="1" from="description">Tooltip indicating delete action</note>
+        <note priority="1" from="meaning">delete action</note>
+      <target>Eliminar</target></trans-unit>
+      <trans-unit id="3d3ae7deebc5949b0c1c78b9847886a94321d9fd" datatype="html">
+        <source>No</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-gen/password-options/password-option/password-option.component.ts</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      <target>No</target></trans-unit>
+      <trans-unit id="4f20f2d5a6882190892e58b85f6ccbedfa737952" datatype="html">
+        <source>Yes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-gen/password-options/password-option/password-option.component.ts</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      <target>Si</target></trans-unit>
+      <trans-unit id="dc24ebd41db37cd5d8620225dc24f51c1550a57d" datatype="html">
+        <source>Password length</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-gen/password-options/password-options.component.ts</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <note priority="1" from="description">Length of password</note>
+        <note priority="1" from="meaning">label</note>
+      <target>Tamaño</target></trans-unit>
+      <trans-unit id="6e9067c3aa07c9e8e136104dfaa3d404faa203e1" datatype="html">
+        <source>Please specify a bigger number</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-gen/password-options/password-options.component.ts</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <note priority="1" from="description">min msg</note>
+      <target>Escriba un numero mayor por favor</target></trans-unit>
+      <trans-unit id="ea42ac10014ebfd12cb7eac392fbdbd4b4c3642e" datatype="html">
+        <source>Please specify a smaller number</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-gen/password-options/password-options.component.ts</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <note priority="1" from="description">max msg</note>
+      <target>Escriba un numero menor por favor</target></trans-unit>
+      <trans-unit id="9f1392bd21ef9373234c0273a8ba26342e61bd23" datatype="html">
+        <source>Please specify a number between 1 and 32</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-gen/password-options/password-options.component.ts</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <note priority="1" from="description">password length required msg</note>
+      <target>Escriba un numero entre 1 y 32 por favor</target></trans-unit>
+      <trans-unit id="423776a5bca23e69dc6b649782a6b5e96604c36f" datatype="html">
+        <source>Use lower-case</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-gen/password-options/password-options.component.ts</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <note priority="1" from="description">Indicates if a lower chars are to be used then generating a password</note>
+        <note priority="1" from="meaning">uc label</note>
+      <target>Usar min&amp;uacute;sculas</target></trans-unit>
+      <trans-unit id="5bc4bd3ec258596be178b4c4fe0e4b426e5358e4" datatype="html">
+        <source>Use numbers</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-gen/password-options/password-options.component.ts</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+        <note priority="1" from="description">Indicates if number are to be used when generating a password</note>
+        <note priority="1" from="meaning">un label</note>
+      <target>Usar n&amp;uacute;meros</target></trans-unit>
+      <trans-unit id="7b04aac3f53d9b8d709bf409b496206ef2974b24" datatype="html">
+        <source>Use upper-case</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-gen/password-options/password-options.component.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <note priority="1" from="description">Indicates if upper chars are to be used when generating a password</note>
+        <note priority="1" from="meaning">uc label</note>
+      <target>Usar may&amp;uacute;sculas</target></trans-unit>
+      <trans-unit id="5f69fc8a28cb2d7f98f3d753eb46b873e4964895" datatype="html">
+        <source>Use special characters</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/components/password-gen/password-options/password-options.component.ts</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <note priority="1" from="description">Indicates if special chars are to be used when generating a password</note>
+        <note priority="1" from="meaning">sc label</note>
+      <target>Usar caracteres especiales</target></trans-unit>
+    </body>
+  </file>
+</xliff>
