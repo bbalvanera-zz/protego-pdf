@@ -49,7 +49,6 @@ export class ElectronService {
     }
 
     const opts: OpenDialogOptions = {
-      title: 'Open Pdf document',
       properties: ['openFile'],
       filters: [
         {
@@ -69,7 +68,6 @@ export class ElectronService {
     }
 
     const opts: OpenDialogOptions = {
-      title: 'Save protected Pdf file',
       filters: [
         {
           name: 'Pdf files',

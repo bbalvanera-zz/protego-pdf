@@ -1,5 +1,5 @@
 .card.fixed-height((dragenter)="prepareForDataTransfer($event.dataTransfer.items[0])")
-  h6.card-header.bg-primary.text-light Proteger documento
+  h6.card-header.bg-primary.text-light(i18n="section title|component header") Protect PDF Document
   div([formGroup]="form", style="height:283px")
     .card-body.border.border-top-0.border-right-0.border-left-0
       .container.p-0
@@ -8,17 +8,29 @@
             input.form-control.form-control-sm.bg-color-normal(
               type="text",
               formControlName="displayName",
-              placeholder="Arrastre aqui un archivo o de clic en Examinar",
+              i18n-placeholder="file name input|Conveys that the user can drag-&-drop a file or click on browse button",
+              placeholder="Drag & drop a file here or click to Browse",
               [ngClass]="{'is-invalid': form.fileName.invalid && form.fileName.dirty}",
               readonly
             )
-            .invalid-feedback.pl-2(*ngIf="form.fileName.errors?.notAPdfDocument && form.fileName.dirty") Invalid or corrupted PDF file. Please select another file
-            .invalid-feedback.pl-2(*ngIf="form.fileName.errors?.fileAccessError && form.fileName.dirty") File open in another program. Please select another file
-            .invalid-feedback.pl-2(*ngIf="form.fileName.errors?.required && form.fileName.dirty") Please select a file to protect
+            .invalid-feedback.pl-2(
+              *ngIf="form.fileName.errors?.notAPdfDocument && form.fileName.dirty",
+              i18n="notAPdfDocument msg|Lets the user know that the file is invalid or corrupted") Invalid or corrupted PDF file. Please select another file
+            .invalid-feedback.pl-2(
+              *ngIf="form.fileName.errors?.fileAccessError && form.fileName.dirty",
+              i18n="fileAccessError msg|Lets the user know that the file is inaccessible") File open in another program. Please select another file
+            .invalid-feedback.pl-2(
+              *ngIf="form.fileName.errors?.required && form.fileName.dirty",
+              i18n="file required msg|Lets the user know that a file is required") Please select a file to protect
             //- use this field to hold full file name and use it for validation since #displayName only holds filename without path
             input(type="hidden", formControlName="fileName")
           .col-3
-            button.btn.btn-primary.btn-sm.btn-block(type="button", (click)="browse()") Examinar
+            button.btn.btn-primary.btn-sm.btn-block(
+              title="Browse files",
+              type="button",
+              (click)="browse()",
+              i18n-title="browse files|Tooltip indicating to browse file",
+              i18n="browse button|The button to browse for a file") Browse
     .card-body.h-100.pt-3
       .container.p-0
         .row
@@ -29,28 +41,80 @@
             app-password-input(formControlName="password")
           .col-3
             .btn-group.d-flex
-              button.btn.btn-primary.btn-sm.btn-block.btn-tall(type="button", (click)="protectDocument(1)") Proteger
-              .btn-group(ngbDropdown, placement="bottom-right", role="group", aria-label="Protect options dropdown")
-                button.btn.btn-primary.dropdown-toggle-split(ngbDropdownToggle)
+              button.btn.btn-primary.btn-sm.btn-block.btn-tall(
+                type="button",
+                (click)="protectDocument(1)",
+                i18n="protect button|The button to protect the pdf document") Protect
+              .btn-group(
+                ngbDropdown,
+                placement="bottom-right",
+                role="group",
+                aria-label="Protect options dropdown",
+                i18n-aria-label="protect options dropdown|Aria label to let know that there is a dropdown available with more protection options")
+                button.btn.btn-primary.dropdown-toggle-split(
+                  ngbDropdownToggle,
+                  title="Protect options",
+                  i18n-title="protect options|Tooltip indicating these are additional protection options",
+                  )
                 .dropdown-menu(ngbDropdownMenu)
-                  button.btn-sm.dropdown-item(type="button", (click)="protectDocument(0)") Overwrite Existing File
-                  button.btn-sm.dropdown-item(type="button", (click)="protectDocument(1)") Save to a New File
-                  button.btn-sm.dropdown-item(type="button", (click)="protectDocument(2)") Save As
+                  button.btn-sm.dropdown-item(
+                    type="button",
+                    i18n="overwrite option|Lets the user know this option will overwrite the existing file",
+                    (click)="protectDocument(0)"
+                  ) Overwrite Existing File
+                  button.btn-sm.dropdown-item(
+                    type="button",
+                    i18n="save new option|Lets the user know this option will create a new file",
+                    (click)="protectDocument(1)"
+                  ) Save to a New File
+                  button.btn-sm.dropdown-item(
+                    type="button",
+                    i18n="save as option|Lets the user know this option will open the `save as` dialog",
+                    (click)="protectDocument(2)"
+                  ) Save As
   .card-footer
-    button.btn.btn-sm.btn-outline-secondary(type="button")
-      i.fas.fa-cog(aria-hidden="true")
-    button.btn.btn-sm.btn-outline-secondary(type="button")
-      i.fas.fa-question-circle(aria-hidden="true")
+    button.btn.btn-sm.btn-outline-secondary(
+      type="button",
+      title="Settings",
+      i18n-title="settings|Tooltip indicating this is the settings button"
+    )
+      i.fas.fa-cog
+    button.btn.btn-sm.btn-outline-secondary(
+      type="button",
+      title="Help",
+      i18n-title="help|Tooltip indicating this is the help button"
+    )
+      i.fas.fa-question-circle
 .drop-zone(*ngIf="readyForDataTransfer")
   .drop-zone-layer
     h1
       i.far.fa-file-pdf
-    p Suelte el archivo aqui
+    p(i18n="drop zone|Lets the user know they can drop the file here") Drop your file here
   .drop-zone-overlay((dragleave)="cancelDataTransfer()", (drop)="acceptDataTransfer($event.dataTransfer)")
 app-ui-messages
-  app-ui-message(id="Success_Message", title="File protected")
-  app-ui-message(id="File_Access_Error", title="Could not protect your file", message="The file is open in another program")
-  app-ui-message(id="Insufficient_Permissions", title="Could not protect your file", message="Access to the file is denied")
-  app-ui-message(id="General_Error", title="Could not protect your file", message="An unexpected error has ocurred")
-  app-ui-message(id="Invalid_Password_To_Save", message="Please specify a valid password to save")
-  app-ui-message(id="PasswordSaved_SuccessMessage", message="Your password has been saved")
+  app-ui-message(
+    id="Success_Message",
+    title="File protected",
+    i18n-title="success msg title|Lets the user know that its Pdf file was protected")
+  app-ui-message(
+    id="File_Access_Error",
+    title="Could not protect your file",
+    i18n-title="fileaccess msg title|Lets the user know that the file could not be protected@@couldNotProtect",
+    i18n="fileaccess msg|Lets the user know the file is open in another program") The file is open in another program
+  app-ui-message(
+    id="Insufficient_Permissions",
+    title="Could not protect your file",
+    i18n-title="@@couldNotProtect"
+    i18n="permissions msg|Lets the user know the file could not be accessed") Access to the file is denied
+  app-ui-message(
+    id="General_Error",
+    title="Could not protect your file",
+    i18n-title="@@couldNotProtect",
+    i18n="general error msg|Lets the user know there was an unexpected error") An unexpected error has ocurred
+  app-ui-message(
+    id="Invalid_Password_To_Save",
+    i18n="Lets the user know that a valid password needs to be specified") Please specify a valid password to save
+  app-ui-message(
+    id="PasswordSaved_SuccessMessage",
+    i18n="Lets the user know when a password was successfuly saved@@passwordSaved") Your password has been saved
+
