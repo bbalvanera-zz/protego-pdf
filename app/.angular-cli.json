@@ -19,7 +19,7 @@
         "styles.scss"
       ],
       "scripts": [
-        "../fontawesome-free-5.0.8/fontawesome-all.min.js"
+        "assets/fontawesome-free-5.0.8/fontawesome-all.min.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {

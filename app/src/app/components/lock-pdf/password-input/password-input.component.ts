@@ -23,7 +23,8 @@ export class PasswordInputComponent implements OnInit, OnDestroy, ControlValueAc
   @ViewChild(PasswordStrengthMeterDirective)
   private passwordStrengthMeter: PasswordStrengthMeterDirective;
   private unsubscribe: Subject<void>;
-  private form: PasswordInputForm;
+
+  public form: PasswordInputForm;
 
   constructor() {
     this.unsubscribe = new Subject<void>();
@@ -78,7 +79,7 @@ export class PasswordInputComponent implements OnInit, OnDestroy, ControlValueAc
     this.form.markChildrenAsPristine();
   }
 
-  private togglePasswordVisibility(visibility: boolean): void {
+  public togglePasswordVisibility(visibility: boolean): void {
     visibility
       ? this.form.disablePasswordConfirm()
       : this.form.enablePasswordConfirm();

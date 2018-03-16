@@ -1,7 +1,5 @@
 /* tslint:disable */
-import * as path from 'path';
-import * as reload from 'electron-reload';
-import * as devtron from 'devtron';
+const path = require('path');
 
 import { app, BrowserWindow, ipcMain, dialog, WebContents, OpenDialogOptions} from 'electron';
 import { EventArgs } from './EventArgs';
@@ -10,6 +8,7 @@ let win: Electron.BrowserWindow;
 const debugMode = /--debug/.test(process.argv[2]);
 
 if (debugMode) {
+  const reload = require('electron-reload');
   reload(__dirname);
 }
 
@@ -49,6 +48,8 @@ function createWindow() {
 
   if (debugMode) {
     win.webContents.openDevTools();
+
+    const devtron = require('devtron');
     devtron.install();
   } else {
     win.setMenu(null);
