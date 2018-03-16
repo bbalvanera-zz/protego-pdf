@@ -9,10 +9,10 @@ import { Logger } from '../../../shared/logging/logger';
   styleUrls: ['./passwords-dropdown.component.scss']
 })
 export class PasswordsDropdownComponent implements OnInit {
-  private favoritePasswords: SavedPassword[];
-
   @Output() public passwordSelected: EventEmitter<string>;
   @Output() public savePassword: EventEmitter<void>;
+
+  public favoritePasswords: SavedPassword[];
 
   constructor(private savedPasswordsService: SavedPasswordsService) {
     this.passwordSelected = new EventEmitter();
@@ -31,6 +31,10 @@ export class PasswordsDropdownComponent implements OnInit {
     );
   }
 
+  public savePasswordRequested(): void {
+    this.savePassword.emit();
+  }
+
   private selectPassword(name: string): void {
     const selected = this.favoritePasswords
       .find(pwd => pwd.name === name);
@@ -38,9 +42,5 @@ export class PasswordsDropdownComponent implements OnInit {
     if (selected) {
       this.passwordSelected.emit(selected.password);
     }
-  }
-
-  private savePasswordRequested(): void {
-    this.savePassword.emit();
   }
 }
