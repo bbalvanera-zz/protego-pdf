@@ -4,6 +4,7 @@
 
 .main-container {
   padding: 0.2rem;
+  overflow: hidden;
 }
 
 .password-input {
@@ -22,6 +23,10 @@
   }
 }
 
+.card.fixed-height {
+  height: 385px;
+}
+
 .card-body.fixed-height {
-  height: 13.19rem;
+  height: 285px;
 }

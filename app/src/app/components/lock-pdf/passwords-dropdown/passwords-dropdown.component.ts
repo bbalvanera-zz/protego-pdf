@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { SavedPasswordsService } from '../../../services/saved-passwords.service';
 import { SavedPassword } from '../../../../modules/protego-pdf-database/entities/saved-password';
+import { Logger } from '../../../shared/logging/logger';
 
 @Component({
   selector: 'app-passwords-dropdown',
@@ -26,7 +27,7 @@ export class PasswordsDropdownComponent implements OnInit {
     this.savedPasswordsService.getFavorites()
     .subscribe(
       favorites => this.favoritePasswords = favorites,
-      reason => console.log(reason) // add proper logging
+      err => Logger.error(`[PasswordsDropdown.refresh] Error in PwdService.getFavorites: ${err.errorDescription}`)
     );
   }
 

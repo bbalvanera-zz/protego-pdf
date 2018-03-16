@@ -1,9 +1,10 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { NgbActiveModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { Component, Inject } from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormControl, Validators, AsyncValidatorFn } from '@angular/forms';
 import { SavedPasswordsService } from '../../../../services/saved-passwords.service';
 import { SavedPassword } from '../../../../../modules/protego-pdf-database/entities/saved-password';
 import { UNIQUE_PASSWORD_NAME_VALIDATOR, uniquePasswordNameValidatorProvider } from '../../../../shared/unique-password-name.validator';
+import { Logger } from '../../../../shared/logging/logger';
 
 @Component({
   selector: 'app-password-add',
@@ -11,7 +12,7 @@ import { UNIQUE_PASSWORD_NAME_VALIDATOR, uniquePasswordNameValidatorProvider } f
   styleUrls: ['./password-add.component.scss'],
   providers: [uniquePasswordNameValidatorProvider]
 })
-export class PasswordAddComponent implements OnInit {
+export class PasswordAddComponent {
   public passwordName: FormControl;
   public favorite: FormControl;
   public password: string; // when opened as modal, this value is set by the caller
@@ -31,10 +32,6 @@ export class PasswordAddComponent implements OnInit {
       uniquePasswordNameValidator
     );
     this.favorite = new FormControl(false);
-  }
-
-  public ngOnInit(): void {
-    return;
   }
 
   public dismissModal(): void {
@@ -58,7 +55,7 @@ export class PasswordAddComponent implements OnInit {
     this.savedPasswordsService.save(savedPassword)
       .subscribe(
         () => this.closeModal(),
-        reason => console.error(reason) // add proper logging
+        err => Logger.error(`[PasswordAdd.save] Error in SavedPasswordsService.save: ${err.errorDescription}`)
       );
   }
 
