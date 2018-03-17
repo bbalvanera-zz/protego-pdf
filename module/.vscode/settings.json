@@ -5,9 +5,11 @@
     "**/.hg": true,
     "**/CVS": true,
     "**/.DS_Store": true,
-    "**/*.html": true,
-    "**/*.spec.ts": true,
-    "gulp-tasks/*.js": true
+    "**/lib": true,
+    "**/bin": true,
+    "**/obj": true,
+    "**/*.csproj*": true,
+    "**/*.sln": true
   },
   "licenser.author": "Bernardo Balvanera",
   "licenser.license": "Custom",

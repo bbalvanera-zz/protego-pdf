@@ -17,15 +17,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AppModule } from './app/app.module';
-import { environment } from './environments/environment';
+import { LockPdfComponent } from './lock-pdf.component';
 
-if (environment.production) {
-  enableProdMode();
-}
+describe('HomeComponent', () => {
+  let component: LockPdfComponent;
+  let fixture: ComponentFixture<LockPdfComponent>;
 
-platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.log(err));
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ LockPdfComponent ]
+    })
+    .compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(LockPdfComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

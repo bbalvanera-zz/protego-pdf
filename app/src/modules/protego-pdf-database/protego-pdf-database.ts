@@ -1,3 +1,22 @@
+/**
+ * Copyright (C) 2018 Bernardo Balvanera
+ *
+ * This file is part of ProtegoPdf.
+ *
+ * ProtegoPdf is a free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import idb, { DB, UpgradeDB } from 'idb';
 
 import { SavedPasswordsStore } from './saved-passwords-store';
@@ -11,12 +30,6 @@ export class ProtegoPdfDatabase {
   constructor() {
     this.wasUpgraded = false;
     this.db = idb.open('protego-pdf', 1, db => this.upgrade(db));
-
-    // this.db.then(db => {
-    //   if (this.wasUpgraded) {
-    //     this.seed().then(() => console.log('done seeding'));
-    //   }
-    // });
   }
 
   public get savedPasswords(): SavedPasswordsStore {
@@ -33,27 +46,4 @@ export class ProtegoPdfDatabase {
 
     this.wasUpgraded = true;
   }
-
-  // private seed(): Promise<void> {
-  //   const letters = 'abcdefghijlkmnopqrstuvwxyz';
-  //   const promise = this.db
-  //     .then(db => {
-  //       const trans     = db.transaction(storeName, 'readwrite');
-  //       const store     = trans.objectStore(storeName);
-
-  //       for (let i = 0; i < 20; i++) {
-  //         const item = {
-  //           name: letters.charAt(i),
-  //           password: 'wafsdfsd',
-  //           favorite: Math.floor((Math.random() * 2))
-  //         }
-
-  //         store.add(item);
-  //       }
-
-  //       return trans.complete
-  //     });
-
-  //   return promise;
-  // }
 }
