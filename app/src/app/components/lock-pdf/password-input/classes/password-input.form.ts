@@ -30,7 +30,10 @@ export class PasswordInputForm extends FormGroup {
 
   constructor(passwordStrengthMeter: PasswordStrengthMeterDirective) {
     const controls = {
-      password: new FormControl('', Validators.required),
+      password: new FormControl(
+        '',
+        Validators.compose([Validators.required, Validators.maxLength(32)])
+      ),
       passwordConfirm: new FormControl(''),
       passwordVisible: new FormControl(false)
     };
