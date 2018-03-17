@@ -20,11 +20,15 @@
 import { FormControl, ValidationErrors } from '@angular/forms';
 import { PasswordInput } from '../password-input/classes/password-input';
 
-export function passwordRequiredValidator(control: FormControl): ValidationErrors | null {
+export function passwordInputValidator(control: FormControl): ValidationErrors | null {
   const value = control.value as PasswordInput;
 
   if (isEmptyPassword(value.password)) {
     return { required: true };
+  }
+
+  if (value.password.length > 32) {
+    return { maxlength: true };
   }
 
   if (value.passwordVisible === false && value.password !== value.passwordConfirm) {

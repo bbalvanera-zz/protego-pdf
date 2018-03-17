@@ -23,7 +23,7 @@ import { filter } from 'rxjs/operators/filter';
 
 import { PasswordInputComponent } from '../password-input/password-input.component';
 import { PasswordInput } from '../password-input/classes/password-input';
-import { passwordRequiredValidator } from './password-required.validator';
+import { passwordInputValidator } from './password-input.validator';
 
 const DEFAULT_VALUES = {
   fileName: '',
@@ -43,7 +43,7 @@ export class LockPdfForm extends FormGroup {
   constructor(passwordInput: PasswordInputComponent, pdfDocumentValidator: AsyncValidatorFn) {
     const controls = {
       fileName: new FormControl(DEFAULT_VALUES.fileName, Validators.required, pdfDocumentValidator),
-      password: new FormControl(DEFAULT_VALUES.password, passwordRequiredValidator),
+      password: new FormControl(DEFAULT_VALUES.password, passwordInputValidator),
       displayName: new FormControl(DEFAULT_VALUES.displayName)
     };
 

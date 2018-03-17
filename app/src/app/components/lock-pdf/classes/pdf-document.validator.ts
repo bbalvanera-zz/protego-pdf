@@ -41,7 +41,6 @@ let timeout: NodeJS.Timer;
 
 export function pdfDocumentValidator(pdfService: PdfProtectService): AsyncValidatorFn {
   return (control: AbstractControl): Observable<ValidationErrors | null> => {
-    console.log('validation requested');
     const value = control.value;
 
     if (!value || value.length === 0) {
@@ -57,7 +56,7 @@ export function pdfDocumentValidator(pdfService: PdfProtectService): AsyncValida
     return Observable.create(observer => {
       timeout = setTimeout(() => {
         timeout = null;
-        console.log('actual validation');
+
         pdfService.pdfDocument(value)
         .pipe(
           map((isPdf: boolean): ValidationErrors | null => isPdf ? null : { notAPdfDocument : true }),
