@@ -26,6 +26,7 @@ export class BrowserConsole extends TransportStream {
   public log(info: any, callback: any): void {
     setImmediate(() => (this as any).emit('logger', info));
 
+    /* tslint:disable:no-console */
     info[LEVEL] === 'error' ? console.error(info[MESSAGE]) : console.log(info[MESSAGE]);
 
     if (callback) {

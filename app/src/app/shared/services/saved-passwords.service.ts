@@ -25,8 +25,8 @@ import { of as observableOf } from 'rxjs/observable/of';
 import { map } from 'rxjs/operators/map';
 import { mergeMap } from 'rxjs/operators';
 
-import { SavedPassword } from '../../modules/protego-pdf-database/entities/saved-password';
-import { ProtegoPdfDatabase } from '../../modules/protego-pdf-database/protego-pdf-database';
+import { SavedPassword } from '../../../modules/protego-pdf-database/entities/saved-password';
+import { ProtegoPdfDatabase } from '../../../modules/protego-pdf-database/protego-pdf-database';
 
 @Injectable()
 export class SavedPasswordsService {

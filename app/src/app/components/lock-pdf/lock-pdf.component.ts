@@ -131,12 +131,14 @@ export class LockPdfComponent implements OnInit, OnDestroy {
 
     this.lockPdfService.protectFile(this.form.fileNameValue, this.form.passwordValue, mode)
       .subscribe(
-        _ => {
+        savePath => {
           // use ngZone since this could potentially be called by a different thread (MainProcess thread)
           // usually when `Save As` is selected.
           this.zone.run(() => {
             this.reset();
-            this.showMessage('success', 'Success_Message');
+
+            const { message } = this.uiMessages.get('Success_Message');
+            this.lockPdfService.showFileSavedMessage(savePath, message);
           });
         },
         err => {
