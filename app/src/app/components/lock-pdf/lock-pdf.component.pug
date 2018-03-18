@@ -28,6 +28,7 @@
               i18n-placeholder="file name input|Conveys that the user can drag-&-drop a file or click on browse button",
               placeholder="Drag & drop a file here or click to Browse",
               [ngClass]="{'is-invalid': form.fileName.invalid && form.fileName.dirty}",
+              (click)="browse()",
               readonly
             )
             .invalid-feedback.pl-2(
@@ -134,4 +135,3 @@ app-ui-messages
   app-ui-message(
     id="PasswordSaved_SuccessMessage",
     i18n="Lets the user know when a password was successfuly saved@@passwordSaved") Your password has been saved
-

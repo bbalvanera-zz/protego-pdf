@@ -17,35 +17,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* You can add global styles to this file, and also import other style files */
-@import "assets/scss/theme";
-@import "assets/scss/overrides";
+import { NgModule } from '@angular/core';
+import { PdfProtectService } from './pdf-protect.service';
+import { ElectronService } from './electron.service';
+import { SavedPasswordsService } from './saved-passwords.service';
+import { StorageService } from './storage.service';
 
-.main-container {
-  padding: 0.2rem;
-  overflow: hidden;
-}
-
-.password-input {
-  font-family: $font-family-monospace;
-
-  &::placeholder {
-    font-family: $font-family-sans-serif;
-  }
-
-  &[disabled]::placeholder {
-    color: $gray-200;
-  }
-
-  &[readonly] {
-    background-color: inherit;
-  }
-}
-
-.card.fixed-height {
-  height: 385px;
-}
-
-.card-body.fixed-height {
-  height: 285px;
-}
+@NgModule({
+  providers: [
+    PdfProtectService,
+    ElectronService,
+    SavedPasswordsService,
+    StorageService
+  ]
+})
+export class ServicesModule { }

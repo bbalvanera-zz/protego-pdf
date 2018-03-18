@@ -16,17 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+ @import "../../../../assets/scss/variables";
+ @import "../../../../../node_modules/bootstrap/scss/functions";
+ @import "../../../../../node_modules/bootstrap/scss/variables";
 
-import { NgModule } from '@angular/core';
-import { PdfProtectService } from './pdf-protect.service';
-import { ElectronService } from './electron.service';
-import { SavedPasswordsService } from './saved-passwords.service';
+:host {
+  min-width: initial !important;
+  display: block;
+}
 
-@NgModule({
-  providers: [
-    PdfProtectService,
-    ElectronService,
-    SavedPasswordsService
-  ]
-})
-export class ServicesModule { }
+.btn-view {
+  margin-left: 0.5rem;
+  font-weight: 700;
+  color: $white;
+  $bgcolor: theme-color-level('success', 6);
+  background-color: lighten($bgcolor, 5%);
+}

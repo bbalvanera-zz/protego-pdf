@@ -20,7 +20,7 @@
 import { Component, Inject } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormControl, Validators, AsyncValidatorFn } from '@angular/forms';
-import { SavedPasswordsService } from '../../../../services/saved-passwords.service';
+import { SavedPasswordsService } from '../../../../shared/services/saved-passwords.service';
 import { SavedPassword } from '../../../../../modules/protego-pdf-database/entities/saved-password';
 import { UNIQUE_PASSWORD_NAME_VALIDATOR, uniquePasswordNameValidatorProvider } from '../../../../shared/unique-password-name.validator';
 import { Logger } from '../../../../shared/logging/logger';

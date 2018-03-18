@@ -32,7 +32,7 @@ import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 import { OpenDialogOptions } from 'electron';
 
-import { EventArgs } from '../../electron/EventArgs';
+import { EventArgs } from '../../../electron/EventArgs';
 
 @Injectable()
 export class ElectronService {
@@ -79,6 +79,13 @@ export class ElectronService {
 
     this.send('OPEN_FILE_DIALOG', opts);
     return this.selectFileSubject.pipe(first());
+  }
+
+  public openFileManager(location?: string): void {
+    const { shell } = window.require('electron');
+    const os = window.require('os');
+
+    shell.showItemInFolder(location || os.homedir());
   }
 
   public getSavePath(): Observable<string> {

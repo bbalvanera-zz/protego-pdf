@@ -26,7 +26,7 @@ import { map } from 'rxjs/operators/map';
 import { debounceTime } from 'rxjs/operators/debounceTime';
 import * as utils from 'underscore';
 
-import { SavedPasswordsService } from '../services/saved-passwords.service';
+import { SavedPasswordsService } from '../shared/services/saved-passwords.service';
 import { Subject } from 'rxjs/Subject';
 
 export const UNIQUE_PASSWORD_NAME_VALIDATOR = new InjectionToken<string>('uniquePasswordNameValidator');
@@ -41,7 +41,6 @@ let timeout;
 
 export function uniquePasswordNameValidator(savedPasswordsService: SavedPasswordsService): AsyncValidatorFn {
   return (control: AbstractControl): Observable<ValidationErrors | null> => {
-    console.log('call to validation');
     if (control.value.length === 0) {
       return observableOf(null);
     }
@@ -51,7 +50,7 @@ export function uniquePasswordNameValidator(savedPasswordsService: SavedPassword
     return Observable.create(observer => {
       timeout = setTimeout(() => {
         timeout = null;
-        console.log(`validating for ${control.value}`);
+
         savedPasswordsService.exists(control.value)
           .pipe(map(exists => exists ? { duplicated: true } : null))
           .subscribe(observer);

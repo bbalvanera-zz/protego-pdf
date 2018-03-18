@@ -33,12 +33,14 @@ import { PdfProtectionOptions } from 'protego-pdf-helper';
 import { ParsedPath } from 'path';
 
 import { PdfProtectMode } from './classes/pdf-protect-mode.enum';
-import { ElectronService } from '../../services/electron.service';
-import { PdfProtectService } from '../../services/pdf-protect.service';
+import { ElectronService } from '../../shared/services/electron.service';
+import { PdfProtectService } from '../../shared/services/pdf-protect.service';
+import { StorageService } from '../../shared/services/storage.service';
 import { PasswordAddComponent } from './passwords-dropdown/password-add/password-add.component';
+import { LockSuccessToastrComponent } from './lock-success-toastr/lock-success-toastr.component';
 
 const path = window.require('path');
-const LOCKPDF_SESSION_KEY = 'LockPdfComponent.state';
+const fs   = window.require('fs');
 
 @Injectable()
 export class LockPdfService {
@@ -46,6 +48,7 @@ export class LockPdfService {
   constructor(
     private electronService: ElectronService,
     private pdfService: PdfProtectService,
+    private storageService: StorageService,
     private toastrService: ToastrService,
     private modalService: NgbModal) {
   }
@@ -58,7 +61,7 @@ export class LockPdfService {
       );
   }
 
-  public protectFile(fileName: string, password: string, mode: PdfProtectMode): Observable<boolean> {
+  public protectFile(fileName: string, password: string, mode: PdfProtectMode): Observable<string> {
     const fileInfo = path.parse(fileName) as ParsedPath;
 
     return this.getTargetFileName(fileInfo, mode)
@@ -74,7 +77,9 @@ export class LockPdfService {
           permissions: 3900 // all permissions. Only ask for 'open document' password, nothing else
         };
 
-        return this.pdfService.protect(source, target, undefined, opts);
+        return this.pdfService
+          .protect(source, target, undefined, opts)
+          .pipe(map(_ => target));
       }));
   }
 
@@ -89,14 +94,16 @@ export class LockPdfService {
   }
 
   public saveState(model: any): void {
-    sessionStorage.setItem(LOCKPDF_SESSION_KEY, JSON.stringify(model));
+    this.storageService.setLockPdfState(model);
   }
 
   public popState(): any {
-    const jsonState = sessionStorage.getItem(LOCKPDF_SESSION_KEY);
-    sessionStorage.removeItem(LOCKPDF_SESSION_KEY);
+    return this.storageService.popLockPdfState();
+  }
 
-    return JSON.parse(jsonState);
+  public showFileSavedMessage(saveLocation: string, message: string): void {
+    this.storageService.setLockPdfDir(saveLocation);
+    this.toastrService.success(message, undefined, { toastComponent: LockSuccessToastrComponent });
   }
 
   public showSuccessMessage({ title, message }: { title?: string, message?: string }): void {
@@ -119,8 +126,9 @@ export class LockPdfService {
         retVal = observableOf(path.join(fileInfo.dir, fileInfo.base));
         break;
       case PdfProtectMode.saveNew:
-        const newName = `${fileInfo.name}.locked${fileInfo.ext}`;
-        retVal = observableOf(path.join(fileInfo.dir, newName));
+        const newFile = this.getUnusedFilename(fileInfo);
+
+        retVal = observableOf(newFile);
         break;
       case PdfProtectMode.saveAs:
         retVal = this.electronService.getSavePath();
@@ -128,5 +136,23 @@ export class LockPdfService {
     }
 
     return retVal;
+  }
+
+  private getUnusedFilename(fileInfo: ParsedPath): string {
+    let fileName = `${fileInfo.name}.locked${fileInfo.ext}`;
+    let unusedFile = path.join(fileInfo.dir, fileName);
+    let count = 1;
+
+    if (!fs.existsSync(unusedFile)) {
+      return unusedFile;
+    }
+
+    do {
+      fileName = `${fileInfo.name}.locked (${count})${fileInfo.ext}`;
+      unusedFile = path.join(fileInfo.dir, fileName);
+      count++;
+    } while (fs.existsSync(unusedFile));
+
+    return unusedFile;
   }
 }
