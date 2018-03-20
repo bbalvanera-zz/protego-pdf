@@ -24,8 +24,9 @@ import { ToastrModule } from 'ngx-toastr';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppRoutingModule } from './app-routing.module';
-import { ServicesModule } from './shared/services/services.module';
+import { ServicesModule } from './services/services.module';
 import { LockPdfModule } from './components/lock-pdf/lock-pdf.module';
+import { UnlockPdfModule } from './components/unlock-pdf/unlock-pdf.module';
 import { PasswordGenModule } from './components/password-gen/password-gen.module';
 import { PasswordManagerModule } from './components/password-manager/password-manager.module';
 
@@ -45,6 +46,7 @@ import { AppComponent } from './app.component';
     }),
     ServicesModule,
     LockPdfModule,
+    UnlockPdfModule,
     PasswordGenModule,
     PasswordManagerModule
   ],

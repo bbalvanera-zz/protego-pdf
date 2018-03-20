@@ -17,6 +17,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.btn-tall {
-  height: 66px;
-}
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+import { UnlockPdfComponent } from './unlock-pdf.component';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: UnlockPdfComponent
+  }
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class UnlockPdfRoutingModule { }

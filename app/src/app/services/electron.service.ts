@@ -32,7 +32,7 @@ import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 import { OpenDialogOptions } from 'electron';
 
-import { EventArgs } from '../../../electron/EventArgs';
+import { EventArgs } from '../../electron/EventArgs';
 
 @Injectable()
 export class ElectronService {

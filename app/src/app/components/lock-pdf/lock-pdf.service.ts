@@ -18,7 +18,6 @@
  */
 
 import { Injectable } from '@angular/core';
-import { AsyncValidatorFn } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs/Observable';
@@ -33,9 +32,9 @@ import { PdfProtectionOptions } from 'protego-pdf-helper';
 import { ParsedPath } from 'path';
 
 import { PdfProtectMode } from './classes/pdf-protect-mode.enum';
-import { ElectronService } from '../../shared/services/electron.service';
-import { PdfProtectService } from '../../shared/services/pdf-protect.service';
-import { StorageService } from '../../shared/services/storage.service';
+import { ElectronService } from '../../services/electron.service';
+import { PdfProtectService } from '../../services/pdf-protect.service';
+import { StorageService } from '../../services/storage.service';
 import { PasswordAddComponent } from './passwords-dropdown/password-add/password-add.component';
 import { LockSuccessToastrComponent } from './lock-success-toastr/lock-success-toastr.component';
 
@@ -61,18 +60,18 @@ export class LockPdfService {
       );
   }
 
-  public protectFile(fileName: string, password: string, mode: PdfProtectMode): Observable<string> {
-    const fileInfo = path.parse(fileName) as ParsedPath;
+  public protectFile(args: { fileName: string, password: string, mode: PdfProtectMode }): Observable<string> {
+    const fileInfo = path.parse(args.fileName) as ParsedPath;
 
-    return this.getTargetFileName(fileInfo, mode)
+    return this.getTargetFileName(fileInfo, args.mode)
       .pipe(mergeMap(target => {
         if (!target || target === '') { // if user cancels save-file dialog, an empty file path is returned
           return observableThrow({ errorType: 'Canceled_By_User' });
         }
 
-        const source = fileName;
+        const source = args.fileName;
         const opts: PdfProtectionOptions = {
-          userPassword: password,
+          userPassword: args.password,
           encryptionMode: 2, // aes128,
           permissions: 3900 // all permissions. Only ask for 'open document' password, nothing else
         };

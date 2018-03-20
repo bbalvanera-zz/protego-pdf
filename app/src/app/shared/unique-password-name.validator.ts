@@ -26,7 +26,7 @@ import { map } from 'rxjs/operators/map';
 import { debounceTime } from 'rxjs/operators/debounceTime';
 import * as utils from 'underscore';
 
-import { SavedPasswordsService } from '../shared/services/saved-passwords.service';
+import { SavedPasswordsService } from '../services/saved-passwords.service';
 import { Subject } from 'rxjs/Subject';
 
 export const UNIQUE_PASSWORD_NAME_VALIDATOR = new InjectionToken<string>('uniquePasswordNameValidator');

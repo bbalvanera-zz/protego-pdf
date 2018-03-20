@@ -17,6 +17,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.btn-tall {
-  height: 66px;
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-unlock-pdf',
+  templateUrl: './unlock-pdf.component.html',
+  styleUrls: ['./unlock-pdf.component.scss']
+})
+export class UnlockPdfComponent implements OnInit {
+
+  public ngOnInit(): void {
+    return;
+  }
+
 }

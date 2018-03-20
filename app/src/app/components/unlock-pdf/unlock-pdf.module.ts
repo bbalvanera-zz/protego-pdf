@@ -17,6 +17,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.btn-tall {
-  height: 66px;
-}
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+import { UnlockPdfComponent } from './unlock-pdf.component';
+import { SharedModule } from '../../shared/shared.module';
+
+@NgModule({
+  declarations: [
+    UnlockPdfComponent
+  ],
+  imports: [
+    CommonModule,
+    SharedModule
+  ],
+  exports: [
+    UnlockPdfComponent
+  ]
+})
+export class UnlockPdfModule { }

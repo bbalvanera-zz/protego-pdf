@@ -22,37 +22,45 @@ import { spawn, ChildProcess } from 'child_process';
 import { PdfOptions } from './pdfOptions';
 import { OperationResult } from './operationResult';
 
+let pdfHelper: ChildProcess;
+let internalResolve: (value?: any | PromiseLike<any>) => void = () => void 0;
+let internalReject: (reason?: any) => void = () => void 0;
+
+(function init(): void {
+  const helperPath = path.resolve(__dirname, '../bin/pdfhelper.exe');
+  pdfHelper = spawn(helperPath);
+
+  pdfHelper.stdout.on('data', (data: Buffer) => {
+    const raw = data.toString('utf8');
+    const response = JSON.parse(raw) as OperationResult<any>;
+
+      response.success
+        ? internalResolve(response.result)
+        : internalReject({
+          errorType: response.errorType,
+          errorDescription: response.errorDescription,
+        });
+  });
+
+  pdfHelper.stderr.once('data', (data: Buffer) => {
+    internalReject(data.toString('utf8'));
+  });
+})();
+
 function executeCall<T>(name: string, options: PdfOptions): Promise<T> {
-  const pdfHelper = getPdfHelper();
   const request = {
     name,
     options
   };
 
-  return new Promise<T>((resolve, reject) => {
-    pdfHelper.stdout.once('data', (data: Buffer) => {
-      const raw = data.toString('utf8');
-      const response = JSON.parse(raw) as OperationResult<T>;
-
-      response.success
-        ? resolve(response.result)
-        : reject({
-          errorType: response.errorType,
-          errorDescription: response.errorDescription,
-        });
-    });
-
-    pdfHelper.stderr.once('data', (data: Buffer) => {
-      reject(data.toString('utf8'));
-    });
-
-    pdfHelper.stdin.write(JSON.stringify(request) + '\n');
+  const retVal = new Promise<T>((resolve, reject) => {
+    internalResolve = resolve;
+    internalReject = reject;
   });
-}
 
-function getPdfHelper(): ChildProcess {
-  const helperPath = path.resolve(__dirname, '../bin/pdfhelper.exe');
-  return spawn(helperPath);
+  pdfHelper.stdin.write(JSON.stringify(request) + '\n');
+
+  return retVal;
 }
 
 export const protegoPdfProxy = {

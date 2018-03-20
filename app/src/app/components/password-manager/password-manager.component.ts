@@ -24,7 +24,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
 import { SavedPassword } from '../../../modules/protego-pdf-database/entities/saved-password';
-import { SavedPasswordsService } from '../../shared/services/saved-passwords.service';
+import { SavedPasswordsService } from '../../services/saved-passwords.service';
 import { UIMessagesDirective } from '../../shared/directives';
 import { PasswordManagerForm } from './password-manager.form';
 import { UNIQUE_PASSWORD_NAME_VALIDATOR, uniquePasswordNameValidatorProvider } from '../../shared/unique-password-name.validator';

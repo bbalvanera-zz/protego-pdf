@@ -17,6 +17,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.btn-tall {
-  height: 66px;
-}
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { UnlockPdfComponent } from './unlock-pdf.component';
+
+describe('UnlockPdfComponent', () => {
+  let component: UnlockPdfComponent;
+  let fixture: ComponentFixture<UnlockPdfComponent>;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ UnlockPdfComponent ]
+    })
+    .compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(UnlockPdfComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

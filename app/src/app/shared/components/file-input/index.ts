@@ -17,6 +17,5 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.btn-tall {
-  height: 66px;
-}
+export { IFileInput } from './ifile-input';
+export { FileInputComponent } from './file-input.component';

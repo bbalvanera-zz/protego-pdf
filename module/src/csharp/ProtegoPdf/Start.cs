@@ -24,7 +24,7 @@ using System.Threading.Tasks;
 
 namespace ProtegoPdf
 {
-  class Start
+    class Start
     {
         static void Main()
         {
@@ -36,8 +36,20 @@ namespace ProtegoPdf
 
         static async Task ProcessAsync()
         {
-            // wait for something to arrive through stdin
-            var input = await Console.In.ReadLineAsync();
+            while (true) {
+                // wait for something to arrive through stdin
+                var input = await Console.In.ReadLineAsync();
+
+                if (input.ToLower() == "exit")
+                {
+                    break;
+                }
+
+                await ProcessInput(input);
+            }
+        }
+
+        private static async Task ProcessInput(string input) {
 
             if (!TryDeserializeInput(input, out PdfRequest request))
             {

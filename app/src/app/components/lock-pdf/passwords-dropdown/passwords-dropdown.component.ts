@@ -18,7 +18,7 @@
  */
 
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { SavedPasswordsService } from '../../../shared/services/saved-passwords.service';
+import { SavedPasswordsService } from '../../../services/saved-passwords.service';
 import { SavedPassword } from '../../../../modules/protego-pdf-database/entities/saved-password';
 import { Logger } from '../../../shared/logging/logger';
 

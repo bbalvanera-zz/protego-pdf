@@ -17,6 +17,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.btn-tall {
-  height: 66px;
+export interface IPasswordInput {
+  readonly value: { password: string, passwordVisible: boolean };
+  readonly valid: boolean;
+
+  ensureValue(): void;
+  setValue(value: { password?: string, passwordVisible?: boolean }): void;
+  reset(): void;
 }

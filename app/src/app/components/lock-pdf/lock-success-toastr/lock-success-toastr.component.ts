@@ -24,8 +24,8 @@ import {
   trigger,
 } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
-import { StorageService } from '../../../shared/services/storage.service';
-import { ElectronService } from '../../../shared/services/electron.service';
+import { StorageService } from '../../../services/storage.service';
+import { ElectronService } from '../../../services/electron.service';
 import { Toast, ToastPackage, ToastrService } from 'ngx-toastr';
 
 @Component({

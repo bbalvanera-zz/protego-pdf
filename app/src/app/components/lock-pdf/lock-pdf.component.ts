@@ -17,57 +17,48 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, OnInit, OnDestroy, ViewChild, NgZone, Inject } from '@angular/core';
-import { AsyncValidatorFn } from '@angular/forms';
+import { Component, OnInit, OnDestroy, ViewChild, NgZone } from '@angular/core';
 import { Router, ActivatedRoute, NavigationStart } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators/takeUntil';
 import { filter } from 'rxjs/operators/filter';
 
 import { PdfProtectMode } from './classes/pdf-protect-mode.enum';
-import { LockPdfForm } from './classes/lock-pdf.form';
 import { LockPdfService } from './lock-pdf.service';
-import { UIMessagesDirective } from '../../shared/directives/ui-messages.directive';
-import { PasswordInputComponent } from './password-input/password-input.component';
+import { IFileInput, FileInputComponent } from '../../shared/components/file-input';
+import { IPasswordInput, PasswordInputComponent } from './password-input';
 import { PasswordsDropdownComponent } from './passwords-dropdown/passwords-dropdown.component';
-import { PDF_DOCUMENT_VALIDATOR, pdfDocumentValidatorProvider } from './classes/pdf-document.validator';
+import { UIMessagesDirective } from '../../shared/directives/ui-messages.directive';
 import { Logger } from '../../shared/logging/logger';
-
-const path = window.require('path');
 
 @Component({
   selector: 'app-lock-pdf',
   templateUrl: './lock-pdf.component.html',
   styleUrls: ['./lock-pdf.component.scss'],
-  providers: [LockPdfService, pdfDocumentValidatorProvider]
+  providers: [LockPdfService]
 })
 export class LockPdfComponent implements OnInit, OnDestroy {
 
-  @ViewChild(UIMessagesDirective)
-  private uiMessages: UIMessagesDirective;
+  @ViewChild(FileInputComponent)
+  private fileInput: IFileInput;
   @ViewChild(PasswordInputComponent)
-  private passwordInput: PasswordInputComponent;
+  private passwordInput: IPasswordInput;
   @ViewChild(PasswordsDropdownComponent)
   private passwordsDropdown: PasswordsDropdownComponent;
+  @ViewChild(UIMessagesDirective)
+  private uiMessages: UIMessagesDirective;
 
   private unsubscriber: Subject<void>;
 
-  public readonly readyForDataTransfer: boolean; // used only by the view
-  public readonly form: LockPdfForm;
-
   constructor(
-    @Inject(PDF_DOCUMENT_VALIDATOR)
-    private pdfDocumentValidator: AsyncValidatorFn,
     private lockPdfService: LockPdfService,
     private router: Router,
     private route: ActivatedRoute,
     private zone: NgZone) {
       this.unsubscriber = new Subject<void>();
-      this.readyForDataTransfer = false;
   }
 
   public ngOnInit(): void {
-    this.initForm();
     this.loadState();
 
     this.router.events
@@ -92,44 +83,15 @@ export class LockPdfComponent implements OnInit, OnDestroy {
     this.unsubscriber.next();
   }
 
-  public browse(): void {
-    this.lockPdfService.selectFile()
-      .subscribe(
-        file => {
-          // use ngZone since this call comes from a different thread (MainProcess thread).
-          this.zone.run(() => this.setFileName(file));
-        },
-        err => {
-          Logger.error(`[LockPdf.browse] Error in lockPdfService.selectFile: ${err.errorDescription}`);
-        }
-      );
-  }
-
-  public prepareForDataTransfer(transferItem: DataTransferItem): void {
-    if (transferItem.kind === 'file' && transferItem.type === 'application/pdf') {
-      (this as { readyForDataTransfer: boolean }).readyForDataTransfer = true;
-    }
-  }
-
-  public acceptDataTransfer(transferItem: DataTransfer): void {
-    if (transferItem.files.length === 0) {
-      return;
-    }
-
-    this.setFileName(transferItem.files[0].path);
-    (this as { readyForDataTransfer: boolean }).readyForDataTransfer = false;
-  }
-
-  public cancelDataTransfer(): void {
-    (this as { readyForDataTransfer: boolean }).readyForDataTransfer = false;
-  }
-
   public protectDocument(mode: PdfProtectMode): void {
     if (!this.valid()) {
       return;
     }
 
-    this.lockPdfService.protectFile(this.form.fileNameValue, this.form.passwordValue, mode)
+    const fileName = this.fileInput.value;
+    const { password } = this.passwordInput.value;
+
+    this.lockPdfService.protectFile({ fileName, password, mode })
       .subscribe(
         savePath => {
           // use ngZone since this could potentially be called by a different thread (MainProcess thread)
@@ -148,14 +110,15 @@ export class LockPdfComponent implements OnInit, OnDestroy {
   }
 
   public savePassword(): void {
-    if (!this.form.passwordValid) {
-      this.form.ensurePasswordValue();
+    if (!this.passwordInput.valid) {
+      this.passwordInput.ensureValue();
       this.showMessage('warning', 'Invalid_Password_To_Save');
 
       return;
     }
 
-    this.lockPdfService.savePassword(this.form.passwordValue)
+    const { password } = this.passwordInput.value;
+    this.lockPdfService.savePassword(password)
       .subscribe(
         () => {
           this.passwordsDropdown.refresh();
@@ -164,25 +127,20 @@ export class LockPdfComponent implements OnInit, OnDestroy {
       );
   }
 
-  public setPassword(password: string): void {
-    this.form.patchValue({ password: { password } });
-  }
-
-  private setFileName(fileName: string): void {
-    const displayName = path.parse(fileName).base;
-
-    this.form.patchValue({ displayName, fileName }, { emitEvent: true });
-    this.form.markFileNameAsDirty();
+  public setPassword(password: string) {
+    this.passwordInput.setValue({ password });
   }
 
   private valid(): boolean {
-    // if validation errors exist, show them
-    this.form.showValidation();
-    return this.form.valid;
+    this.fileInput.ensureValue();
+    this.passwordInput.ensureValue();
+
+    return this.fileInput.valid && this.passwordInput.valid;
   }
 
   private reset(): void {
-    this.form.reset();
+    this.fileInput.reset();
+    this.passwordInput.reset();
   }
 
   private handleProtectError(err: { errorType: string, errorDescription?: string }): void {
@@ -192,9 +150,8 @@ export class LockPdfComponent implements OnInit, OnDestroy {
 
     switch (err.errorType) {
       case 'File_Access_Error':
-        this.form.setFileNameErrors({ fileAccessError: true });
-        // break; Yes, fall-through is intentional
-      case 'Insufficient_Permissions':
+        this.fileInput.setAccessError();
+      case 'Insufficient_Permissions': // fall-through is intentional
         this.showMessage('error', err.errorType);
         break;
       default:
@@ -225,7 +182,12 @@ export class LockPdfComponent implements OnInit, OnDestroy {
   }
 
   private saveState(): void {
-    this.lockPdfService.saveState(this.form.value);
+    const value = {
+      fileName: this.fileInput.value,
+      ...this.passwordInput.value
+    };
+
+    this.lockPdfService.saveState(value);
   }
 
   private loadState(): void {
@@ -235,14 +197,7 @@ export class LockPdfComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.form.setValue(state);
-
-    if (state.fileName) {
-      this.form.markFileNameAsDirty();
-    }
-  }
-
-  private initForm(): void {
-    (this as { form: LockPdfForm }).form = new LockPdfForm(this.passwordInput, this.pdfDocumentValidator);
+    this.fileInput.setValue(state.fileName);
+    this.passwordInput.setValue({...state});
   }
 }
