@@ -17,22 +17,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { fromPromise } from 'rxjs/observable/fromPromise';
-import { map } from 'rxjs/operators/map';
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+import { UnlockPdfComponent } from './unlock-pdf.component';
 
-import { PdfProtectionOptions } from 'protego-pdf-helper';
-
-const { isPdfDocument, protect } = window.require('protego-pdf-helper');
-
-@Injectable()
-export class PdfProtectService {
-  public pdfDocument(file: string): Observable<boolean> {
-    return fromPromise(isPdfDocument(file));
+const routes: Routes = [
+  {
+    path: '',
+    component: UnlockPdfComponent
   }
+];
 
-  public protect(source: string, target: string, password: string, options?: PdfProtectionOptions): Observable<boolean> {
-    return fromPromise<boolean>(protect(source, target, password, options || {}));
-  }
-}
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class UnlockPdfRoutingModule { }

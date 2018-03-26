@@ -49,6 +49,6 @@
       "property-declaration"
     ],
     "arrow-parens": [true, "ban-single-arg-parens"],
-    "interface-name": [true, "never-prefix"]
+    "interface-name": false
   }
 }

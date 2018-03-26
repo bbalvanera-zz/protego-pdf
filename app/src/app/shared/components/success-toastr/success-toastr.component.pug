@@ -16,5 +16,5 @@
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 div(role="alertdialog", aria-live="polite", [class]="options.messageClass")
-  ng-container(i18n="message") File Protected
-  button.btn.btn-sm.btn-view((click)="view($event)", i18n="action") View
+  ng-container {{message}}
+  button.btn.btn-sm.btn-view(*ngIf="showLink", (click)="view($event)", i18n="action") View

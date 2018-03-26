@@ -15,40 +15,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-.card.fixed-height((dragenter)="prepareForDataTransfer($event.dataTransfer.items[0])")
+.card.fixed-height
   h6.card-header.bg-primary.text-light(i18n="section title|component header") Protect PDF Document
-  div([formGroup]="form", style="height:283px")
+  div(style="height:283px")
     .card-body.border.border-top-0.border-right-0.border-left-0
       .container.p-0
-        .row
-          .col-9.pr-0
-            input.form-control.form-control-sm.bg-color-normal(
-              type="text",
-              formControlName="displayName",
-              i18n-placeholder="file name input|Conveys that the user can drag-&-drop a file or click on browse button",
-              placeholder="Drag & drop a file here or click to Browse",
-              [ngClass]="{'is-invalid': form.fileName.invalid && form.fileName.dirty}",
-              (click)="browse()",
-              readonly
-            )
-            .invalid-feedback.pl-2(
-              *ngIf="form.fileName.errors?.notAPdfDocument && form.fileName.dirty",
-              i18n="notAPdfDocument msg|Lets the user know that the file is invalid or corrupted") Invalid or corrupted PDF file. Please select another file
-            .invalid-feedback.pl-2(
-              *ngIf="form.fileName.errors?.fileAccessError && form.fileName.dirty",
-              i18n="fileAccessError msg|Lets the user know that the file is inaccessible") File open in another program. Please select another file
-            .invalid-feedback.pl-2(
-              *ngIf="form.fileName.errors?.required && form.fileName.dirty",
-              i18n="file required msg|Lets the user know that a file is required") Please select a file to protect
-            //- use this field to hold full file name and use it for validation since #displayName only holds filename without path
-            input(type="hidden", formControlName="fileName")
-          .col-3
-            button.btn.btn-primary.btn-sm.btn-block(
-              title="Browse files",
-              type="button",
-              (click)="browse()",
-              i18n-title="browse files|Tooltip indicating to browse file",
-              i18n="browse button|The button to browse for a file") Browse
+        app-file-input((protectedStatusChanges)="protectedStatusChanges($event)")
     .card-body.h-100.pt-3
       .container.p-0
         .row
@@ -56,7 +28,7 @@
             app-passwords-dropdown((passwordSelected)="setPassword($event)", (savePassword)="savePassword()")
         .row
           .col-9.pr-0
-            app-password-input(formControlName="password")
+            app-password-input
           .col-3
             .btn-group.d-flex
               button.btn.btn-primary.btn-sm.btn-block.btn-tall(
@@ -77,43 +49,41 @@
                 .dropdown-menu(ngbDropdownMenu)
                   button.btn-sm.dropdown-item(
                     type="button",
-                    i18n="overwrite option|Lets the user know this option will overwrite the existing file",
+                    i18n="overwrite option|Lets the user know this option will overwrite the existing file@@overwriteOption",
                     (click)="protectDocument(0)"
                   ) Overwrite Existing File
                   button.btn-sm.dropdown-item(
                     type="button",
-                    i18n="save new option|Lets the user know this option will create a new file",
+                    i18n="save new option|Lets the user know this option will create a new file@@newFileOption",
                     (click)="protectDocument(1)"
                   ) Save to a New File
                   button.btn-sm.dropdown-item(
                     type="button",
-                    i18n="save as option|Lets the user know this option will open the `save as` dialog",
+                    i18n="save as option|Lets the user know this option will open the `save as` dialog@@saveAsOption",
                     (click)="protectDocument(2)"
                   ) Save As
   .card-footer
-    button.btn.btn-sm.btn-outline-secondary(
-      type="button",
-      title="Settings",
-      i18n-title="settings|Tooltip indicating this is the settings button"
-    )
-      i.fas.fa-cog
-    button.btn.btn-sm.btn-outline-secondary(
-      type="button",
-      title="Help",
-      i18n-title="help|Tooltip indicating this is the help button"
-    )
-      i.fas.fa-question-circle
-.drop-zone(*ngIf="readyForDataTransfer")
-  .drop-zone-layer
-    h1
-      i.far.fa-file-pdf
-    p(i18n="drop zone|Lets the user know they can drop the file here") Drop your file here
-  .drop-zone-overlay((dragleave)="cancelDataTransfer()", (drop)="acceptDataTransfer($event.dataTransfer)")
+    .container.p-0
+      .row.justify-content-between
+        .col-4
+          button.btn.btn-sm.btn-outline-secondary(
+            type="button",
+            title="Settings",
+            i18n-title="settings|Tooltip indicating this is the settings button"
+          )
+            i.fas.fa-cog
+          button.btn.btn-sm.btn-outline-secondary(
+            type="button",
+            title="Help",
+            i18n-title="help|Tooltip indicating this is the help button"
+          )
+            i.fas.fa-question-circle
+        .col-4
+          button.btn.btn-sm.btn-link.float-right.text-primary.pr-0(i18n) Unlock a document
 app-ui-messages
   app-ui-message(
     id="Success_Message",
-    title="File protected",
-    i18n-title="success msg title|Lets the user know that its Pdf file was protected")
+    i18n="success msg title|Lets the user know that its Pdf file was protected") File protected
   app-ui-message(
     id="File_Access_Error",
     title="Could not protect your file",

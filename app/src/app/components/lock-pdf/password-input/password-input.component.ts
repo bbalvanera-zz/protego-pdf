@@ -17,85 +17,45 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, OnInit, OnDestroy, Provider, forwardRef, ViewChild } from '@angular/core';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import { Subject } from 'rxjs/Subject';
-import { takeUntil } from 'rxjs/operators/takeUntil';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 
 import { PasswordInput } from './classes/password-input';
 import { PasswordInputForm } from './classes/password-input.form';
 import { PasswordStrengthMeterDirective } from './password-strength-meter/password-strength-meter.directive';
-
-const PASSWORD_INPUT_VALUE_ACCESSOR: Provider = {
-  provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => PasswordInputComponent),
-  multi: true
-};
+import { IPasswordInput } from './ipassword-input';
 
 @Component({
   selector: 'app-password-input',
   templateUrl: './password-input.component.html',
-  styleUrls: ['./password-input.component.scss'],
-  providers: [PASSWORD_INPUT_VALUE_ACCESSOR]
+  styleUrls: ['./password-input.component.scss']
 })
-export class PasswordInputComponent implements OnInit, OnDestroy, ControlValueAccessor {
+export class PasswordInputComponent implements IPasswordInput, OnInit, AfterViewInit {
   @ViewChild(PasswordStrengthMeterDirective)
   private passwordStrengthMeter: PasswordStrengthMeterDirective;
-  private unsubscribe: Subject<void>;
+  private pendingValue: { password?: string, passwordVisible?: boolean };
 
   public form: PasswordInputForm;
 
-  constructor() {
-    this.unsubscribe = new Subject<void>();
+  public get value(): { password: string, passwordVisible: boolean } {
+    return (this.form.value as { password: string, passwordVisible: boolean });
+  }
+
+  public get valid(): boolean {
+    return this.form.valid;
   }
 
   public ngOnInit(): void {
     this.form = new PasswordInputForm(this.passwordStrengthMeter);
-    this.form.valueChanges
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(values => this.onChange(values));
   }
 
-  public ngOnDestroy(): void {
-    this.unsubscribe.next();
-  }
-
-  public writeValue({ password, passwordVisible }: PasswordInput): void {
-    // this method ignores `passwordConfirm` value if passed. This is because
-    // the control would not allow mismatched values and so only `password` value is utilized.
-
-    if (passwordVisible === undefined) {
-      passwordVisible = this.form.passwordVisible;
+  public ngAfterViewInit(): void {
+    if (this.pendingValue) {
+      setTimeout(() => {
+        this.setValue(this.pendingValue);
+        this.togglePasswordVisibility(this.pendingValue.passwordVisible);
+        this.updatePasswordStrength();
+      });
     }
-
-    const values = {
-      password,
-      passwordConfirm: passwordVisible ? '' : password,
-      passwordVisible,
-    };
-
-    this.form.setValue(values, { emitEvent: false });
-    this.togglePasswordVisibility(passwordVisible);
-
-    // `setTimeout` is required since angular doesn't like view changes inside this method.
-    // It works since it is actually another thread the one causing view modifications not the current one.
-    setTimeout(() => this.updatePasswordStrength());
-  }
-
-  public registerOnChange(fn: (value: PasswordInput) => void): void {
-    this.onChange = fn;
-  }
-
-  public registerOnTouched(fn: () => void): void {
-    this.onTouch = fn;
-  }
-
-  public showValidation(): void {
-    this.form.showValidation();
-  }
-
-  public markAsPristine(): void {
-    this.form.markChildrenAsPristine();
   }
 
   public togglePasswordVisibility(visibility: boolean): void {
@@ -104,8 +64,36 @@ export class PasswordInputComponent implements OnInit, OnDestroy, ControlValueAc
       : this.form.enablePasswordConfirm();
   }
 
+  public setValue(value: { password?: string, passwordVisible?: boolean }): void {
+    // this method could be called before ngOnInit and before `this.form` is set.
+    // Use pending value to hold value until `this.form` is set.
+    if (!this.form) {
+      this.pendingValue = value;
+      return;
+    }
+
+    const patch = {
+      password: value.password,
+      passwordConfirm: !value.passwordVisible ? value.password : '',
+      passwordVisible: !!value.passwordVisible
+    };
+
+    this.form.setValue(patch);
+  }
+
+  public ensureValue(): void {
+    this.form.showValidation();
+  }
+
+  public reset(): void {
+    this.form.reset();
+    this.form.markChildrenAsPristine();
+    this.form.updatePasswordStrength();
+    this.togglePasswordVisibility(false);
+  }
+
   private updatePasswordStrength(): void {
-    this.passwordStrengthMeter.updatePasswordStrength();
+    this.form.updatePasswordStrength();
   }
 
   private onChange = (value: PasswordInput): void => { return; };

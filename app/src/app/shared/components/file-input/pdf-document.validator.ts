@@ -23,9 +23,8 @@ import { Observable } from 'rxjs/Observable';
 import { of as observableOf } from 'rxjs/observable/of';
 import { map } from 'rxjs/operators/map';
 import { catchError } from 'rxjs/operators/catchError';
-import * as utils from 'underscore';
 
-import { PdfProtectService } from '../../../shared/services/pdf-protect.service';
+import { PdfProtectService } from '../../../services/pdf-protect.service';
 
 const fs = window.require('fs');
 
@@ -57,7 +56,7 @@ export function pdfDocumentValidator(pdfService: PdfProtectService): AsyncValida
       timeout = setTimeout(() => {
         timeout = null;
 
-        pdfService.pdfDocument(value)
+        pdfService.isPdfDocument(value)
         .pipe(
           map((isPdf: boolean): ValidationErrors | null => isPdf ? null : { notAPdfDocument : true }),
           catchError(err => errorHandler(err))

@@ -14,7 +14,7 @@
     "prepare": "nsp check",
     "install": "npm run compile",
     "compile": "node ./tools/buildHelper.js && tslint -c tslint.json -p tsconfig.json && tsc",
-    "test": "jest"
+    "test": "jasmine"
   },
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
@@ -29,6 +29,7 @@
   "devDependencies": {
     "@types/jest": "^22.2.0",
     "@types/node": "^8.0.58",
+    "jasmine": "^3.1.0",
     "jest": "^22.4.2",
     "jest-cli": "^22.4.2",
     "nsp": "^3.2.1",

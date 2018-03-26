@@ -17,18 +17,5 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { NgModule } from '@angular/core';
-import { PdfProtectService } from './pdf-protect.service';
-import { ElectronService } from './electron.service';
-import { SavedPasswordsService } from './saved-passwords.service';
-import { StorageService } from './storage.service';
-
-@NgModule({
-  providers: [
-    PdfProtectService,
-    ElectronService,
-    SavedPasswordsService,
-    StorageService
-  ]
-})
-export class ServicesModule { }
+export { IPasswordInput } from './ipassword-input';
+export { PasswordInputComponent } from './password-input.component';

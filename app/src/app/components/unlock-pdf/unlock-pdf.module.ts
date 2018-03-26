@@ -17,6 +17,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.btn-tall {
-  height: 66px;
-}
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+import { UnlockPdfComponent } from './unlock-pdf.component';
+import { SharedModule } from '../../shared/shared.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { UnlockPdfRoutingModule } from './unlock-pdf-routing.module';
+
+@NgModule({
+  declarations: [
+    UnlockPdfComponent
+  ],
+  imports: [
+    CommonModule,
+    SharedModule,
+    ReactiveFormsModule,
+    NgbModule,
+    UnlockPdfRoutingModule
+  ],
+  exports: [
+    UnlockPdfComponent
+  ]
+})
+export class UnlockPdfModule { }

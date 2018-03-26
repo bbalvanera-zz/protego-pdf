@@ -29,16 +29,15 @@ import { PasswordInputComponent } from './password-input/password-input.componen
 import { PasswordsDropdownComponent } from './passwords-dropdown/passwords-dropdown.component';
 import { SharedModule } from '../../shared/shared.module';
 import { PasswordAddComponent } from './passwords-dropdown/password-add/password-add.component';
-import { LockSuccessToastrComponent } from './lock-success-toastr/lock-success-toastr.component';
+import { SuccessToastrComponent } from '../../shared/components/success-toastr/success-toastr.component';
 
 @NgModule({
   declarations: [
     PasswordStrengthMeterDirective,
-    LockPdfComponent,
     PasswordInputComponent,
     PasswordsDropdownComponent,
     PasswordAddComponent,
-    LockSuccessToastrComponent
+    LockPdfComponent
   ],
   imports: [
     CommonModule,
@@ -49,7 +48,7 @@ import { LockSuccessToastrComponent } from './lock-success-toastr/lock-success-t
   ],
   entryComponents: [
     PasswordAddComponent,
-    LockSuccessToastrComponent
+    SuccessToastrComponent,
   ],
   exports: [
     LockPdfComponent

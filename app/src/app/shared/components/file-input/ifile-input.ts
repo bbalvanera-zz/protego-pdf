@@ -17,6 +17,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.btn-tall {
-  height: 66px;
+export interface IFileInput {
+  readonly value: string;
+  readonly valid: boolean;
+
+  ensureValue(): void;
+  reset(): void;
+  setAccessError(): void;
+  setValue(value: string): void;
 }

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LockSuccessToastrComponent } from './lock-success-toastr.component';
+import { FileInputComponent } from './file-input.component';
 
-describe('LockSuccessToastrComponent', () => {
-  let component: LockSuccessToastrComponent;
-  let fixture: ComponentFixture<LockSuccessToastrComponent>;
+describe('FileInputComponent', () => {
+  let component: FileInputComponent;
+  let fixture: ComponentFixture<FileInputComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LockSuccessToastrComponent ]
+      declarations: [ FileInputComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LockSuccessToastrComponent);
+    fixture = TestBed.createComponent(FileInputComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
