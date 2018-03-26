@@ -36,11 +36,11 @@ export class StorageService {
     return JSON.parse(jsonItem);
   }
 
-  public setLockPdfDir(dir: string): void {
+  public setSuccessDir(dir: string): void {
     sessionStorage.setItem(LOCKPDF_SAVE_DIR, JSON.stringify(dir));
   }
 
-  public popLockPdfDir(): string {
+  public popSuccessDir(): string {
     const jsonItem = sessionStorage.getItem(LOCKPDF_SAVE_DIR);
     sessionStorage.removeItem(LOCKPDF_SAVE_DIR);
 

@@ -153,19 +153,27 @@ namespace ProtegoPdf
 
         public async Task<OperationResult> Unlock(PdfOptions options)
         {
-            if (!ValidUnlockRequest(options))
-            {
-                return InvalidArgument();
-            }
-
             try
             {
+                if (!ValidUnlockRequest(options))
+                {
+                    return InvalidArgument();
+                }
+
                 await Task.Run(() => service.Unlock(options));
                 return Successful();
             }
             catch (BadPasswordException)
             {
                 return BadPassword();
+            }
+            catch (IOException ex)
+            {
+                return FileAccessError(ex.Message);
+            }
+            catch (SystemException ex) when (ex is UnauthorizedAccessException || ex is NotSupportedException)
+            {
+                return InsufficientPermissions(ex.Message);
             }
             catch (Exception ex)
             {

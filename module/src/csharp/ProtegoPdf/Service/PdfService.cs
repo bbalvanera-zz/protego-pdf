@@ -77,26 +77,48 @@ namespace ProtegoPdf.Service
                 encryption)
             );
 
-            var doc = new PdfDocument(reader, writer);
-            doc.SetCloseReader(true);
-            doc.SetCloseWriter(true);
+            try
+            {
+                var doc = new PdfDocument(reader, writer);
+                doc.SetCloseReader(true);
+                doc.SetCloseWriter(true);
 
-            doc.Close();
+                doc.Close();
 
-            File.Copy(tempTarget, args.Target, true);
-            File.Delete(tempTarget);
+                File.Copy(tempTarget, args.Target, true);
+            }
+            finally
+            {
+                reader.Close();
+                writer.Close();
+
+                File.Delete(tempTarget);
+            }
         }
 
         public void Unlock(PdfOptions args)
         {
+            var tempTarget = Path.GetTempFileName();
             var reader = new PdfReader(args.Source, new ReaderProperties().SetPassword(args.PasswordArray));
-            var writer = new PdfWriter(args.Target);
+            var writer = new PdfWriter(tempTarget);
 
-            var doc = new PdfDocument(reader, writer);
-            doc.SetCloseReader(true);
-            doc.SetCloseWriter(true);
+            try
+            {
+                var doc = new PdfDocument(reader, writer);
+                doc.SetCloseReader(true);
+                doc.SetCloseWriter(true);
 
-            doc.Close();
+                doc.Close();
+
+                File.Copy(tempTarget, args.Target, true);
+            }
+            finally
+            {
+                reader.Close();
+                writer.Close();
+
+                File.Delete(tempTarget);
+            }
         }
 
         private void ForceRead(string fileName)

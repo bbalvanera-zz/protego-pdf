@@ -23,11 +23,16 @@ import { Routes, RouterModule } from '@angular/router';
 import { LockPdfComponent } from './components/lock-pdf/lock-pdf.component';
 import { PasswordGenComponent } from './components/password-gen/password-gen.component';
 import { PasswordManagerComponent } from './components/password-manager/password-manager.component';
+import { UnlockPdfComponent } from './components/unlock-pdf/unlock-pdf.component';
 
 const routes: Routes = [
   {
     path: '',
     component: LockPdfComponent
+  },
+  {
+    path: 'unlock',
+    component: UnlockPdfComponent
   },
   {
     path: 'password-gen',

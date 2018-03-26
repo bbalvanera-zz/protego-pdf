@@ -30,8 +30,8 @@ import { Toast, ToastPackage, ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-lock-success-toastr',
-  templateUrl: './lock-success-toastr.component.html',
-  styleUrls: ['./lock-success-toastr.component.scss'],
+  templateUrl: './success-toastr.component.html',
+  styleUrls: ['./success-toastr.component.scss'],
   animations: [
     trigger('flyInOut', [
       state('inactive', style({
@@ -50,7 +50,7 @@ import { Toast, ToastPackage, ToastrService } from 'ngx-toastr';
   ],
   preserveWhitespaces: false,
 })
-export class LockSuccessToastrComponent extends Toast implements OnInit {
+export class SuccessToastrComponent extends Toast implements OnInit {
   private dir: string;
 
   constructor(
@@ -64,7 +64,7 @@ export class LockSuccessToastrComponent extends Toast implements OnInit {
   public get showLink(): boolean { return this.dir && this.dir !== ''; }
 
   public ngOnInit(): void {
-    this.dir = this.storageService.popLockPdfDir();
+    this.dir = this.storageService.popSuccessDir();
   }
 
   public view(event: Event): void {

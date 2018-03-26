@@ -29,8 +29,7 @@ import { PasswordInputComponent } from './password-input/password-input.componen
 import { PasswordsDropdownComponent } from './passwords-dropdown/passwords-dropdown.component';
 import { SharedModule } from '../../shared/shared.module';
 import { PasswordAddComponent } from './passwords-dropdown/password-add/password-add.component';
-import { LockSuccessToastrComponent } from './lock-success-toastr/lock-success-toastr.component';
-import { FileInputComponent } from '../../shared/components/file-input/file-input.component';
+import { SuccessToastrComponent } from '../../shared/components/success-toastr/success-toastr.component';
 
 @NgModule({
   declarations: [
@@ -38,8 +37,6 @@ import { FileInputComponent } from '../../shared/components/file-input/file-inpu
     PasswordInputComponent,
     PasswordsDropdownComponent,
     PasswordAddComponent,
-    LockSuccessToastrComponent,
-    FileInputComponent,
     LockPdfComponent
   ],
   imports: [
@@ -51,7 +48,7 @@ import { FileInputComponent } from '../../shared/components/file-input/file-inpu
   ],
   entryComponents: [
     PasswordAddComponent,
-    LockSuccessToastrComponent
+    SuccessToastrComponent,
   ],
   exports: [
     LockPdfComponent

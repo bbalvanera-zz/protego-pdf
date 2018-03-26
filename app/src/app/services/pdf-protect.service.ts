@@ -24,15 +24,27 @@ import { map } from 'rxjs/operators/map';
 
 import { PdfProtectionOptions } from 'protego-pdf-helper';
 
-const { isPdfDocument, protect } = window.require('protego-pdf-helper');
+const { isPdfDocument, isProtected, protect, unlock } = window.require('protego-pdf-helper');
 
 @Injectable()
 export class PdfProtectService {
-  public pdfDocument(file: string): Observable<boolean> {
+  constructor() {
+    console.log('A new instance of PdfProtectService has been created');
+  }
+
+  public isPdfDocument(file: string): Observable<boolean> {
     return fromPromise(isPdfDocument(file));
+  }
+
+  public isProtected(file: string): Observable<boolean> {
+    return fromPromise(isProtected(file));
   }
 
   public protect(source: string, target: string, password: string, options?: PdfProtectionOptions): Observable<boolean> {
     return fromPromise<boolean>(protect(source, target, password, options || {}));
+  }
+
+  public unlock(source: string, target: string, password: string): Observable<boolean> {
+    return fromPromise<boolean>(unlock(source, target, password));
   }
 }

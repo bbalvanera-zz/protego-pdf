@@ -20,7 +20,7 @@
   div(style="height:283px")
     .card-body.border.border-top-0.border-right-0.border-left-0
       .container.p-0
-        app-file-input
+        app-file-input((protectedStatusChanges)="protectedStatusChanges($event)")
     .card-body.h-100.pt-3
       .container.p-0
         .row
@@ -49,37 +49,41 @@
                 .dropdown-menu(ngbDropdownMenu)
                   button.btn-sm.dropdown-item(
                     type="button",
-                    i18n="overwrite option|Lets the user know this option will overwrite the existing file",
+                    i18n="overwrite option|Lets the user know this option will overwrite the existing file@@overwriteOption",
                     (click)="protectDocument(0)"
                   ) Overwrite Existing File
                   button.btn-sm.dropdown-item(
                     type="button",
-                    i18n="save new option|Lets the user know this option will create a new file",
+                    i18n="save new option|Lets the user know this option will create a new file@@newFileOption",
                     (click)="protectDocument(1)"
                   ) Save to a New File
                   button.btn-sm.dropdown-item(
                     type="button",
-                    i18n="save as option|Lets the user know this option will open the `save as` dialog",
+                    i18n="save as option|Lets the user know this option will open the `save as` dialog@@saveAsOption",
                     (click)="protectDocument(2)"
                   ) Save As
   .card-footer
-    button.btn.btn-sm.btn-outline-secondary(
-      type="button",
-      title="Settings",
-      i18n-title="settings|Tooltip indicating this is the settings button"
-    )
-      i.fas.fa-cog
-    button.btn.btn-sm.btn-outline-secondary(
-      type="button",
-      title="Help",
-      i18n-title="help|Tooltip indicating this is the help button"
-    )
-      i.fas.fa-question-circle
+    .container.p-0
+      .row.justify-content-between
+        .col-4
+          button.btn.btn-sm.btn-outline-secondary(
+            type="button",
+            title="Settings",
+            i18n-title="settings|Tooltip indicating this is the settings button"
+          )
+            i.fas.fa-cog
+          button.btn.btn-sm.btn-outline-secondary(
+            type="button",
+            title="Help",
+            i18n-title="help|Tooltip indicating this is the help button"
+          )
+            i.fas.fa-question-circle
+        .col-4
+          button.btn.btn-sm.btn-link.float-right.text-primary.pr-0(i18n) Unlock a document
 app-ui-messages
   app-ui-message(
     id="Success_Message",
-    title="File protected",
-    i18n-title="success msg title|Lets the user know that its Pdf file was protected")
+    i18n="success msg title|Lets the user know that its Pdf file was protected") File protected
   app-ui-message(
     id="File_Access_Error",
     title="Could not protect your file",

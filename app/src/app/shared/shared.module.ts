@@ -21,9 +21,17 @@ import { NgModule } from '@angular/core';
 
 import { SHARED_DIRECTIVES } from './directives/index';
 import { SHARED_PIPES } from './pipes/index';
+import { FileInputComponent } from './components/file-input';
+import { SuccessToastrComponent } from './components/success-toastr/success-toastr.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
-  declarations: [SHARED_DIRECTIVES, SHARED_PIPES],
-  exports: [SHARED_DIRECTIVES, SHARED_PIPES]
+  declarations: [SHARED_DIRECTIVES, SHARED_PIPES, FileInputComponent, SuccessToastrComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule
+  ],
+  exports: [SHARED_DIRECTIVES, SHARED_PIPES, FileInputComponent]
 })
 export class SharedModule { }

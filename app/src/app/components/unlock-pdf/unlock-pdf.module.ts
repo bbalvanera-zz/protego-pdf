@@ -22,6 +22,9 @@ import { CommonModule } from '@angular/common';
 
 import { UnlockPdfComponent } from './unlock-pdf.component';
 import { SharedModule } from '../../shared/shared.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { UnlockPdfRoutingModule } from './unlock-pdf-routing.module';
 
 @NgModule({
   declarations: [
@@ -29,7 +32,10 @@ import { SharedModule } from '../../shared/shared.module';
   ],
   imports: [
     CommonModule,
-    SharedModule
+    SharedModule,
+    ReactiveFormsModule,
+    NgbModule,
+    UnlockPdfRoutingModule
   ],
   exports: [
     UnlockPdfComponent

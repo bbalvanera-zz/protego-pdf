@@ -34,12 +34,12 @@ let internalReject: (reason?: any) => void = () => void 0;
     const raw = data.toString('utf8');
     const response = JSON.parse(raw) as OperationResult<any>;
 
-      response.success
-        ? internalResolve(response.result)
-        : internalReject({
-          errorType: response.errorType,
-          errorDescription: response.errorDescription,
-        });
+    response.success
+      ? internalResolve(response.result)
+      : internalReject({
+        errorType: response.errorType,
+        errorDescription: response.errorDescription,
+      });
   });
 
   pdfHelper.stderr.once('data', (data: Buffer) => {

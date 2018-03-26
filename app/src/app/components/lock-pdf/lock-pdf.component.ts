@@ -23,7 +23,7 @@ import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators/takeUntil';
 import { filter } from 'rxjs/operators/filter';
 
-import { PdfProtectMode } from './classes/pdf-protect-mode.enum';
+import { PdfProtectMode } from '../../shared/pdf-protect-mode.enum';
 import { LockPdfService } from './lock-pdf.service';
 import { IFileInput, FileInputComponent } from '../../shared/components/file-input';
 import { IPasswordInput, PasswordInputComponent } from './password-input';
@@ -64,7 +64,9 @@ export class LockPdfComponent implements OnInit, OnDestroy {
     this.router.events
       .pipe(
         takeUntil(this.unsubscriber),
-        filter(event => event instanceof NavigationStart)
+        filter(event =>
+          event instanceof NavigationStart && !/\/unlock/.test(event.url)
+        )
       )
       .subscribe(_ => {
         this.saveState();
@@ -73,6 +75,10 @@ export class LockPdfComponent implements OnInit, OnDestroy {
     this.route.queryParams
       .pipe(takeUntil(this.unsubscriber))
       .subscribe(params => {
+        if (params.fileName) {
+          this.setFileName(params.fileName);
+        }
+
         if (params.pwd) {
           this.setPassword(params.pwd);
         }
@@ -127,8 +133,14 @@ export class LockPdfComponent implements OnInit, OnDestroy {
       );
   }
 
-  public setPassword(password: string) {
+  public setPassword(password: string): void {
     this.passwordInput.setValue({ password });
+  }
+
+  public protectedStatusChanges(event: { status: string, fileName: string }): void {
+    if (event.status === 'protected') {
+      this.router.navigate(['/unlock'], { queryParams: { fileName: event.fileName } });
+    }
   }
 
   private valid(): boolean {
@@ -136,6 +148,10 @@ export class LockPdfComponent implements OnInit, OnDestroy {
     this.passwordInput.ensureValue();
 
     return this.fileInput.valid && this.passwordInput.valid;
+  }
+
+  private setFileName(fileName: string): void {
+    this.fileInput.setValue(fileName);
   }
 
   private reset(): void {
@@ -197,7 +213,7 @@ export class LockPdfComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.fileInput.setValue(state.fileName);
+    this.setFileName(state.fileName);
     this.passwordInput.setValue({...state});
   }
 }

@@ -30,6 +30,9 @@
       *ngIf="fileName.errors?.notAPdfDocument && fileName.dirty",
       i18n="notAPdfDocument msg|Lets the user know that the file is invalid or corrupted") Invalid or corrupted PDF file. Please select another file
     .invalid-feedback.pl-2(
+      *ngIf="fileName.errors?.protectedDocument && fileName.dirty",
+      i18n="file required msg|Lets the user know that a file is required") This file is fucking protected!
+    .invalid-feedback.pl-2(
       *ngIf="fileName.errors?.fileAccessError && fileName.dirty",
       i18n="fileAccessError msg|Lets the user know that the file is inaccessible") File open in another program. Please select another file
     .invalid-feedback.pl-2(

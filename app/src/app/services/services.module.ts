@@ -19,6 +19,7 @@
 
 import { NgModule } from '@angular/core';
 import { PdfProtectService } from './pdf-protect.service';
+import { PdfComponentService } from './pdf-component.service';
 import { ElectronService } from './electron.service';
 import { SavedPasswordsService } from './saved-passwords.service';
 import { StorageService } from './storage.service';
@@ -26,6 +27,7 @@ import { StorageService } from './storage.service';
 @NgModule({
   providers: [
     PdfProtectService,
+    PdfComponentService,
     ElectronService,
     SavedPasswordsService,
     StorageService

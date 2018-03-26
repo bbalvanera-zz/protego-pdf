@@ -25,7 +25,9 @@ import {
   forwardRef,
   Renderer2,
   NgZone,
-  Inject
+  Inject,
+  Output,
+  EventEmitter
 } from '@angular/core';
 import {
   NG_VALUE_ACCESSOR,
@@ -37,11 +39,13 @@ import {
 } from '@angular/forms';
 import { filter } from 'rxjs/operators/filter';
 import { map } from 'rxjs/operators/map';
+import { mergeMap } from 'rxjs/operators';
 
 import { Logger } from '../../logging/logger';
 import { PDF_DOCUMENT_VALIDATOR, pdfDocumentValidatorProvider } from './pdf-document.validator';
 import { ElectronService } from '../../../services/electron.service';
 import { IFileInput } from './ifile-input';
+import { PdfProtectService } from '../../../services/pdf-protect.service';
 
 const path = window.require('path');
 const FILEINPUT_VALUE_ACCESSOR: Provider = {
@@ -59,6 +63,8 @@ const FILEINPUT_VALUE_ACCESSOR: Provider = {
 export class FileInputComponent implements IFileInput, OnInit, OnDestroy {
   private removeListener: () => void;
 
+  @Output()
+  public protectedStatusChanges: EventEmitter<{ status: 'protected' | 'unprotected', fileName: string }>;
   public readyForDataTransfer: boolean;
   public displayName: string;
   public fileName: FormControl;
@@ -67,10 +73,12 @@ export class FileInputComponent implements IFileInput, OnInit, OnDestroy {
     @Inject(PDF_DOCUMENT_VALIDATOR)
     private pdfDocumentValidator: AsyncValidatorFn,
     private electronService: ElectronService,
+    private pdfService: PdfProtectService,
     private zone: NgZone,
     private renderer: Renderer2) {
       this.displayName = '';
       this.fileName = new FormControl('', Validators.required, pdfDocumentValidator);
+      this.protectedStatusChanges = new EventEmitter<{ status: 'protected' | 'unprotected', fileName: string }>();
   }
 
   public get value(): string { return this.fileName.value; }
@@ -82,6 +90,22 @@ export class FileInputComponent implements IFileInput, OnInit, OnDestroy {
       'dragenter',
       ($event: DragEvent) => this.prepareForDataTransfer($event.dataTransfer.items[0])
     );
+
+    this.fileName.statusChanges
+      .pipe(
+        filter(status => status === 'VALID'),
+        mergeMap(_ => {
+          const value = this.fileName.value;
+
+          // check to see if this new file is protected
+          return this.pdfService.isProtected(value);
+      }))
+      .subscribe(isProtected => {
+        const status = isProtected ? 'protected' : 'unprotected';
+        const fileName = this.fileName.value;
+
+        this.protectedStatusChanges.emit({ status, fileName });
+      });
   }
 
   public ngOnDestroy(): void {

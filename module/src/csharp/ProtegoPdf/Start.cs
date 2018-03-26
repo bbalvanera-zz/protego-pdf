@@ -17,7 +17,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-using iText.IO.Log;
 using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
@@ -28,8 +27,6 @@ namespace ProtegoPdf
     {
         static void Main()
         {
-            SetupLogging();
-
             var process = ProcessAsync();
             process.Wait();
         }
@@ -53,12 +50,12 @@ namespace ProtegoPdf
 
             if (!TryDeserializeInput(input, out PdfRequest request))
             {
-                await Console.Error.WriteLineAsync("Invalid Request");
+                await Console.Error.WriteAsync("Invalid Request");
                 return;
             }
             else if (!ValidRequest(request))
             {
-                await Console.Error.WriteLineAsync($"Invalid request");
+                await Console.Error.WriteAsync($"Invalid request");
                 return;
             }
 
@@ -67,11 +64,11 @@ namespace ProtegoPdf
                 var command = new PdfCommand(request.Name);
                 var result = await command.Execute(request.Options);
 
-                await Console.Out.WriteLineAsync(result.ToJson());
+                await Console.Out.WriteAsync(result.ToJson());
             }
             catch (Exception ex)
             {
-                await Console.Error.WriteLineAsync($"Unexpected exception ocurred: {ex.Message}");
+                await Console.Error.WriteAsync($"Unexpected exception ocurred: {ex.Message}");
                 throw;
             }
         }
@@ -111,13 +108,6 @@ namespace ProtegoPdf
             }
 
             return retVal;
-        }
-
-        private static void SetupLogging()
-        {
-            // this is required by iText.
-            // If it is not set here, their code will invoke Console.Error causing the client to fail.
-            LoggerFactory.BindFactory(new NoOpLoggerFactory());
         }
     }
 }
