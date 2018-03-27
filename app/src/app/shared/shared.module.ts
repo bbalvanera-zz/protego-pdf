@@ -25,13 +25,27 @@ import { FileInputComponent } from './components/file-input';
 import { SuccessToastrComponent } from './components/success-toastr/success-toastr.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { CardComponent } from './components/card/card.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
-  declarations: [SHARED_DIRECTIVES, SHARED_PIPES, FileInputComponent, SuccessToastrComponent],
+  declarations: [
+    SHARED_DIRECTIVES,
+    SHARED_PIPES,
+    FileInputComponent,
+    SuccessToastrComponent,
+    CardComponent
+  ],
   imports: [
     CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterModule
   ],
-  exports: [SHARED_DIRECTIVES, SHARED_PIPES, FileInputComponent]
+  exports: [
+    SHARED_DIRECTIVES,
+    SHARED_PIPES,
+    FileInputComponent,
+    CardComponent
+  ]
 })
 export class SharedModule { }

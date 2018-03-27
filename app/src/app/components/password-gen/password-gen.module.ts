@@ -27,6 +27,7 @@ import { PasswordOptionComponent } from './password-options/password-option/pass
 import { PasswordOptionsComponent } from './password-options/password-options.component';
 import { PasswordGenComponent } from './password-gen.component';
 import { PasswordGenRoutingModule } from './password-gen-routing.module';
+import { SharedModule } from '../../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { PasswordGenRoutingModule } from './password-gen-routing.module';
     PasswordGenComponent
   ],
   imports: [
+    SharedModule,
     CommonModule,
     RouterModule,
     ReactiveFormsModule,
