@@ -28,10 +28,6 @@ const { isPdfDocument, isProtected, protect, unlock } = window.require('protego-
 
 @Injectable()
 export class PdfProtectService {
-  constructor() {
-    console.log('A new instance of PdfProtectService has been created');
-  }
-
   public isPdfDocument(file: string): Observable<boolean> {
     return fromPromise(isPdfDocument(file));
   }
