@@ -15,71 +15,53 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-.card.fixed-height
-  h6.card-header.bg-primary.text-light(i18n="section title|component header") Protect PDF Document
-  div(style="height:283px")
-    .card-body.border.border-top-0.border-right-0.border-left-0
-      .container.p-0
-        app-file-input((protectedStatusChanges)="protectedStatusChanges($event)")
-    .card-body.h-100.pt-3
-      .container.p-0
-        .row
-          .col
-            app-passwords-dropdown((passwordSelected)="setPassword($event)", (savePassword)="savePassword()")
-        .row
-          .col-9.pr-0
-            app-password-input
-          .col-3
-            .btn-group.d-flex
-              button.btn.btn-primary.btn-sm.btn-block.btn-tall(
-                type="button",
-                (click)="protectDocument(1)",
-                i18n="protect button|The button to protect the pdf document") Protect
-              .btn-group(
-                ngbDropdown,
-                placement="bottom-right",
-                role="group",
-                aria-label="Protect options dropdown",
-                i18n-aria-label="protect options dropdown|Aria label to let know that there is a dropdown available with more protection options")
-                button.btn.btn-primary.dropdown-toggle-split(
-                  ngbDropdownToggle,
-                  title="Protect options",
-                  i18n-title="protect options|Tooltip indicating these are additional protection options",
-                  )
-                .dropdown-menu(ngbDropdownMenu)
-                  button.btn-sm.dropdown-item(
-                    type="button",
-                    i18n="overwrite option|Lets the user know this option will overwrite the existing file@@overwriteOption",
-                    (click)="protectDocument(0)"
-                  ) Overwrite Existing File
-                  button.btn-sm.dropdown-item(
-                    type="button",
-                    i18n="save new option|Lets the user know this option will create a new file@@newFileOption",
-                    (click)="protectDocument(1)"
-                  ) Save to a New File
-                  button.btn-sm.dropdown-item(
-                    type="button",
-                    i18n="save as option|Lets the user know this option will open the `save as` dialog@@saveAsOption",
-                    (click)="protectDocument(2)"
-                  ) Save As
-  .card-footer
+app-card(cardTitle="Protect PDF Document", i18n-cardTitle="section title")
+  .card-body.border.border-top-0.border-right-0.border-left-0
     .container.p-0
-      .row.justify-content-between
-        .col-4
-          button.btn.btn-sm.btn-outline-secondary(
-            type="button",
-            title="Settings",
-            i18n-title="settings|Tooltip indicating this is the settings button"
-          )
-            i.fas.fa-cog
-          button.btn.btn-sm.btn-outline-secondary(
-            type="button",
-            title="Help",
-            i18n-title="help|Tooltip indicating this is the help button"
-          )
-            i.fas.fa-question-circle
-        .col-4
-          button.btn.btn-sm.btn-link.float-right.text-primary.pr-0(i18n) Unlock a document
+      app-file-input((protectedStatusChanges)="protectedStatusChanges($event)")
+  .card-body.h-100.pt-3
+    .container.p-0
+      .row
+        .col
+          app-passwords-dropdown((passwordSelected)="setPassword($event)", (savePassword)="savePassword()")
+      .row
+        .col-9.pr-0
+          app-password-input
+        .col-3
+          .btn-group.d-flex
+            button.btn.btn-primary.btn-sm.btn-block.btn-tall(
+              type="button",
+              (click)="protectDocument(1)",
+              i18n="protect button|The button to protect the pdf document") Protect
+            .btn-group(
+              ngbDropdown,
+              placement="bottom-right",
+              role="group",
+              aria-label="Protect options dropdown",
+              i18n-aria-label="protect options dropdown|Aria label to let know that there is a dropdown available with more protection options")
+              button.btn.btn-primary.dropdown-toggle-split(
+                ngbDropdownToggle,
+                title="Protect options",
+                i18n-title="protect options|Tooltip indicating these are additional protection options",
+                )
+              .dropdown-menu(ngbDropdownMenu)
+                button.btn-sm.dropdown-item(
+                  type="button",
+                  i18n="overwrite option|Lets the user know this option will overwrite the existing file@@overwriteOption",
+                  (click)="protectDocument(0)"
+                ) Overwrite Existing File
+                button.btn-sm.dropdown-item(
+                  type="button",
+                  i18n="save new option|Lets the user know this option will create a new file@@newFileOption",
+                  (click)="protectDocument(1)"
+                ) Save to a New File
+                button.btn-sm.dropdown-item(
+                  type="button",
+                  i18n="save as option|Lets the user know this option will open the `save as` dialog@@saveAsOption",
+                  (click)="protectDocument(2)"
+                ) Save As
+  ng-container(footer)
+    button.btn.btn-sm.btn-link.float-right.text-primary(routerLink="/unlock", i18n) Unlock a Document
 app-ui-messages
   app-ui-message(
     id="Success_Message",
