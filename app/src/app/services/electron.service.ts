@@ -22,6 +22,7 @@ declare global {
   interface Window {
     require: (...args: string[]) => any;
     process: any;
+    __dirname: string;
   }
 }
 /* tslint:enable:interface-name */
@@ -33,6 +34,8 @@ import { first } from 'rxjs/operators';
 import { OpenDialogOptions } from 'electron';
 
 import { EventArgs } from '../../electron/EventArgs';
+
+const path = window.require('path');
 
 @Injectable()
 export class ElectronService {
@@ -86,6 +89,21 @@ export class ElectronService {
     const os = window.require('os');
 
     shell.showItemInFolder(location || os.homedir());
+  }
+
+  public openLicense(): void {
+    const { shell } = window.require('electron');
+    shell.openExternal('https://github.com/bbalvanera/protego-pdf/blob/dev/LICENSE');
+  }
+
+  public openSourceCode(): void {
+    const { shell } = window.require('electron');
+    shell.openExternal('https://github.com/bbalvanera/protego-pdf');
+  }
+
+  public openCredits(): void {
+    const { shell } = window.require('electron');
+    shell.openExternal('https://github.com/bbalvanera/protego-pdf/blob/dev/CREDITS.md');
   }
 
   public getSavePath(): Observable<string> {

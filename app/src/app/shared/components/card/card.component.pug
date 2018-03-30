@@ -25,18 +25,14 @@
   .card-footer
     .container.p-0
       .row.justify-content-between
-        .col-4
-          button.btn.btn-sm.btn-outline-secondary(
-            type="button",
-            title="Settings",
-            i18n-title="settings|Tooltip indicating this is the settings button"
-          )
-            i.fas.fa-cog
-          button.btn.btn-sm.btn-outline-secondary(
-            type="button",
-            title="Help",
-            i18n-title="help|Tooltip indicating this is the help button"
-          )
-            i.fas.fa-question-circle
         .col-8
           ng-content(select="[footer]")
+        .col-4
+          button.btn.btn-sm.btn-link.text-secondary.float-right(
+            type="button",
+            title="About",
+            i18n-title="about|Tooltip indicating this is the about button",
+            (click)="showAbout()"
+          )
+            i.mr-1.fas.fa-question-circle
+            | About
