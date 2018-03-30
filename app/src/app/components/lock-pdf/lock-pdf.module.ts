@@ -29,7 +29,6 @@ import { PasswordInputComponent } from './password-input/password-input.componen
 import { PasswordsDropdownComponent } from './passwords-dropdown/passwords-dropdown.component';
 import { SharedModule } from '../../shared/shared.module';
 import { PasswordAddComponent } from './passwords-dropdown/password-add/password-add.component';
-import { SuccessToastrComponent } from '../../shared/components/success-toastr/success-toastr.component';
 
 @NgModule({
   declarations: [
@@ -47,8 +46,7 @@ import { SuccessToastrComponent } from '../../shared/components/success-toastr/s
     LockPdfRoutingModule
   ],
   entryComponents: [
-    PasswordAddComponent,
-    SuccessToastrComponent,
+    PasswordAddComponent
   ],
   exports: [
     LockPdfComponent
