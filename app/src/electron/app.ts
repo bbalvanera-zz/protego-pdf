@@ -59,8 +59,11 @@ ipcMain.on('ELECTRON_MAIN_PROC', (event: Electron.Event, args: EventArgs) => {
 function createWindow() {
   win = new BrowserWindow({
     width: 600,
-    height: 450,
-    resizable: true
+    height: 420,
+    resizable: false,
+    icon: path.join(__dirname, 'favicon.ico'),
+    fullscreenable: false,
+    maximizable: false
   });
 
   win.loadURL(`file://${__dirname}/index.html`);

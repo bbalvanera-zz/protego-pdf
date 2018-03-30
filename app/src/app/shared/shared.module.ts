@@ -27,6 +27,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CardComponent } from './components/card/card.component';
 import { RouterModule } from '@angular/router';
+import { AboutComponent } from './components/about/about.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { RouterModule } from '@angular/router';
     SHARED_PIPES,
     FileInputComponent,
     SuccessToastrComponent,
-    CardComponent
+    CardComponent,
+    AboutComponent
   ],
   imports: [
     CommonModule,
@@ -46,6 +48,10 @@ import { RouterModule } from '@angular/router';
     SHARED_PIPES,
     FileInputComponent,
     CardComponent
+  ],
+  entryComponents: [
+    SuccessToastrComponent,
+    AboutComponent
   ]
 })
 export class SharedModule { }
