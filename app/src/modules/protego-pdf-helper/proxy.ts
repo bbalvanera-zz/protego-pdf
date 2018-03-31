@@ -21,6 +21,8 @@ import { HelperOptions } from './helper-options';
 import { OperationResult } from './operation-result';
 import { ChildProcess } from 'child_process';
 
+import { environment } from '../../environments/environment';
+
 const path = window.require('path');
 const { spawn } = window.require('child_process');
 
@@ -30,7 +32,8 @@ let internalResolve: (value?: any | PromiseLike<any>) => void = () => void 0;
 let internalReject: (reason?: any) => void = () => void 0;
 
 (function init(): void {
-  const helperPath = path.resolve(window.__dirname, 'extras/helper/pdfhelper.exe');
+  const extras = environment.production ? '../extras' : 'extras'; // extras have diff path in prod than in dev
+  const helperPath = path.resolve(window.__dirname, extras, 'helper/pdfhelper.exe');
 
   pdfHelper = spawn(helperPath);
 

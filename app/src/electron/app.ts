@@ -70,13 +70,13 @@ function createWindow() {
   win.loadURL(`file://${__dirname}/index.html`);
 
   if (debugMode) {
+    win.webContents.openDevTools();
     const devtron = require('devtron');
     devtron.install();
   } else {
     win.setMenu(null);
   }
 
-  win.webContents.openDevTools();
   win.on('closed', () => {
     win = null;
   });

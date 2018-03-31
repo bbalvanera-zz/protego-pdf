@@ -22,11 +22,15 @@ import { fork } from 'child_process';
 import { setTimeout } from 'timers';
 import * as fs from 'fs';
 // this task depends on the ./dist folder being deleted before running this class.
+import { isProd } from './is-prod';
 
 function buildAngular(done: TaskFunction): void {
   try {
-    const process = "./node_modules/@angular/cli/bin/ng"
-    const ng = fork(process, ['build', '-w']);
+
+    const ngLocation = "./node_modules/@angular/cli/bin/ng";
+    const args = ['build', `${isProd() ? '--prod' : '-w'}`];
+    const ng = fork(ngLocation, args);
+
   } catch(error) {
     console.log(error);
   }
