@@ -1,0 +1,39 @@
+{
+  "name": "protego-pdf-helper",
+  "version": "0.1.0",
+  "description": "A node.js/csharp module that enables access to PDF encryption functionality through the use of iText",
+  "homepage": "https://github.com/bbalvanera/protego-pdf#readme",
+  "author": {
+    "name": "Bernardo Balvanera",
+    "email": "bernardo.balvanera@gmail.com"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "prepare": "nsp check",
+    "install": "npm run compile",
+    "compile": "node ./tools/buildHelper.js"
+  },
+  "main": "./lib/index.js",
+  "typings": "./lib/index.d.ts",
+  "keywords": [
+    "pdf",
+    "protect",
+    "encrypt",
+    "password",
+    "service"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "nsp": "^3.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bbalvanera/protego-pdf.git"
+  },
+  "license": "AGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/bbalvanera/protego-pdf/issues"
+  }
+}

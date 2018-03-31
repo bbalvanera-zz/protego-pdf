@@ -1,0 +1,55 @@
+// Copyright (C) 2018 Bernardo Balvanera
+//
+// This file is part of ProtegoPdf.
+//
+// ProtegoPdf is a free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+.row
+  .col-9.pr-0
+    input.form-control.form-control-sm.bg-color-normal(
+      type="text",
+      i18n-placeholder="file name input|Conveys that the user can drag-&-drop a file or click on browse button",
+      placeholder="Drag & drop a file here or click to Browse",
+      [value]="displayName",
+      [ngClass]="{'is-invalid': fileName.invalid && fileName.dirty}",
+      (click)="browse()",
+      readonly
+    )
+    .invalid-feedback.pl-2(
+      *ngIf="fileName.errors?.notAPdfDocument && fileName.dirty",
+      i18n="notAPdfDocument msg|Lets the user know that the file is invalid or corrupted") Invalid or corrupted PDF file. Please select another file
+    .invalid-feedback.pl-2(
+      *ngIf="fileName.errors?.protectedDocument && fileName.dirty",
+      i18n="file required msg|Lets the user know that a file is required") This file is fucking protected!
+    .invalid-feedback.pl-2(
+      *ngIf="fileName.errors?.fileAccessError && fileName.dirty",
+      i18n="fileAccessError msg|Lets the user know that the file is inaccessible") File open in another program. Please select another file
+    .invalid-feedback.pl-2(
+      *ngIf="fileName.errors?.required && fileName.dirty",
+      i18n="file required msg|Lets the user know that a file is required") Please select a file to protect
+    //- use this field to hold full file name and use it for validation since #displayName only holds filename without path
+    input(type="hidden", [formControl]="fileName")
+  .col-3
+    button.btn.btn-primary.btn-sm.btn-block(
+      title="Browse files",
+      type="button",
+      (click)="browse()",
+      i18n-title="browse files|Tooltip indicating to browse file",
+      i18n="browse button|The button to browse for a file") Browse
+.drop-zone(*ngIf="readyForDataTransfer")
+  .drop-zone-layer
+    h1
+      i.far.fa-file-pdf
+    p(i18n="drop zone|Lets the user know they can drop the file here") Drop your file here
+  .drop-zone-overlay((dragleave)="cancelDataTransfer()", (drop)="acceptDataTransfer($event.dataTransfer)")

@@ -1,0 +1,89 @@
+// Copyright (C) 2018 Bernardo Balvanera
+//
+// This file is part of ProtegoPdf.
+//
+// ProtegoPdf is a free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+app-card(cardTitle="Protect PDF Document", i18n-cardTitle="section title")
+  .card-body.border.border-top-0.border-right-0.border-left-0
+    .container.p-0
+      app-file-input((protectedStatusChanges)="protectedStatusChanges($event)")
+  .card-body.h-100.pt-3
+    .container.p-0
+      .row
+        .col
+          app-passwords-dropdown((passwordSelected)="setPassword($event)", (savePassword)="savePassword()")
+      .row
+        .col-9.pr-0
+          app-password-input
+        .col-3
+          .btn-group.d-flex
+            button.btn.btn-primary.btn-sm.btn-block.btn-tall(
+              type="button",
+              (click)="protectDocument(1)",
+              i18n="protect button|The button to protect the pdf document") Protect
+            .btn-group(
+              ngbDropdown,
+              placement="bottom-right",
+              role="group",
+              aria-label="Protect options dropdown",
+              i18n-aria-label="protect options dropdown|Aria label to let know that there is a dropdown available with more protection options")
+              button.btn.btn-primary.dropdown-toggle-split(
+                ngbDropdownToggle,
+                title="Protect options",
+                i18n-title="protect options|Tooltip indicating these are additional protection options",
+                )
+              .dropdown-menu(ngbDropdownMenu)
+                button.btn-sm.dropdown-item(
+                  type="button",
+                  i18n="overwrite option|Lets the user know this option will overwrite the existing file@@overwriteOption",
+                  (click)="protectDocument(0)"
+                ) Overwrite Existing File
+                button.btn-sm.dropdown-item(
+                  type="button",
+                  i18n="save new option|Lets the user know this option will create a new file@@newFileOption",
+                  (click)="protectDocument(1)"
+                ) Save to a New File
+                button.btn-sm.dropdown-item(
+                  type="button",
+                  i18n="save as option|Lets the user know this option will open the `save as` dialog@@saveAsOption",
+                  (click)="protectDocument(2)"
+                ) Save As
+  ng-container(footer)
+    button.btn.btn-sm.btn-link.text-primary.pl-0(routerLink="/unlock", i18n) Unlock a Document
+app-ui-messages
+  app-ui-message(
+    id="Success_Message",
+    i18n="success msg title|Lets the user know that its Pdf file was protected") File protected
+  app-ui-message(
+    id="File_Access_Error",
+    title="Could not protect your file",
+    i18n-title="fileaccess msg title|Lets the user know that the file could not be protected@@couldNotProtect",
+    i18n="fileaccess msg|Lets the user know the file is open in another program") The file is open in another program
+  app-ui-message(
+    id="Insufficient_Permissions",
+    title="Could not protect your file",
+    i18n-title="@@couldNotProtect"
+    i18n="permissions msg|Lets the user know the file could not be accessed") Access to the file is denied
+  app-ui-message(
+    id="General_Error",
+    title="Could not protect your file",
+    i18n-title="@@couldNotProtect",
+    i18n="general error msg|Lets the user know there was an unexpected error") An unexpected error has ocurred
+  app-ui-message(
+    id="Invalid_Password_To_Save",
+    i18n="Lets the user know that a valid password needs to be specified") Please specify a valid password to save
+  app-ui-message(
+    id="PasswordSaved_SuccessMessage",
+    i18n="Lets the user know when a password was successfuly saved@@passwordSaved") Your password has been saved

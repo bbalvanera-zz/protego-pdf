@@ -1,0 +1,75 @@
+// Copyright (C) 2018 Bernardo Balvanera
+//
+// This file is part of ProtegoPdf.
+//
+// ProtegoPdf is a free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+app-card(cardTitle="Unlock PDF Document", i18n-cardTitle="section title")
+  .card-body.border.border-top-0.border-right-0.border-left-0
+    .container.p-0
+      app-file-input((protectedStatusChanges)="protectedStatusChanges($event)")
+  .card-body.h-100.pt-3
+    .container.p-0
+      .row
+        .col-9.pr-0
+          input.password-input.form-control.form-control-sm(
+            type="password",
+            i18n-placeholder="password input|Conveys that this input is to enter the password to unlock a document"
+            placeholder="Password to unlock",
+            [formControl]="password"
+          )
+          .invalid-feedback.pl-2.mb-2(
+            *ngIf="password.errors?.required && password.dirty",
+            i18n="@@pwdRequiredMessage"
+          ) Please specify a password
+        .col-3
+          .btn-group.d-flex
+            button.btn.btn-primary.btn-sm.btn-block(
+              type="button",
+              i18n="action",
+              (click)="unlockDocument(1)"
+            ) Unlock
+            .btn-group(
+              ngbDropdown,
+              placement="bottom-right",
+              role="group",
+              aria-label="Unlock options dropdown",
+              i18n-aria-label="unlock options dropdown|Aria label to let know that there is a dropdown available with more options")
+              button.btn.btn-sm.btn-primary.dropdown-toggle-split(
+                ngbDropdownToggle,
+                title="Unlock options",
+                i18n-title="unlock options|Tooltip indicating these are additional options"
+                )
+              .dropdown-menu(ngbDropdownMenu)
+                button.btn-sm.dropdown-item(
+                  type="button",
+                  i18n="@@overwriteOption",
+                  (click)="unlockDocument(0)"
+                ) Overwrite Existing File
+                button.btn-sm.dropdown-item(
+                  type="button",
+                  i18n="@@newFileOption",
+                  (click)="unlockDocument(1)"
+                ) Save to a New File
+                button.btn-sm.dropdown-item(
+                  type="button",
+                  i18n="@@saveAsOption",
+                  (click)="unlockDocument(2)"
+                ) Save As
+  ng-container(footer)
+    button.btn.btn-sm.btn-link.text-primary.pl-0(routerLink="/", i18n) Protect a Document
+app-ui-messages
+  app-ui-message(
+    id="Success_Message",
+    i18n="success msg title|Lets the user know that its Pdf file was protected") File unlocked

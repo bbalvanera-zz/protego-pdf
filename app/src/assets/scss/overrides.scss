@@ -1,0 +1,102 @@
+/**
+ * Copyright (C) 2018 Bernardo Balvanera
+ *
+ * This file is part of ProtegoPdf.
+ *
+ * ProtegoPdf is a free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+// overrides for default bootstrap style
+body {
+  font-size: 0.875rem;
+}
+
+.was-validated .form-control:invalid:focus,
+.form-control.is-invalid:focus,
+.was-validated .custom-select:invalid:focus,
+.custom-select.is-invalid:focus {
+  box-shadow: none;
+}
+
+.form-control:focus {
+  box-shadow: none;
+  border-color: $blue
+}
+
+.btn {
+  &:focus, .focus, &.active.focus {
+    box-shadow: none;
+  }
+}
+
+.btn-primary:focus {
+  border-color: darken($blue, 50%);
+}
+
+.btn-outline-secondary:focus {
+  border-color: darken($gray-500, 20%);
+}
+
+[class*="btn-"]:not(:disabled):not(.disabled):active:focus,
+[class*="btn-"]:not(:disabled):not(.disabled).active:focus,
+.show > [class*="btn-"].dropdown-toggle:focus {
+  box-shadow: none;
+}
+
+.dropdown-menu {
+  padding: 0.2rem 0;
+  min-width: 7rem;
+}
+
+.dropdown-item {
+  padding: 0.1rem 1.5rem;
+
+  &:hover, &:focus {
+    color: $white;
+    background-color: $primary;
+  }
+}
+
+.dropdown-header {
+  font-size: 0.75rem;
+}
+
+// overrides ngx-toastr style
+.toast-container {
+  .toast {
+    min-width: 300px;
+    width: initial;
+  }
+}
+
+.input-group {
+  border-radius: 0.2rem;
+  border: 1px solid $gray-400;
+
+  * {
+    border: none;
+  }
+
+  &.focus {
+    border-color: $blue;
+  }
+
+  &.is-invalid {
+    border-color: $danger !important;
+  }
+}
+
+.invalid-feedback {
+  display: block;
+}

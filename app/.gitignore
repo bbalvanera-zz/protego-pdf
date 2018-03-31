@@ -46,3 +46,9 @@ Thumbs.db
 
 #html files
 /src/**/*.html
+
+#font-awesome package dependency
+fontawesome-free-5.0.8/*
+!fontawesome-free-5.0.8/**/fontawesome-all.min.js
+
+extras

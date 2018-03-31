@@ -8,7 +8,8 @@
       "root": "src",
       "outDir": "dist",
       "assets": [
-        "assets"
+        "favicon.ico",
+        "extras/**/*"
       ],
       "index": "index.html",
       "main": "main.ts",
@@ -20,7 +21,9 @@
       "styles": [
         "styles.scss"
       ],
-      "scripts": [],
+      "scripts": [
+        "assets/fontawesome-free-5.0.8/fontawesome-all.min.js"
+      ],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",

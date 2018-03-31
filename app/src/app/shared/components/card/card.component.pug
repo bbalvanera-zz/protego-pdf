@@ -1,0 +1,38 @@
+// Copyright (C) 2018 Bernardo Balvanera
+//
+// This file is part of ProtegoPdf.
+//
+// ProtegoPdf is a free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+.card.fixed-height
+  h6.card-header.bg-primary.text-light([ngClass]="{'pl-2': returnRoute}")
+    a.text-light.mr-2(*ngIf="returnRoute", [routerLink]="returnRoute")
+      i.fas.fa-arrow-left
+    | {{cardTitle}}
+  div(style="height:283px")
+    ng-content(select=".card-body")
+  .card-footer
+    .container.p-0
+      .row.justify-content-between
+        .col-8
+          ng-content(select="[footer]")
+        .col-4
+          button.btn.btn-sm.btn-link.text-secondary.float-right(
+            type="button",
+            title="About",
+            i18n-title="about|Tooltip indicating this is the about button",
+            (click)="showAbout()"
+          )
+            i.mr-1.fas.fa-question-circle
+            | About

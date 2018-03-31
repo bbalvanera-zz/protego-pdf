@@ -1,7 +1,51 @@
+/**
+ * Copyright (C) 2018 Bernardo Balvanera
+ *
+ * This file is part of ProtegoPdf.
+ *
+ * ProtegoPdf is a free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /* You can add global styles to this file, and also import other style files */
-@import "assets/scss/spacelab";
-@import url("assets/css/font-awesome.min.css");
+@import "assets/scss/theme";
+@import "assets/scss/overrides";
 
 .main-container {
   padding: 0.2rem;
+  overflow: hidden;
+}
+
+.password-input {
+  font-family: $font-family-monospace;
+
+  &::placeholder {
+    font-family: $font-family-sans-serif;
+  }
+
+  &[disabled]::placeholder {
+    color: $gray-200;
+  }
+
+  &[readonly] {
+    background-color: inherit;
+  }
+}
+
+.card.fixed-height {
+  height: 385px;
+}
+
+.card-body.fixed-height {
+  height: 285px;
 }

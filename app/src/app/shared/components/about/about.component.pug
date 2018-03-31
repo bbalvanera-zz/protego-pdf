@@ -1,0 +1,54 @@
+// Copyright (C) 2018 Bernardo Balvanera
+//
+// This file is part of ProtegoPdf.
+//
+// ProtegoPdf is a free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+.modal-header.bg-primary
+  h6.modal-title.text-light About Protego PDF
+  button.close(
+    title="Close",
+    i18n-title="close|Tooltip indicating action: close this dialog",
+    type="button",
+    aria-label="Close",
+    (click)="dismissModal()"
+  )
+    span.text-light(aria-hidden="true") &times;
+.modal-body
+  // ul.rows
+    li
+      h5.text-primary Protego PDF
+    li(i18n) Version 0.8.0
+    li Copyright &copy; 2018 Bernardo Balvanera
+    li.sep
+      a.text-primary(href="mailto:bernardo.balvanera@gmail.com") bernardo.balvanera@gmail.com
+    li(style="padding-top:0.5rem;", i18n) This program is distributed under the terms of the Affero General Public License v3 or later.
+  h5.text-primary Protego PDF
+  ul.list-unstyled
+    li(i18n) Version 0.8.0
+    li Copyright &copy; 2018 Bernardo Balvanera
+    li.sep
+      a.text-primary(href="mailto:bernardo.balvanera@gmail.com") bernardo.balvanera@gmail.com
+  p This program is distributed under the terms of the Affero General Public License v3 or later.
+  ul.list-unstyled
+    li
+      // a(href) www.sometools.com
+    li
+      ul.list-inline
+        li.list-inline-item
+          a.text-primary(href, (click)="showLicense()", i18n) License
+        li.list-inline-item
+          a.text-primary(href, (click)="showCredits()", i18n) Credits
+        li.list-inline-item
+          a.text-primary(href, (click)="showSourceCode()", i18n) Source code
