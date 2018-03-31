@@ -24,6 +24,7 @@ import * as gulp from 'gulp';
 function buildElectron() {
   return gulp.src(['src/electron/**/*.ts', '!src/electron/**/EventArgs.ts'])
       .pipe(typescript())
+      .pipe(gulp.src(['src/package.json']))
       .pipe(gulp.dest('dist/'));
 }
 

@@ -20,8 +20,11 @@
 import { exec } from 'child_process';
 import * as gulp from 'gulp';
 
+import { isProd } from './is-prod';
+
 function runElectron(done: gulp.TaskFunction) {
-  exec('electron ./dist/app.js --debug');
+  const args = `electron ./dist/app.js ${isProd() ? '' : '--debug'}`;
+  exec(args);
   done();
 }
 

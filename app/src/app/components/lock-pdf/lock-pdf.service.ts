@@ -27,7 +27,7 @@ import { mergeMap } from 'rxjs/operators/mergeMap';
 import { _throw as observableThrow } from 'rxjs/observable/throw';
 import { fromPromise as observableFromPromise } from 'rxjs/observable/fromPromise';
 import { ParsedPath } from 'path';
-import { PdfProtectionOptions } from 'protego-pdf-helper';
+import { ProtectionOptions } from '../../../modules/protego-pdf-helper';
 
 import { PasswordAddComponent } from './passwords-dropdown/password-add/password-add.component';
 import { PdfProtectMode } from '../../shared/pdf-protect-mode.enum';
@@ -69,7 +69,7 @@ export class LockPdfService extends PdfComponentService {
         }
 
         const source = args.fileName;
-        const opts: PdfProtectionOptions = {
+        const opts: ProtectionOptions = {
           userPassword: args.password,
           encryptionMode: 2, // aes128,
           permissions: 3900 // all permissions. Only ask for 'open document' password, nothing else

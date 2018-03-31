@@ -1,0 +1,32 @@
+{
+  "productName": "ProtegoPDF",
+  "name": "protego-pdf",
+  "version": "0.8.0",
+  "description": "A simple program to password-protect your PDF Documents",
+  "main": "app.js",
+  "dependencies": {
+    "winston": "^3.0.0-rc2",
+    "zxcvbn": "^4.4.2"
+  },
+  "devDependencies": {
+    "electron": "^1.8.3"
+  },
+  "scripts": { },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bbalvanera/protego-pdf.git"
+  },
+  "keywords": [
+    "pdf",
+    "password",
+    "protect",
+    "pdf document",
+    "document"
+  ],
+  "author": "Bernardo Balvanera <bernardo.balvanera@gmail.com>",
+  "license": "AGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/bbalvanera/protego-pdf/issues"
+  },
+  "homepage": "https://github.com/bbalvanera/protego-pdf#readme"
+}

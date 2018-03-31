@@ -22,9 +22,9 @@ import { Observable } from 'rxjs/Observable';
 import { fromPromise } from 'rxjs/observable/fromPromise';
 import { map } from 'rxjs/operators/map';
 
-import { PdfProtectionOptions } from 'protego-pdf-helper';
+import { ProtectionOptions, isPdfDocument, isProtected, protect, unlock } from '../../modules/protego-pdf-helper';
 
-const { isPdfDocument, isProtected, protect, unlock } = window.require('protego-pdf-helper');
+export { ProtectionOptions, EncryptionMode, EncryptionOption, PdfPermissions } from '../../modules/protego-pdf-helper';
 
 @Injectable()
 export class PdfProtectService {
@@ -36,7 +36,7 @@ export class PdfProtectService {
     return fromPromise(isProtected(file));
   }
 
-  public protect(source: string, target: string, password: string, options?: PdfProtectionOptions): Observable<boolean> {
+  public protect(source: string, target: string, password: string, options?: ProtectionOptions): Observable<boolean> {
     return fromPromise<boolean>(protect(source, target, password, options || {}));
   }
 

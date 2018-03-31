@@ -18,7 +18,6 @@
  */
 
 const gulp = require('gulp');
-const exec = require('child_process').exec;
 
 const lint = require('./gulp-tasks/lint');
 const cleanDist = require('./gulp-tasks/clean-dist');
@@ -26,6 +25,7 @@ const buildPug = require('./gulp-tasks/build-pug');
 const buildAngular = require('./gulp-tasks/build-angular');
 const buildElectron = require('./gulp-tasks/build-electron');
 const runElectron = require('./gulp-tasks/run-electron');
+const publishing = require('./gulp-tasks/publishing');
 const watchPug = require('./gulp-tasks/watch-pug');
 const watchElectron = require('./gulp-tasks/watch-electron');
 
@@ -48,6 +48,7 @@ gulp.task(lint);
 gulp.task('angular', buildAngular);
 gulp.task('pug', buildPug);
 gulp.task('electron', buildElectron);
+gulp.task('run', runElectron);
 
 gulp.task('watch',
   gulp.parallel(
@@ -56,3 +57,22 @@ gulp.task('watch',
     watchElectron
   )
 );
+
+function setProd(done) {
+  process.env.PROD = true;
+  done();
+}
+
+gulp.task('publish',
+  gulp.series(
+    setProd,
+    cleanDist,
+    buildPug,
+    lint,
+    buildAngular,
+    buildElectron,
+    publishing
+  )
+);
+
+gulp.task(publishing);

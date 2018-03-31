@@ -63,14 +63,14 @@ function createWindow() {
     resizable: false,
     icon: path.join(__dirname, 'favicon.ico'),
     fullscreenable: false,
-    maximizable: false
+    maximizable: false,
+    autoHideMenuBar: true
   });
 
   win.loadURL(`file://${__dirname}/index.html`);
 
   if (debugMode) {
     win.webContents.openDevTools();
-
     const devtron = require('devtron');
     devtron.install();
   } else {
