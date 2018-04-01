@@ -2,26 +2,27 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.6.3.
 
+## What I learned
+I leared a lot about Angular. I had the opportunity to work with my aspects of Angular programing as well as Electron programing. I learned and implemented:
+
+* ValueAccess Components
+* I18n as implemented by Angular
+* Validators and AsyncValidators and how sometimes it is necessary to debounce their calls.
+* I learned the differences between Template-drive Forms and Reactive Forms. Coming from a programming background, I have to say I prefer Reactive Forms because it feels more like programming than configuring which is what happens with Template Forms.
+* Electron
+  * Communicate between Main and Renderer process
+* Winston logger
+* Zxcvbn. I also investigated a little about password strength and entropy.
+* I enabled communication between components using Binding and Events
+* I learned about dynamic component loading.
+
+In general it was a great experience to work with this application and also I learned a lot. Not to mention I really enjoyed.
+
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `gulp serve` to run the application from local folder. Requires electron 1.8.3 globally installed and gulp 4
 
-## Code scaffolding
+## Publishing
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+Run `gulp publish` to have the application built using `prod` settings and copied to another location and have `npm install` run.
+Then run `electron-packager` on the created folder to create a windows application ready for distribution.
