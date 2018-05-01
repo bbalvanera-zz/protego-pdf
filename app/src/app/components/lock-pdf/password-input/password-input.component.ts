@@ -79,6 +79,7 @@ export class PasswordInputComponent implements IPasswordInput, OnInit, AfterView
     };
 
     this.form.setValue(patch);
+    this.form.updatePasswordStrength();
   }
 
   public ensureValue(): void {
