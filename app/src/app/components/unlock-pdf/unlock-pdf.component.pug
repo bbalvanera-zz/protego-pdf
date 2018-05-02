@@ -27,7 +27,8 @@ app-card(cardTitle="Unlock PDF Document", i18n-cardTitle="section title")
             type="password",
             i18n-placeholder="password input|Conveys that this input is to enter the password to unlock a document"
             placeholder="Password to unlock",
-            [formControl]="password"
+            [formControl]="password",
+            [ngClass]="{'is-invalid': password.invalid && password.dirty}"
           )
           .invalid-feedback.pl-2.mb-2(
             *ngIf="password.errors?.required && password.dirty",
