@@ -22,5 +22,29 @@ html
     meta(charset="UTF-8")
 
     title Protego PDF
+    style
+      | .loading {
+      |   display: block;
+      |   transition: opacity .8s ease-in-out;
+      |   display: flex;
+      |   justify-content: center;
+      |   align-items: center;
+      |   height: 100vh;
+      |   font-family: Arial;
+      |   overflow: hidden;
+      |   background-color: rgba(68, 110, 155, 0.9);
+      | }
+      | .loading h3 {
+      |    color: #dee2e6;
+      | }
+      |
+      | app-root[ng-version] + .loading {
+      |   display: none;
+      | }
+      | body {
+      |   overflow: hidden;
+      | }
   body
     app-root
+    .loading
+      h3(i18n="loading screen") Loading
