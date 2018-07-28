@@ -15,12 +15,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-.card.fixed-height
-  h6.card-header.bg-primary.text-light([ngClass]="{'pl-2': returnRoute}")
+nav.navbar.navbar-expand-sm.navbar-dark.bg-primary
+  span.navbar-brand.pl-2
     a.text-light.mr-2(*ngIf="returnRoute", [routerLink]="returnRoute")
       i.fas.fa-arrow-left
     | {{cardTitle}}
-  div(style="height:283px")
+
+
+.card.fixed-height
+  //h6.card-header.bg-primary.text-light([ngClass]="{'pl-2': returnRoute}")
+    a.text-light.mr-2(*ngIf="returnRoute", [routerLink]="returnRoute")
+      i.fas.fa-arrow-left
+    | {{cardTitle}}
+  div
     ng-content(select=".card-body")
   .card-footer
     .container.p-0

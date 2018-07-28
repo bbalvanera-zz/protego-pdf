@@ -22,7 +22,6 @@
 @import "assets/scss/overrides";
 
 .main-container {
-  padding: 0.2rem;
   overflow: hidden;
 }
 
@@ -40,12 +39,4 @@
   &[readonly] {
     background-color: inherit;
   }
-}
-
-.card.fixed-height {
-  height: 385px;
-}
-
-.card-body.fixed-height {
-  height: 285px;
 }
