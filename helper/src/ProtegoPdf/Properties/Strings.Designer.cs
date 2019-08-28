@@ -61,6 +61,24 @@ namespace ProtegoPdf.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Empty or invalid owner password provided for this document. Owner Password required..
+        /// </summary>
+        internal static string Operation_BadOwnerPassword_Description {
+            get {
+                return ResourceManager.GetString("Operation_BadOwnerPassword_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bad_Owner_Password.
+        /// </summary>
+        internal static string Operation_BadOwnerPassword_Type {
+            get {
+                return ResourceManager.GetString("Operation_BadOwnerPassword_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An empty or invalid password was provided for this document..
         /// </summary>
         internal static string Operation_BadPassword_Description {

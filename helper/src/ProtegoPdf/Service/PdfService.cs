@@ -129,7 +129,23 @@ namespace ProtegoPdf.Service
                 {
                     using (var doc = new PdfDocument(reader))
                     {
+                        if (!reader.IsOpenedWithFullPermission())
+                            throw new BadPasswordException("Bad Password");
+                    }
+                }
+            }
 
+            GC.Collect();
+        }
+
+        private void ForceRead(string fileName, byte[] password)
+        {
+            using (var file = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.Delete))
+            {
+                using (var reader = new PdfReader(file, new ReaderProperties().SetPassword(password)))
+                {
+                    using (var doc = new PdfDocument(reader))
+                    {
                         if (!reader.IsOpenedWithFullPermission())
                             throw new BadPasswordException("Bad Password");
                     }

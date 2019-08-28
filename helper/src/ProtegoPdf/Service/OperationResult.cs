@@ -71,6 +71,13 @@ namespace ProtegoPdf.Service
             ErrorDescription = Strings.Operation_BadPassword_Description
         };
 
+        internal static OperationResult BadOwnerPassword() => new OperationResult
+        {
+            Success = false,
+            ErrorType = Strings.Operation_BadOwnerPassword_Type,
+            ErrorDescription = Strings.Operation_BadOwnerPassword_Description
+        };
+
         internal static OperationResult FileAccessError(string description = null) => new OperationResult
         {
             Success = false,

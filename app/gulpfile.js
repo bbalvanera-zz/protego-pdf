@@ -48,7 +48,7 @@ gulp.task(lint);
 gulp.task('angular', buildAngular);
 gulp.task('pug', buildPug);
 gulp.task('electron', buildElectron);
-gulp.task('run', runElectron);
+gulp.task('runElectron', runElectron);
 
 gulp.task('watch',
   gulp.parallel(

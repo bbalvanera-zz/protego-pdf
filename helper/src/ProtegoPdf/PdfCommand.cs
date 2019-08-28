@@ -163,6 +163,10 @@ namespace ProtegoPdf
                 await Task.Run(() => service.Unlock(options));
                 return Successful();
             }
+            catch (BadPasswordException ex) when (ex.Message == "PdfReader is not opened with owner password")
+            {
+                return BadOwnerPassword();
+            }
             catch (BadPasswordException)
             {
                 return BadPassword();

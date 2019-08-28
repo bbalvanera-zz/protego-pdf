@@ -520,6 +520,42 @@ namespace ProtegoPdf.Tests
                 }
             }
 
+            [DataTestMethod]
+            [DataRow("TestData/test.v1.6.restricted[owner][test].pdf")]
+            public async Task Should_succeed_When_only_user_password_and_forced(string sourceFile)
+            {
+                var targetFile = $"{sourceFile}.unlocked.pdf";
+                try
+                {
+                    File.Copy(sourceFile, targetFile, true); // source is a clean file, copy it and avoid overwriting original one
+                    var request = new PdfOptions
+                    {
+                        Source = targetFile,
+                        Target = targetFile,
+                        Password = "test", //usign user password instead of owner password
+                        ForceDecryption = true
+                    };
+
+                    var subject = GetSubject();
+                    var result = await subject.IsProtected(new PdfOptions { Source = targetFile });
+                    Assert.IsTrue(result.Result); // make sure to start with a protected file.
+
+                    result = await subject.Unlock(request);
+
+                    Assert.IsTrue(result.Success);
+                    Assert.IsTrue(File.Exists(targetFile));
+
+                    result = await subject.IsProtected(new PdfOptions { Source = targetFile });
+                    Assert.IsTrue(result.Success);
+                    Assert.IsFalse(result.Result);
+                }
+                finally
+                {
+                    if (File.Exists(targetFile))
+                        File.Delete(targetFile);
+                }
+            }
+
             [TestMethod]
             [DataRow("TestData/test.v1.2.encrypted[test].pdf")]
             [DataRow("TestData/test.v1.4.encrypted[test].pdf")]
@@ -539,6 +575,24 @@ namespace ProtegoPdf.Tests
 
                 Assert.IsFalse(result.Success);
                 Assert.AreEqual("Bad_Password", result.ErrorType);
+            }
+
+            [TestMethod]
+            [DataRow("TestData/test.v1.6.restricted[owner][test].pdf")]
+            public async Task Should_fail_in_no_owner_password(string sourceFile)
+            {
+                var request = new PdfOptions
+                {
+                    Source = sourceFile,
+                    Target = sourceFile,
+                    Password = "test" // using user password instead of owner password
+                };
+                var subject = GetSubject();
+
+                var result = await subject.Unlock(request);
+
+                Assert.IsFalse(result.Success);
+                Assert.AreEqual("Bad_Owner_Password", result.ErrorType);
             }
 
             [TestMethod]

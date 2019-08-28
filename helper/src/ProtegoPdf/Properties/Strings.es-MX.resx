@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Operation_BadOwnerPassword_Description" xml:space="preserve">
+    <value>La contraseña del propietario es incorrecta o está vacía. La Contraseña del Propietario es requerida.</value>
+  </data>
   <data name="Operation_BadPassword_Description" xml:space="preserve">
     <value>La contraseña proporcionada para este documento es incorrecta o está vacía.</value>
   </data>
