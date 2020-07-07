@@ -9,7 +9,7 @@
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
-    "electron": "^1.8.3"
+    "electron": "^9.1.0"
   },
   "scripts": { },
   "repository": {
